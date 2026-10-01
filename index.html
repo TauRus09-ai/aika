@@ -117,6 +117,11 @@ input,textarea.arch-chat{width:100%;background:rgba(8,10,14,.82);border:1px soli
   color:#fff;
   box-shadow:0 3px 0 #013001, 0 6px 10px rgba(0,0,0,.25);
 }
+#dayStrip .mcut{display:flex;align-items:center;gap:6px;flex:0 0 auto;padding:0 4px}
+#dayStrip .mcut .arr{width:36px;height:36px;border-radius:18px;border:0;color:#fff;font-size:20px;line-height:36px;text-align:center;padding:0}
+#dayStrip .mcut .arr.g{background:#008000}
+#dayStrip .mcut .arr.r{background:#9b1c1c}
+#dayStrip .mcut .bar{width:3px;height:28px;border-radius:2px;background:rgba(255,255,255,.7)}
 #dayStrip .chip{box-shadow:none;background:var(--chip);border:1px solid var(--line);color:var(--text)}
 #dayStrip .chip.on{
   background:#008000;
@@ -1365,13 +1370,31 @@ function renderDayTabMain(){
 const menu=document.getElementById('stMenu');
 menu.innerHTML=db.stations.map((s,i)=>'<button class="'+(s.id===db.current?'on':'')+'" onclick="pickStation(\''+s.id+'\')"><span class="num-ic">'+(i+1)+'</span><span>'+(String(s.name||'').trim()?s.name.replace(/</g,''):'Без названия')+'</span></button>').join('');
 const on=menu.querySelector('button.on'); if(on) on.scrollIntoView({inline:'nearest',block:'nearest'});
-const ms=document.getElementById('monthStrip');const nowM=(new Date()).getMonth();const nowY=(new Date()).getFullYear();ms.innerHTML='<div class="chip '+(view.mode==='all'?'on':'')+'" onclick="setAllHist()">Вся история</div>'+MONTHS.map((name,i)=>'<div class="chip '+(view.mode==='day'&&i===view.m?'on':'')+(i===nowM&&view.y===nowY?' cur':'')+'" onclick="setMonth('+i+')">'+name+'</div>').join('');centerChip(ms,!!view.smooth);const daysIn=new Date(view.y,view.m+1,0).getDate();const ds=document.getElementById('dayStrip');if(view.mode==='all'){ds.innerHTML='';document.getElementById('dayCard').style.display='none';}else{document.getElementById('dayCard').style.display='block';const td=new Date();const isThisMonth=td.getFullYear()===view.y && td.getMonth()===view.m;
-ds.innerHTML=Array.from({length:daysIn},(_,i)=>i+1).map(d=>{
-  const isToday=isThisMonth && d===td.getDate();
-  const cls='chip'+(d===view.d?' on':'')+(isToday?' today':'');
-  const label=isToday?('сегодня '+d):String(d);
-  return '<div class="'+cls+'" onclick="setDay('+d+')">'+label+'</div>';
-}).join('');centerChip(ds,!!view.smooth);view.smooth=false;loadDayForm();}renderAllHistory();paintDots();}
+const ms=document.getElementById('monthStrip');const nowM=(new Date()).getMonth();const nowY=(new Date()).getFullYear();ms.innerHTML='<div class="chip '+(view.mode==='all'?'on':'')+'" onclick="setAllHist()">Вся история</div>'+MONTHS.map((name,i)=>'<div class="chip '+(view.mode==='day'&&i===view.m?'on':'')+(i===nowM&&view.y===nowY?' cur':'')+'" onclick="setMonth('+i+')">'+name+'</div>').join('');centerChip(ms,!!view.smooth);const ds=document.getElementById('dayStrip');if(view.mode==='all'){ds.innerHTML='';document.getElementById('dayCard').style.display='none';}else{document.getElementById('dayCard').style.display='block';paintDayStrip();view.smooth=false;loadDayForm();}renderAllHistory();paintDots();}
+function shiftYM(y,m,delta){const dt=new Date(y,m+delta,1);return {y:dt.getFullYear(),m:dt.getMonth()};}
+function paintDayStrip(){
+  const ds=document.getElementById('dayStrip'); if(!ds) return;
+  if(view.stripY==null||view.stripM==null){view.stripY=view.y;view.stripM=view.m;}
+  const right={y:view.stripY,m:view.stripM};
+  const left=shiftYM(right.y,right.m,-1);
+  const leftDays=new Date(left.y,left.m+1,0).getDate();
+  const rightDays=new Date(right.y,right.m+1,0).getDate();
+  const td=new Date();
+  const onLeft=view.y===left.y&&view.m===left.m;
+  const chip=function(y,m,d){
+    const on=view.mode==='day'&&view.y===y&&view.m===m&&view.d===d;
+    const today=td.getFullYear()===y&&td.getMonth()===m&&td.getDate()===d;
+    const cls='chip'+(on?' on':'')+(today?' today':'');
+    const label=today?('сегодня '+d):String(d);
+    return '<div class="'+cls+'" data-y="'+y+'" data-m="'+m+'" data-d="'+d+'" onclick="setDayDate('+y+','+m+','+d+','+(m===right.m&&y===right.y?0:1)+')">'+label+'</div>';
+  };
+  let html='';
+  for(let d=Math.max(1,leftDays-4); d<=leftDays; d++) html+=chip(left.y,left.m,d);
+  html+='<div class="mcut"><button type="button" class="arr '+(onLeft?'g':'r')+'" onclick="setDayDate('+left.y+','+left.m+','+leftDays+',1)">←</button><div class="bar"></div><button type="button" class="arr '+(onLeft?'r':'g')+'" onclick="setDayDate('+right.y+','+right.m+',1,0)">→</button></div>';
+  for(let d=1; d<=rightDays; d++) html+=chip(right.y,right.m,d);
+  ds.innerHTML=html;
+  centerChip(ds,!!view.smooth);
+}
 function toggleStations(){}
 const drafts={};
 function draftKey(date,fuel,sid){return (sid||db.current)+'|'+date+'|'+(fuel||view.fuel);}
@@ -1389,8 +1412,9 @@ function carryValue(date,fuel,field){
 }
 function pickStation(id){if(id===db.current)return;stashDay();db.current=id;persist();renderDayTab();}
 function setAllHist(){stashDay();view.mode='all';renderDayTab();}
-function setMonth(m){stashDay();view.mode='day';view.m=m;view.d=Math.min(view.d,new Date(view.y,m+1,0).getDate());view.smooth=true;renderDayTab();}
-function setDay(d){if(view.mode==='day'&&d===view.d)return;stashDay();view.mode='day';view.d=d;const ds=document.getElementById('dayStrip');if(!ds||!ds.children.length){view.smooth=true;renderDayTab();return;}const td=new Date();const isThisMonth=td.getFullYear()===view.y&&td.getMonth()===view.m;[...ds.children].forEach(el=>{const num=parseInt(el.textContent.replace(/\D/g,''),10);el.classList.toggle('on',num===d);el.classList.toggle('today',isThisMonth&&num===td.getDate());});centerChip(ds,true);loadDayForm();renderAllHistory();}
+function setMonth(m){stashDay();view.mode='day';view.m=m;view.stripY=view.y;view.stripM=m;view.d=Math.min(view.d,new Date(view.y,m+1,0).getDate());view.smooth=true;renderDayTab();}
+function setDay(d){setDayDate(view.y,view.m,d,0);}
+function setDayDate(y,m,d,keepRight){if(view.mode==='day'&&view.y===y&&view.m===m&&view.d===d)return;stashDay();view.mode='day';view.y=y;view.m=m;view.d=d;if(!keepRight){view.stripY=y;view.stripM=m;}view.smooth=true;renderDayTab();}
 function renderDayFuels(){
   const box=document.getElementById('dayFuels');if(!box)return;
   const F=stFuels();if(F.indexOf(view.fuel)<0)view.fuel=F[0];
@@ -1717,7 +1741,7 @@ function monthStatus(y,m){
 }
 function paintDots(){
   const set=function(el,st){const o=el.querySelector('.dot');if(o)o.remove();if(st){const i=document.createElement('i');i.className='dot '+st;el.appendChild(i);}};
-  document.querySelectorAll('#dayStrip .chip').forEach(function(el){const num=parseInt(el.textContent.replace(/\D/g,''),10);if(num)set(el,dayStatus(iso(view.y,view.m,num)));});
+  document.querySelectorAll('#dayStrip .chip').forEach(function(el){const y=+el.dataset.y,m=+el.dataset.m,d=+el.dataset.d;if(d)set(el,dayStatus(iso(y,m,d)));});
   document.querySelectorAll('#monthStrip .chip').forEach(function(el,i){if(i>0)set(el,monthStatus(view.y,i-1));});
 }
 
