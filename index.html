@@ -338,6 +338,7 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 <div class="muted" id="autoSaveNote" style="margin:6px 0">Пишется само, кнопку сохранять не нужно.</div><div class="btns"><button class="btn btn-danger" onclick="clearDay(this)">Стереть</button></div>
 <div class="stat" id="dayCalc" style="margin-top:8px"></div>
 <div id="dayIssues"></div>
+<div id="shiftNotes"></div>
 <div class="btns"><button class="btn btn-copy" onclick="copyDay(this)">Скопировать день</button></div>
 </div>
 <div class="card" id="summaryCard">
@@ -494,7 +495,7 @@ black:{bg:'#07080a',bg2:'#030304',card:'rgba(16,18,22,.90)',text:'#e8eaee',muted
 paper:{bg:'#e7e1d4',bg2:'#d4ccbc',card:'rgba(250,247,240,.92)',text:'#1c1a16',muted:'#6b6558',accent:'#2d4a38','accent-hi':'#3d6a4c',chip:'rgba(0,0,0,.06)','azs-top':'#3d5a86','azs-bot':'#243a58','btn-top':'#4a5560','btn-bot':'#2f3840','btn-edge':'#1a2026','ok-top':'#3d5c45','ok-bot':'#2a4030','ok-edge':'#17241b','danger-top':'#8a4540','danger-bot':'#5a2c28','danger-edge':'#351816'},
 };
 const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-const KEY='aika-v3';
+const KEY='azs-v3';
 var FUELS=['95'];          // список растёт сам: любой АИ-номер, найденный в данных или созданный вручную
 function fuelOk(f){return /^\d{1,3}$/.test(String(f))&&+f>0;}
 function fuelAdd(f){                                  // 95 первым, остальные по возрастанию
@@ -532,7 +533,7 @@ function load(){
       scanFuels(x);migrateStations(x.stations,{prices:x.prices,calib:x.calib});delete x.prices;delete x.calib;
       return x;
     }catch(e){
-      try{localStorage.setItem('aika-broken-'+Date.now(),raw);}catch(e2){}                       // испорченное не выбрасываем, а откладываем
+      try{localStorage.setItem('azs-broken-'+Date.now(),raw);}catch(e2){}                       // испорченное не выбрасываем, а откладываем
       window._loadWarn='Данные на устройстве не прочитались. Я отложил их копию и открыл пустое приложение. Если подключено облако, данные подтянутся из него.';
     }
   }
@@ -674,7 +675,7 @@ function renderMmBox(){
 function renderSaveBox(){
   const box=document.getElementById('saveBox');if(!box)return;
   if(!canAdmin()){box.style.display='none';box.innerHTML='';return;}
-  const last=lsGet('aika-file-saved')||'';
+  const last=lsGet('azs-file-saved')||'';
   const days=last?Math.round((new Date(todayIso()+'T12:00:00')-new Date(last+'T12:00:00'))/86400000):null;
   const old=days==null||days>7;
   box.style.display='';box.className='card save-card'+(old?' old':'');
@@ -705,7 +706,7 @@ function renderFolders(){
 }
 function pickFolder(id){if(!isBoss())return;if(id===bookId())return;commitDrafts();db.book=id;persist();renderDayTab();}
 function ensureShifts(){if(!Array.isArray(db.shifts))db.shifts=[];}
-function currentShift(){ensureShifts();const pin=lsGet('aika-shift')||'';return db.shifts.filter(function(s){return s.pin===pin;})[0]||null;}
+function currentShift(){ensureShifts();const pin=lsGet('azs-shift')||'';return db.shifts.filter(function(s){return s.pin===pin;})[0]||null;}
 function isBoss(){const s=currentShift();return !!(s&&s.boss);}
 function canAdmin(){ensureShifts();return !db.shifts.length||isBoss();}   // опасные действия: начальник (или пока смены не заведены)
 function ensureShiftLock(){const s=currentShift();if(!s||s.boss)return;if(db.book!==s.folder){db.book=s.folder;}}
@@ -734,12 +735,12 @@ function shiftGo(){
   if(!db.shifts.length){
     const name=(document.getElementById('shiftName').value||'').trim().slice(0,40)||'Управляющий';
     db.shifts.push({id:'boss',name:name,pin:pin,folder:'main',boss:true});
-    lsSet('aika-shift',pin);db.book='main';persist();shiftGate(false);renderDayTab();return;
+    lsSet('azs-shift',pin);db.book='main';persist();shiftGate(false);renderDayTab();return;
   }
   const hit=db.shifts.filter(function(s){return s.id===gateSel;})[0];
   if(!hit){msg.textContent='Нажми на своё имя.';return;}
   if(hit.pin!==pin){msg.textContent='Неверный код.';return;}
-  lsSet('aika-shift',pin);gateSel=null;db.book=hit.folder||'main';shiftGate(false);renderDayTab();
+  lsSet('azs-shift',pin);gateSel=null;db.book=hit.folder||'main';shiftGate(false);renderDayTab();
 }
 function shiftCancel(){
   if(currentShift()){shiftGate(false);return;}
@@ -772,7 +773,7 @@ function shiftSave(id,btn){
   const me=currentShift();
   s.name=name;s.pin=pin;
   const f=(db.folders||[]).filter(function(x){return x.id===s.folder&&x.id!=='main';})[0];if(f)f.name=name;
-  if(me&&me.id===id)lsSet('aika-shift',pin);
+  if(me&&me.id===id)lsSet('azs-shift',pin);
   persist();renderFolders();flashBtn(btn,'Сохранено');
 }
 function orphanRows(){                                      // папки, у которых нет входа (остались от прежних версий)
@@ -1685,6 +1686,7 @@ if(mi&&!String(mi.value||'').trim()){const pe=carryValue(shiftDate(date,-1),view
 if(ei&&!String(ei.value||'').trim()){const nm=carryValue(shiftDate(date,1),view.fuel,'morning');if(nm){ei.value=nm;hint+='Закрытие взято из открытия следующего дня.';}}
 if(tip)tip.textContent=hint.trim();
 paintCalc();
+renderShiftNotes();
 }
 function paintCalc(){
   const date=iso(view.y,view.m,view.d);
@@ -1896,6 +1898,49 @@ function logHtml(date){                                  // только упр�
     const d=new Date(e.t);
     return '<div class="log-r"><span class="log-t">'+z(d.getDate())+'.'+z(d.getMonth()+1)+' '+z(d.getHours())+':'+z(d.getMinutes())+'</span> <b>'+escHtml(String(e.w||''))+'</b> · '+escHtml(LOG_LBL[e.k]||e.k)+': '+sh(e.a)+' → '+sh(e.b)+'</div>';
   }).join('')+'</div>';
+}
+/* ---- заметки смены: свободный текст к дню (rec.sn), с автором, папкой и временем; цифры дня не трогают ---- */
+var snDraft='',snDraftKey='';
+function snList(date){const r=db.days[key(date)];return r&&Array.isArray(r.sn)?r.sn:[];}
+function snCanDel(n){const s=currentShift();return canAdmin()||!!(s&&n.i&&n.i===s.id);}   // удалить: автор или управляющий
+function snFolderName(id){ensureFolders();const f=db.folders.filter(function(x){return x.id===id;})[0];return f?String(f.name||''):'';}
+function renderShiftNotes(){
+  const box=document.getElementById('shiftNotes');if(!box)return;
+  const date=iso(view.y,view.m,view.d);
+  if(view.mode!=='day'||!date){box.innerHTML='';return;}
+  const k=key(date);if(snDraftKey!==k){snDraftKey=k;snDraft='';}
+  const z=function(v){return String(v).padStart(2,'0');};
+  const rows=snList(date).map(function(n,i){
+    if(!n||typeof n.x!=='string')return '';
+    const d=new Date(n.t),fn=snFolderName(n.f);
+    return '<div class="log-r"><span class="log-t">'+z(d.getDate())+'.'+z(d.getMonth()+1)+' '+z(d.getHours())+':'+z(d.getMinutes())+'</span> <b>'+escHtml(String(n.w||''))+'</b>'+(fn?' · '+escHtml(fn):'')+(snCanDel(n)?' <button type="button" class="btn btn-danger" style="padding:1px 9px" onclick="snDel('+i+',this)">×</button>':'')+'<div>'+escHtml(n.x)+'</div></div>';
+  }).reverse().join('');
+  box.innerHTML='<div class="log-box"><div class="log-h">Заметки смены</div>'+rows+'<div style="display:flex;gap:8px;margin-top:8px"><input id="snText" maxlength="300" placeholder="Заметка к этому дню" style="flex:1;min-width:0" oninput="snDraft=this.value" onkeydown="if(event.key===\'Enter\')snAdd()"/><button type="button" class="btn btn-ok" onclick="snAdd()">Добавить</button></div></div>';
+  const inp=document.getElementById('snText');if(inp)inp.value=snDraft;
+}
+function snAdd(){
+  const inp=document.getElementById('snText');
+  const x=String(inp?inp.value:'').trim().slice(0,300);if(!x)return;
+  const date=iso(view.y,view.m,view.d);if(!date)return;
+  const s=currentShift(),k=key(date),rec=db.days[k]||getRec(date);
+  const arr=Array.isArray(rec.sn)?rec.sn.slice():[];
+  arr.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),t:Date.now(),i:s?s.id:'',w:s?roleName(s):'Без входа',f:bookId(),x:x});
+  rec.sn=arr.slice(-50);db.days[k]=rec;
+  snDraft='';persist();renderShiftNotes();
+}
+function snDel(i,btn){
+  armDo(btn,function(){
+    const date=iso(view.y,view.m,view.d),k=key(date),rec=db.days[k],n=rec&&Array.isArray(rec.sn)?rec.sn[i]:null;
+    if(!n||!snCanDel(n))return;
+    rec.sn=rec.sn.filter(function(_,j){return j!==i;});
+    if(!rec.sn.length){delete rec.sn;if(FUELS.every(function(f){const x=rec.fuels&&rec.fuels[f];return !x||!Object.keys(x).length;}))delete db.days[k];}   // день, созданный только ради заметки, не оставляем пустым
+    persist();renderShiftNotes();
+  },'Удалить?');
+}
+function snMerge(a,b){                                  // заметки из архива: добавляем те, которых ещё нет (по id)
+  const out=Array.isArray(a)?a.slice():[],have={};out.forEach(function(x){if(x&&x.id)have[x.id]=1;});
+  (Array.isArray(b)?b:[]).forEach(function(x){if(x&&x.id&&typeof x.x==='string'&&!have[x.id]){out.push(x);have[x.id]=1;}});
+  return out.length?out.sort(function(p,q){return (p.t||0)-(q.t||0);}).slice(-50):null;
 }
 function writeFuel(date,fuel,v,parts,notesE,notesT){
   const out={},P={};
@@ -2289,7 +2334,7 @@ function applyThemeBtn(btn){db.theme=pendingTheme||db.theme;persist();applyTheme
 function archiveText(){return JSON.stringify({v:1,db:db});}
 function fileText(){const d=Object.assign({},db);delete d.shifts;return JSON.stringify({v:1,db:d});}   // файл для телефона: без кодов входа
 function fileName(){const t=todayIso(),m=['yanvarya','fevralya','marta','aprelya','maya','iyunya','iyulya','avgusta','sentyabrya','oktyabrya','noyabrya','dekabrya'][+t.slice(5,7)-1];return 'UchetAZS-'+(+t.slice(8,10))+'-'+m+'-'+t.slice(0,4)+'.json';}   // латиница: так имя не портится ни в одном браузере
-function markSaved(){lsSet('aika-file-saved',todayIso());renderSaveBox();}
+function markSaved(){lsSet('azs-file-saved',todayIso());renderSaveBox();}
 
 function pickArchiveFile(inp){
   const f=inp.files&&inp.files[0]; if(!f) return;
@@ -2417,6 +2462,7 @@ function mergeDaysInto(merged,incDays,onConflict){
     const hit=fieldConflict(merged[k],incDays[k]);
     if(hit.length){onConflict(k,hit);return;}
     const rec=merged[k];rec.fuels=rec.fuels||{};
+    const sn=snMerge(rec.sn,incDays[k].sn);if(sn)rec.sn=sn;
     FUELS.forEach(function(f){const e=rec.fuels[f]||{},n=Object.assign({},e,(incDays[k].fuels&&incDays[k].fuels[f])||{});if(e.log)n.log=e.log;rec.fuels[f]=n;});
   });
 }
@@ -2506,6 +2552,8 @@ function applyArchChat(btn){
     return;
   }
   const had={};Object.keys(db.days).forEach(function(k){had[k]=1;});
+  const snN=function(d){let c=0;Object.keys(d).forEach(function(k){const q=(d[k]||{}).sn;if(Array.isArray(q))c+=q.length;});return c;};
+  const snAdd=snN(mergedDays)-snN(db.days);
   db.days=mergedDays;
   good.forEach(function(c){mergeFoldersFrom(c.obj.db||c.obj);});
   if(nextStations.some(function(x){return String(x.name||'').trim();})){
@@ -2532,7 +2580,7 @@ function applyArchChat(btn){
   renderDayTab();
   fxOnBox(box,'oil');
   flashBtn(btn,'Архив применён');
-  if(st) st.textContent=added.length?('Принято. Добавлено дней в общую папку: '+added.length+(addedOther?(', в папки смен: '+addedOther):'')+'. Открыт '+ruDate(added[added.length-1].split('|')[1])+'.'):('Принято. Новых дней нет'+(addedOther?(', добавлено дней в папки смен: '+addedOther):'')+'. Всё, что в файле, уже было.');
+  if(st) st.textContent=added.length?('Принято. Добавлено дней в общую папку: '+added.length+(addedOther?(', в папки смен: '+addedOther):'')+'. Открыт '+ruDate(added[added.length-1].split('|')[1])+'.'):('Принято. Новых дней нет'+(addedOther?(', добавлено дней в папки смен: '+addedOther):'')+(snAdd>0?('. Добавлено заметок: '+snAdd+'.'):'. Всё, что в файле, уже было.'));
 }
 function fxOnBox(box,kind){
   if(!box) return;
@@ -2691,13 +2739,13 @@ function cloudInit(){
   let h='';try{h=decodeURIComponent(raw).trim();}catch(e){h=raw.trim();}
   if(h){
     try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
-    if(validCode(h)){code=h;lsSet('aika-space',h);lsDel('aika-cloud-off');}
+    if(validCode(h)){code=h;lsSet('azs-space',h);lsDel('azs-cloud-off');}
     else toast('Код в ссылке неверный');
   }
-  if(!code&&lsGet('aika-cloud-off')!=='1') code=lsGet('aika-space');
+  if(!code&&lsGet('azs-cloud-off')!=='1') code=lsGet('azs-space');
   if(!validCode(code||'')) code=null;
   if(!code){
-    if(lsGet('aika-cloud-off')==='1'){cloudStatusPaint();return;}
+    if(lsGet('azs-cloud-off')==='1'){cloudStatusPaint();return;}
     cloudShowGate();return;
   }
   cloudStart(code);
@@ -2707,12 +2755,12 @@ function cloudGateGo(){
   const inp=document.getElementById('gateCode'),msg=document.getElementById('gateMsg');
   const c=(inp.value||'').trim();
   if(!validCode(c)){msg.textContent='Код не короче 12 символов: только латиница, цифры, - и _.';return;}
-  lsSet('aika-space',c);lsDel('aika-cloud-off');
+  lsSet('azs-space',c);lsDel('azs-cloud-off');
   document.getElementById('cloudGate').classList.remove('on');
   cloudStart(c);
 }
 function cloudGateLocal(){
-  lsSet('aika-cloud-off','1');
+  lsSet('azs-cloud-off','1');
   document.getElementById('cloudGate').classList.remove('on');
   cloudStatusPaint();
 }
@@ -2725,7 +2773,7 @@ function cloudStart(code){
   cloud.timer=setTimeout(function(){if(!cloud.readyAll)cloudBootMsg('Облако не отвечает. Проверь интернет.',true);},12000);
   cloudStatusPaint();
   const go=function(){
-    if(lsGet('aika-pre-cloud')!==code){lsSet('aika-pre-cloud-data',JSON.stringify(db));lsSet('aika-pre-cloud',code);}
+    if(lsGet('azs-pre-cloud')!==code){lsSet('azs-pre-cloud-data',JSON.stringify(db));lsSet('azs-pre-cloud',code);}
     try{
       cloud.unsub=window.__fbAdapter.connect(code,{
         meta:cloudOnMeta,
@@ -3042,7 +3090,7 @@ function cloudRenderPane(){
   bkStatPaint();inCloudPaint();
   ['archCard','dataCard','bkCard','inCloudCard'].forEach(function(i){const c=document.getElementById(i);if(c)c.style.display=canAdmin()?'':'none';});
 }
-try{Object.keys(localStorage).filter(function(k){return /^aika-snap-/.test(k);}).forEach(function(k){localStorage.removeItem(k);});}catch(e){}   // старые копии на телефоне больше не ведутся
+try{Object.keys(localStorage).filter(function(k){return /^azs-snap-/.test(k);}).forEach(function(k){localStorage.removeItem(k);});}catch(e){}   // старые копии на телефоне больше не ведутся
 function pad2(v){return String(v).padStart(2,'0');}
 /* ===== копии в облаке: раз в день сами + перед опасными действиями ===== */
 const BK_KEEP_DAYS=45,BK_MAX=900000;
@@ -3090,7 +3138,7 @@ function inCloudPaint(){
 }
 function bkStatPaint(){
   const e=document.getElementById('bkStat');if(!e)return;
-  const t=+lsGet('aika-bk-at')||0;
+  const t=+lsGet('azs-bk-at')||0;
   e.textContent=cloud.bkErr?('⛔ Копия в облако не записалась: '+cloud.bkErr):(t?('Последняя копия: '+new Date(t).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})):'Копия на этом устройстве ещё не делалась.');
   e.style.color=cloud.bkErr?'#ff8a80':'';
 }
@@ -3105,7 +3153,7 @@ function cloudBackup(kind){
   });};
   const job=kind==='auto'?A.bkHas(code,id).then(function(has){return has?null:put();}):put();   // дневная копия пишется один раз за день и не затирается
   return job.then(function(){
-    cloud.bkErr='';lsSet('aika-bk-at',String(Date.now()));
+    cloud.bkErr='';lsSet('azs-bk-at',String(Date.now()));
     const o=new Date();o.setDate(o.getDate()-BK_KEEP_DAYS);
     A.bkDel(code,iso(o.getFullYear(),o.getMonth(),o.getDate())+'_auto').catch(function(){});
     bkStatPaint();return true;
@@ -3113,9 +3161,9 @@ function cloudBackup(kind){
 }
 function cloudBackupMaybe(){
   if(cloud.bkBusy||!cloud.readyAll||cloud.fromCache||!cloud.server.meta||!cloud.server.months||!cloud.server.supply)return;
-  const day=todayIso();if(lsGet('aika-bk-day')===day)return;
+  const day=todayIso();if(lsGet('azs-bk-day')===day)return;
   cloud.bkBusy=true;
-  cloudBackup('auto').then(function(ok){cloud.bkBusy=false;if(ok)lsSet('aika-bk-day',day);});
+  cloudBackup('auto').then(function(ok){cloud.bkBusy=false;if(ok)lsSet('azs-bk-day',day);});
 }
 function bkNow(btn){cloudBackup('manual').then(function(ok){flashBtn(btn,ok?'Копия сделана':'Не вышло');});}
 function bkShow(){
@@ -3180,7 +3228,7 @@ function cloudLeave(btn){
 function cloudWipeDevice(){                            // выход = на этом устройстве ничего не остаётся, всё лежит только в облаке
   window.__leaving=true;
   const done=function(){
-    try{Object.keys(localStorage).filter(function(k){return k.indexOf('aika-')===0;}).forEach(function(k){localStorage.removeItem(k);});localStorage.setItem('aika-cloud-off','1');}catch(e){}
+    try{Object.keys(localStorage).filter(function(k){return k.indexOf('azs-')===0;}).forEach(function(k){localStorage.removeItem(k);});localStorage.setItem('azs-cloud-off','1');}catch(e){}
     try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}   // код из ссылки убираем, иначе облако откроется снова
     location.reload();
   };
