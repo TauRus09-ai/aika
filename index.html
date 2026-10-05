@@ -298,7 +298,7 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 .st-line button.btn3d{opacity:1;color:#fff;font-weight:800;font-size:13px;padding:0 16px;border:0;background:linear-gradient(180deg,#4aa8ff,#1f6fd0);box-shadow:0 4px 0 #134a91,0 6px 10px rgba(0,0,0,.4);transform:translateY(0)}
 .st-line button.btn3d:active{transform:translateY(3px);box-shadow:0 1px 0 #134a91,0 2px 4px rgba(0,0,0,.4);filter:none}
 .arch-flag.offline,.arch-flag.error,.arch-flag.connecting{background:#8a3b1f}
-#shiftGate{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:18px}#shiftGate.on{display:flex}#shiftGate .gate-box{width:min(420px,100%)}#shiftList{display:flex;flex-direction:column;gap:8px;margin:10px 0}.sh-pick{width:100%}.sh-pick.on{outline:2px solid var(--accent-hi,#fff)}.who{display:inline-block;margin-right:8px;padding:6px 10px;font-weight:800;font-size:13px;border-radius:10px;border:1px solid transparent}.who.wb{color:#ffd666;border-color:#d4a017;background:rgba(212,160,23,.16)}.who.ws{color:#a9d8f5;border-color:#4da3d9;background:rgba(77,163,217,.14)}html[data-role=boss] header.brand{border-bottom:4px solid #d4a017}html[data-role=shift] header.brand{border-bottom:4px solid #4da3d9}.sh-row{margin:12px 0;padding:12px;border-radius:12px;border:1px solid var(--line)}.sh-role{font-weight:800;margin-bottom:6px}.sh-row input{width:100%;margin:4px 0;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:16px}#shiftGate input{width:100%;margin:8px 0;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:18px}
+#shiftGate{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:18px}#shiftGate.on{display:flex}#shiftGate .gate-box{width:min(420px,100%)}#shiftList{display:flex;flex-direction:column;gap:8px;margin:10px 0}.sh-pick{width:100%}.sh-pick.sh-boss{color:#ffd666;border:1px solid #d4a017}.sh-pick.on{outline:2px solid var(--accent-hi,#fff)}.who{display:inline-block;margin-right:8px;padding:6px 10px;font-weight:800;font-size:13px;border-radius:10px;border:1px solid transparent}.who.wb{color:#ffd666;border-color:#d4a017;background:rgba(212,160,23,.16)}.who.ws{color:#a9d8f5;border-color:#4da3d9;background:rgba(77,163,217,.14)}html[data-role=boss] header.brand{border-bottom:4px solid #d4a017}html[data-role=shift] header.brand{border-bottom:4px solid #4da3d9}.sh-row{margin:12px 0;padding:12px;border-radius:12px;border:1px solid var(--line)}.sh-role{font-weight:800;margin-bottom:6px}.sh-row input{width:100%;margin:4px 0;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:16px}#shiftGate input{width:100%;margin:8px 0;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:18px}
 </style>
 </head>
 <body>
@@ -711,7 +711,7 @@ function canAdmin(){ensureShifts();return !db.shifts.length||isBoss();}   // о�
 function ensureShiftLock(){const s=currentShift();if(!s||s.boss)return;if(db.book!==s.folder){db.book=s.folder;}}
 function shiftGate(on){const g=document.getElementById('shiftGate');if(g)g.classList.toggle('on',!!on);}
 var gateSel=null;
-function roleName(s){const r=s.boss?'Управляющий':'Ответственный',n=String(s.name||'').trim();return n&&n.toLowerCase()!==r.toLowerCase()?r+' · '+n:r;}
+function roleName(s){const n=String(s.name||'').trim();return n||(s.boss?'Управляющий':'Ответственный');}   // показываем только то имя, которое человек вписал сам; роль видна по цвету
 function shiftSetupMode(){
   ensureShifts();const first=!db.shifts.length;
   const $=function(i){return document.getElementById(i);};
@@ -721,7 +721,7 @@ function shiftSetupMode(){
   $('shiftCancel').style.display=(cur||first)?'':'none';
   $('shiftCancel').textContent=first?'Назад: выйти из облака':'Отмена, остаться как есть';
   $('shiftName').style.display=first?'':'none';
-  $('shiftList').innerHTML=first?'':db.shifts.map(function(s){return '<button type="button" class="btn sh-pick'+(gateSel===s.id?' on':'')+'" onclick="shiftPick(\''+escAttr(s.id)+'\')">'+escHtml(s.boss?roleName(s):String(s.name||''))+'</button>';}).join('');
+  $('shiftList').innerHTML=first?'':db.shifts.map(function(s){return '<button type="button" class="btn sh-pick'+(s.boss?' sh-boss':'')+(gateSel===s.id?' on':'')+'" onclick="shiftPick(\''+escAttr(s.id)+'\')">'+escHtml(s.boss?roleName(s):String(s.name||''))+'</button>';}).join('');
   $('shiftPin').style.display=(first||gateSel)?'':'none';
   $('shiftBtn').textContent=first?'Назначить':'Войти';
 }
