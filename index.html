@@ -403,8 +403,8 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 <div class="muted">После выхода на этом устройстве ничего не остаётся: все данные хранятся только в облаке. Чтобы вернуть их, введи код доступа снова.</div>
 <div class="muted" id="cloudNote"></div>
 </div>
-<div class="card"><h2>Копии в облаке</h2><div class="muted">Раз в день приложение само кладёт полную копию данных в облако и хранит её 45 дней. Копия делается и перед удалением АЗС или стиранием всего.</div><div class="muted" id="bkStat" style="margin:8px 0"></div><div class="btns"><button class="btn btn-ok" onclick="bkShow()">Показать копии</button><button class="btn btn-copy" onclick="bkNow(this)">Сделать копию сейчас</button></div><div id="bkList"></div></div>
-<div class="card"><h2>Копии на этом телефоне</h2><div class="muted">Запасные, только на этом телефоне, три последние. «Скачать» сохраняет файл.</div><div id="snapList" class="muted"></div></div>
+<div class="card" id="inCloudCard"><h2>Что сейчас в облаке</h2><div id="inCloud" class="muted"></div></div>
+<div class="card" id="bkCard"><h2>Если что-то пропало</h2><div class="muted">Каждый день приложение само делает снимок всех данных и хранит его в облаке 45 дней. Если кто-то случайно стёр записи, можно вернуть базу к нужному дню.</div><div class="muted" style="margin-top:6px"><b>Внимание:</b> кнопка «Вернуть» заменяет ВСЕ текущие данные снимком. Всё, что записано после даты снимка, пропадёт. Перед возвратом приложение само делает снимок «как было сейчас», так что откатить можно обратно. Чтобы подмешать к текущим данным файл, «Вернуть» не нужно, для этого есть «Загрузить файл» ниже.</div><div class="muted" id="bkStat" style="margin:8px 0"></div><div class="btns"><button class="btn btn-ok" onclick="bkShow()">Показать снимки</button><button class="btn btn-copy" onclick="bkNow(this)">Сделать снимок сейчас</button></div><div id="bkList"></div></div>
 <div class="card" id="archCard">
 <h2>Загрузить копию из файла или текста</h2>
 <div class="arch-wrap" id="archWrap"><pre class="arch-mirror" id="archMirror" aria-hidden="true"></pre><textarea id="archBox" class="arch-chat" placeholder="Сюда вставь текст архива или период. Либо выбери файл — он появится в этом окне."></textarea></div>
@@ -475,7 +475,7 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 <button data-tab="set" onclick="tab('set',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Настройки</button>
 </nav>
 </div>
-<div id="shiftGate" onclick="if(event.target===this)shiftCancel()"><div class="gate-box"><h2 id="shiftTitle"></h2><div class="muted" id="shiftHint"></div><div id="shiftList"></div><input id="shiftName" placeholder="Имя или должность" autocomplete="off" style="display:none"/><input id="shiftPin" placeholder="Код: от 4 символов" autocomplete="off" autocapitalize="off" spellcheck="false"/><div id="shiftMsg" class="gate-msg"></div><div class="btns"><button class="btn btn-ok" id="shiftBtn" onclick="shiftGo()">Войти</button><button class="btn" id="shiftCancel" onclick="shiftCancel()" style="display:none">Отмена, остаться как есть</button></div></div></div>
+<div id="shiftGate" onclick="if(event.target===this&&currentShift())shiftCancel()"><div class="gate-box"><h2 id="shiftTitle"></h2><div class="muted" id="shiftHint"></div><div id="shiftList"></div><input id="shiftName" placeholder="Имя или должность" autocomplete="off" style="display:none"/><input id="shiftPin" placeholder="Код: от 4 символов" autocomplete="off" autocapitalize="off" spellcheck="false"/><div id="shiftMsg" class="gate-msg"></div><div class="btns"><button class="btn btn-ok" id="shiftBtn" onclick="shiftGo()">Войти</button><button class="btn" id="shiftCancel" onclick="shiftCancel()" style="display:none">Отмена, остаться как есть</button></div></div></div>
 <div id="cloudGate"><div class="gate-box"><h2>Код доступа</h2><div class="muted">Введи код, который тебе дали (он же в конце ссылки). Так ты увидишь общие данные.</div><input id="gateCode" placeholder="цифры" autocapitalize="off" autocomplete="off" spellcheck="false"/><div id="gateMsg" class="gate-msg"></div><div class="btns"><button class="btn btn-ok" onclick="cloudGateGo()">Войти</button><button class="btn" onclick="cloudGateLocal()">Без облака</button></div></div></div>
 <div id="cloudBoot"><div class="gate-box"><div id="cloudBootMsg">Подключаюсь к облаку…</div><div class="btns" id="cloudBootBtns" style="display:none"><button class="btn btn-ok" onclick="location.reload()">Повторить</button><button class="btn" onclick="cloudBootLocal()">Работать без облака</button></div></div></div>
 <script>
@@ -694,7 +694,8 @@ function shiftSetupMode(){
   const cur=currentShift();
   $('shiftTitle').textContent=first?'Назначается управляющий':(cur?'Войти под другим именем':'Ответственные за смену');
   $('shiftHint').textContent=first?'Впиши своё имя или должность и придумай код: от 4 символов, цифры или буквы. С этим кодом ты будешь заходить как управляющий.':(cur?'Сейчас ты: '+roleName(cur)+'. Чтобы посмотреть глазами другого человека, нажми на его имя и введи его код. Чтобы остаться как есть, нажми «Отмена».':'Нажми на своё имя или должность и введи свой код.');
-  $('shiftCancel').style.display=cur?'':'none';
+  $('shiftCancel').style.display=(cur||first)?'':'none';
+  $('shiftCancel').textContent=first?'Назад: выйти из облака':'Отмена, остаться как есть';
   $('shiftName').style.display=first?'':'none';
   $('shiftList').innerHTML=first?'':db.shifts.map(function(s){return '<button type="button" class="btn sh-pick'+(gateSel===s.id?' on':'')+'" onclick="shiftPick(\''+escAttr(s.id)+'\')">'+escHtml(s.boss?roleName(s):String(s.name||''))+'</button>';}).join('');
   $('shiftPin').style.display=(first||gateSel)?'':'none';
@@ -716,7 +717,14 @@ function shiftGo(){
   if(hit.pin!==pin){msg.textContent='Неверный код.';return;}
   lsSet('aika-shift',pin);gateSel=null;db.book=hit.folder||'main';shiftGate(false);renderDayTab();
 }
-function shiftCancel(){if(currentShift())shiftGate(false);}
+function shiftCancel(){
+  if(currentShift()){shiftGate(false);return;}
+  ensureShifts();
+  if(db.shifts.length)return;                               // смены есть — закрыть окно нельзя, нужно выбрать себя
+  const m=document.getElementById('shiftMsg');             // управляющий ещё не назначен: человек зашёл в облако случайно, даём выйти
+  if(cloudState()!=='online'){m.textContent='Подожди секунду, облако ещё сверяется, и нажми снова.';return;}
+  cloudWipeDevice();
+}
 function shiftOut(){commitDrafts();gateSel=null;document.getElementById('shiftPin').value='';document.getElementById('shiftMsg').textContent='';openShiftGate();}
 function shiftsOpen(){tab('set');const c=document.querySelector('#setTabs .chip[data-pane="shifts"]');if(c)setPane(c,'shifts');}
 function shiftCheck(pin,exceptId){return pin.length>=4&&!db.shifts.some(function(s){return s.id!==exceptId&&s.pin===pin;});}
@@ -778,7 +786,7 @@ function delStation(id,btn){
   armDo(btn,function(){delStationDo(id);},'Точно? Пропадут: дней '+days+', поставок '+sup,6000);
 }
 function delStationDo(id){
-  cloudSnapshot(true);cloudBackup('pre');                    // копия «как было»: на телефоне и в облаке (Настройки → Облако)
+  cloudBackup('pre');                    // копия «как было» в облаке
   cloud.allowEmpty=true;
   db.stations=db.stations.filter(s=>s.id!==id);
   Object.keys(db.days).forEach(k=>{if(k.startsWith(id+'|'))delete db.days[k];});
@@ -2579,7 +2587,7 @@ function wipeAll(btn){
     if(!cloud.active){wipeDo(btn);return;}
     askText('Данные будут стёрты у ВСЕХ, кто пользуется приложением. Копия останется на этом устройстве. Чтобы продолжить, напиши слово СТЕРЕТЬ',function(w){
       if((w||'').trim().toUpperCase()!=='СТЕРЕТЬ')return;
-      cloudSnapshot(true);cloudBackup('pre');cloud.allowEmpty=true;wipeDo(btn);
+      cloudBackup('pre');cloud.allowEmpty=true;wipeDo(btn);
     });
   },'Точно стереть все данные?');
 }
@@ -2725,7 +2733,6 @@ function cloudMarkReady(which,changed,fromCache){
     cloud.readyAll=true;clearTimeout(cloud.timer);
     document.getElementById('cloudBoot').classList.remove('on');
     cloudRefreshUI(true);
-    cloudSnapshot();
     cloudFlush();
     if(!currentShift())openShiftGate();
   } else if(cloud.readyAll&&changed) cloudRefreshUI(false);
@@ -2984,28 +2991,11 @@ function cloudRenderPane(){
   if(box)box.style.display=on?'flex':'none';
   if(box2)box2.style.display=on?'none':'flex';
   line.textContent=on?('Код доступа: '+cloud.code.slice(0,4)+'••••••••'):'Код не введён.';
-  bkStatPaint();
-  ['archCard','dataCard'].forEach(function(i){const c=document.getElementById(i);if(c)c.style.display=canAdmin()?'':'none';});
-  const sl=document.getElementById('snapList');
-  if(sl){
-    const keys=snapKeys();
-    sl.innerHTML=keys.length?keys.map(function(k){return '<div class="item" style="align-items:center"><div class="name">'+k.replace('aika-snap-','').replace(/-(\d\d)(\d\d)(\d\d)$/,' $1:$2')+'</div><div class="side"><button class="btn" onclick="downloadSnap(\''+k+'\',this)">Скачать</button></div></div>';}).join(''):'На этом телефоне копий нет. Копия появляется здесь после подключения к облаку и хранится только на этом телефоне.';
-  }
+  bkStatPaint();inCloudPaint();
+  ['archCard','dataCard','bkCard','inCloudCard'].forEach(function(i){const c=document.getElementById(i);if(c)c.style.display=canAdmin()?'':'none';});
 }
-function snapKeys(){
-  const out=[];
-  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^aika-snap-\d{4}-\d{2}-\d{2}(-\d{6})?$/.test(k))out.push(k);}}catch(e){}
-  return out.sort().reverse();
-}
+try{Object.keys(localStorage).filter(function(k){return /^aika-snap-/.test(k);}).forEach(function(k){localStorage.removeItem(k);});}catch(e){}   // старые копии на телефоне больше не ведутся
 function pad2(v){return String(v).padStart(2,'0');}
-function cloudSnapshot(force){
-  const d=new Date(),day=iso(d.getFullYear(),d.getMonth(),d.getDate());
-  const k='aika-snap-'+day+(force?'-'+pad2(d.getHours())+pad2(d.getMinutes())+pad2(d.getSeconds()):'');   // срочная копия не затирает дневную и предыдущие срочные
-  if(!force&&lsGet(k)!==null) return;
-  if(!Object.keys(db.days).length&&!(db.supply||[]).length) return;
-  lsSet(k,archiveText());
-  snapKeys().slice(3).forEach(lsDel);                        // на телефоне 3 последние: основной архив теперь в облаке, а память браузера небезразмерна
-}
 /* ===== копии в облаке: раз в день сами + перед опасными действиями ===== */
 const BK_KEEP_DAYS=45,BK_MAX=900000;
 var bkCache={};
@@ -3037,6 +3027,18 @@ function bkUnpack(b){
 function bkId(kind){
   const d=new Date(),day=iso(d.getFullYear(),d.getMonth(),d.getDate());
   return kind==='auto'?day+'_auto':day+'T'+pad2(d.getHours())+'-'+pad2(d.getMinutes())+'-'+pad2(d.getSeconds())+'_'+kind;
+}
+function inCloudPaint(){
+  const e=document.getElementById('inCloud');if(!e)return;
+  if(!cloud.active){e.textContent='Облако не подключено.';return;}
+  if(!cloud.server.meta||!cloud.server.months||!cloud.server.supply){e.textContent='Сверяюсь с облаком… Открой эту вкладку ещё раз через несколько секунд.';return;}
+  const dates={},recs=Object.keys(db.days||{}).filter(function(k){const d=db.days[k];return d&&typeof d==='object'&&Object.keys(d).length;});
+  recs.forEach(function(k){const p=k.split('|');dates[p[p.length-1]]=1;});
+  const ds=Object.keys(dates).sort(),sup=(db.supply||[]).length,st=(db.stations||[]).length,sh=(db.shifts||[]).length;
+  if(!ds.length&&!sup&&!st){e.innerHTML='<b>Облако пустое.</b> Записей, АЗС и смен нет.';return;}
+  const row=function(a,b){return '<div class="item"><div class="name">'+a+'</div><div class="side">'+b+'</div></div>';};
+  e.innerHTML=row('АЗС',st)+row('Дней с записями',ds.length+(ds.length?' <span class="muted">('+dmy(ds[0])+' — '+dmy(ds[ds.length-1])+')</span>':''))+row('Поставок',sup)+row('Смен (людей)',sh)+
+    '<div style="margin-top:6px">'+(cloud.pending?'Идёт сохранение в облако…':'Всё сохранено в облаке.')+'</div>';
 }
 function bkStatPaint(){
   const e=document.getElementById('bkStat');if(!e)return;
@@ -3081,7 +3083,7 @@ function bkShow(){
     bkCache={};list.forEach(function(x){bkCache[x.id]=x;});
     box.innerHTML=list.length?list.map(function(x){
       const kind=kinds[x.id.split('_')[1]]||'копия',tm=x.id.indexOf('T')>0?(' '+x.id.slice(11,19).replace(/-/g,':')):'';
-      return '<div class="item" style="align-items:center"><div class="name">'+dmy(x.id.slice(0,10))+tm+'<div class="muted">'+kind+' · дней '+(x.n.days||0)+', поставок '+(x.n.supply||0)+'</div></div>'+(canAdmin()?'<div class="side"><button class="btn btn-danger" onclick="bkRestore(\''+escAttr(x.id)+'\',this)">Восстановить</button></div>':'')+'</div>';
+      return '<div class="item" style="align-items:center"><div class="name">'+dmy(x.id.slice(0,10))+tm+'<div class="muted">'+kind+' · дней '+(x.n.days||0)+', поставок '+(x.n.supply||0)+'</div></div>'+(canAdmin()?'<div class="side"><button class="btn btn-danger" onclick="bkRestore(\''+escAttr(x.id)+'\',this)">Вернуть</button></div>':'')+'</div>';
     }).join(''):'Копий пока нет.';
   }).catch(function(e){box.textContent='⛔ '+cloudErrText(e);});
 }
@@ -3092,15 +3094,14 @@ function bkRestore(id,btn){
       const o=JSON.parse(txt),inc=o&&(o.db||o);
       if(!isArch(o)||!inc||!Array.isArray(inc.stations)||badDayKeys(inc).length)throw new Error('Копия повреждена, ничего не изменено');
       return cloudBackup('restore').then(function(){          // сначала копия того, что есть сейчас
-        cloudSnapshot(true);
         db.days=inc.days||{};db.stations=inc.stations;db.supply=inc.supply||[];
         migrateStations(db.stations,{prices:inc.prices,calib:inc.calib});
         if(!db.stations.some(function(s){return s.id===db.current;}))db.current=(db.stations[0]&&db.stations[0].id)||'';
         persist();renderStations();renderDayTab();fillSettings();
-        toast('Восстановлено из копии');
+        toast('Данные возвращены к выбранному снимку');
       });
     }).catch(function(e){warnBar('⛔ '+(e&&e.message||'Не удалось восстановить'));});
-  },'Точно? Данные заменятся копией',7000);
+  },'Точно? Всё текущее заменится снимком',7000);
 }
 function downloadText(name,text,st){
   const blob=new Blob([text],{type:'application/json'});
@@ -3108,11 +3109,6 @@ function downloadText(name,text,st){
   a.href=URL.createObjectURL(blob);a.download=name;
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
-}
-function downloadSnap(k,btn){
-  const t=lsGet(k);if(!t) return;
-  downloadText('aika-kopiya-'+k.replace('aika-snap-','')+'.json',t);
-  flashBtn(btn,'Скачано');
 }
 function cloudCopyLink(btn){
   if(!cloud.code) return;
