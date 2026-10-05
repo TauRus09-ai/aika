@@ -751,7 +751,6 @@ function shiftCancel(){
   cloudWipeDevice();
 }
 function shiftOut(){commitDrafts();gateSel=null;document.getElementById('shiftPin').value='';document.getElementById('shiftMsg').textContent='';openShiftGate();}
-function shiftsOpen(){tab('set');const c=document.querySelector('#setTabs .chip[data-pane="shifts"]');if(c)setPane(c,'shifts');}
 function shiftCheck(pin,exceptId){return pin.length>=4&&!db.shifts.some(function(s){return s.id!==exceptId&&s.pin===pin;});}
 function shiftsPaint(){
   const box=document.getElementById('shiftsBox'),note=document.getElementById('shiftsNote');if(!box)return;ensureShifts();
@@ -3198,13 +3197,6 @@ function bkRestore(id,btn){
       });
     }).catch(function(e){warnBar('⛔ '+(e&&e.message||'Не удалось восстановить'));});
   },'Точно? Всё текущее заменится снимком',7000);
-}
-function downloadText(name,text,st){
-  const blob=new Blob([text],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);a.download=name;
-  document.body.appendChild(a);a.click();a.remove();
-  setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
 }
 function cloudCopyLink(btn){
   if(!cloud.code) return;
