@@ -4,8 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-title" content="Aika" />
-<title>Кавказские заправки Aika</title>
+<meta name="apple-mobile-web-app-title" content="Учёт АЗС" />
+<title>Учёт АЗС</title>
 <style>
 :root{--bg:#0b1220;--bg2:#070b12;--card:rgba(12,16,24,.90);--line:rgba(255,255,255,.14);--text:#f3faf5;--muted:#b4c8bb;--accent:#1a5c32;--accent-hi:#2f8a4a;--chip:rgba(255,255,255,.10);--azs-top:#3a5cb0;--azs-bot:#102a73;--btn-top:#2c4258;--btn-bot:#1a2836;--btn-edge:#0d1620;--ok-top:#2a6240;--ok-bot:#173d28;--ok-edge:#0c2618;--danger-top:#7a3333;--danger-bot:#4a1b1b;--danger-edge:#2c1010}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -409,7 +409,7 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 <div class="muted" id="cloudNote"></div>
 </div>
 <div class="card" id="inCloudCard"><h2>Что сейчас в облаке</h2><div id="inCloud" class="muted"></div></div>
-<div class="card" id="bkCard"><h2>Если что-то пропало</h2><div class="muted">Каждый день приложение само делает снимок всех данных и хранит его в облаке 45 дней. Если кто-то случайно стёр записи, можно вернуть базу к нужному дню.</div><div class="muted" style="margin-top:6px"><b>Внимание:</b> кнопка «Вернуть» заменяет ВСЕ текущие данные снимком. Всё, что записано после даты снимка, пропадёт. Перед возвратом приложение само делает снимок «как было сейчас», так что откатить можно обратно. Чтобы подмешать к текущим данным файл, «Вернуть» не нужно, для этого есть «Загрузить файл» ниже.</div><div class="muted" id="bkStat" style="margin:8px 0"></div><div class="btns"><button class="btn btn-ok" onclick="bkShow()">Показать снимки</button><button class="btn btn-copy" onclick="bkNow(this)">Сделать снимок сейчас</button></div><div id="bkList"></div></div>
+<div class="card" id="bkCard"><h2>Если что-то пропало</h2><div class="muted">Ваши записи лежат в облаке бессрочно, они сами не пропадают. А это запасные снимки: каждый день приложение делает снимок всех данных, и последние 45 дней можно открыть. Старые снимки сами удаляются, чтобы не копился мусор. Если кто-то случайно стёр записи, можно вернуть базу к нужному дню.</div><div class="muted" style="margin-top:6px"><b>Внимание:</b> кнопка «Вернуть» заменяет ВСЕ текущие данные снимком. Всё, что записано после даты снимка, пропадёт. Перед возвратом приложение само делает снимок «как было сейчас», так что откатить можно обратно. Чтобы подмешать к текущим данным файл, «Вернуть» не нужно, для этого есть «Загрузить файл» ниже.</div><div class="muted" id="bkStat" style="margin:8px 0"></div><div class="btns"><button class="btn btn-ok" onclick="bkShow()">Показать снимки</button><button class="btn btn-copy" onclick="bkNow(this)">Сделать снимок сейчас</button></div><div id="bkList"></div></div>
 <div class="card" id="archCard">
 <h2>Загрузить копию из файла или текста</h2>
 <div class="arch-wrap" id="archWrap"><pre class="arch-mirror" id="archMirror" aria-hidden="true"></pre><textarea id="archBox" class="arch-chat" placeholder="Сюда вставь текст архива или период. Либо выбери файл — он появится в этом окне."></textarea></div>
@@ -2288,7 +2288,7 @@ function applyTheme(k){if(!THEMES[k])k='scarlet';const th=THEMES[k];const r=docu
 function applyThemeBtn(btn){db.theme=pendingTheme||db.theme;persist();applyTheme(db.theme);fillSettings();flashBtn(btn,'Тема применена');}
 function archiveText(){return JSON.stringify({v:1,db:db});}
 function fileText(){const d=Object.assign({},db);delete d.shifts;return JSON.stringify({v:1,db:d});}   // файл для телефона: без кодов входа
-function fileName(){const t=todayIso(),m=['yanvarya','fevralya','marta','aprelya','maya','iyunya','iyulya','avgusta','sentyabrya','oktyabrya','noyabrya','dekabrya'][+t.slice(5,7)-1];return 'NeftAiki-'+(+t.slice(8,10))+'-'+m+'-'+t.slice(0,4)+'.json';}   // латиница: так имя не портится ни в одном браузере
+function fileName(){const t=todayIso(),m=['yanvarya','fevralya','marta','aprelya','maya','iyunya','iyulya','avgusta','sentyabrya','oktyabrya','noyabrya','dekabrya'][+t.slice(5,7)-1];return 'UchetAZS-'+(+t.slice(8,10))+'-'+m+'-'+t.slice(0,4)+'.json';}   // латиница: так имя не портится ни в одном браузере
 function markSaved(){lsSet('aika-file-saved',todayIso());renderSaveBox();}
 
 function pickArchiveFile(inp){
