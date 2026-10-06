@@ -21,7 +21,6 @@ html[data-theme="ayasava"] #dayStrip .chip:not(.on):not(.today){
 html[data-theme="ayasava"] #monthStrip .chip.on{
   background:#006400;
 }
-html[data-theme="ayasava"] #dayStrip .chip.on,
 #dayStrip .chip.on{
   background:#008000 !important;
   color:#fff !important;
@@ -178,7 +177,8 @@ nav.tabbar svg{width:22px;height:22px}
 
 
 .inbox{position:relative}
-.inbox input{width:100%;display:block}
+.inbox input{width:100%;display:block}.inbox.hasSig input{padding-right:50px}
+.sig{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;padding:0;border:0;border-radius:10px;font-size:20px;font-weight:800;line-height:1;color:#031f1e;background:linear-gradient(180deg,#3fd0c8,#17908c);box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 2px 0 #0b5754,0 6px 12px rgba(0,0,0,.3);cursor:pointer}.sig[hidden]{display:none}.sig:active{transform:translateY(-50%) scale(.9)}
 .fx-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:10px;z-index:6}
 .fx-layer canvas{width:100%;height:100%;display:block}
 
@@ -324,16 +324,16 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 <h2 id="dayTitle">День</h2>
 <div class="fuel-tabs" id="dayFuels"></div>
 <div class="row">
-<div><label>Открытие смены, литров</label><div class="inbox"><input id="morning" /></div><div class="muted" id="openHint"></div><div class="lst" id="lst-morning"></div></div>
-<div><label>Закрытие смены, литров</label><div class="inbox"><input id="evening" /></div><div class="lst" id="lst-evening"></div></div>
+<div><label>Открытие смены, литров</label><div class="inbox"><input id="morning" /><button type="button" class="sig" id="sig-morning" hidden onclick="sumBtn('morning')" title="Сложить">Σ</button></div><div class="muted" id="openHint"></div><div class="lst" id="lst-morning"></div></div>
+<div><label>Закрытие смены, литров</label><div class="inbox"><input id="evening" /><button type="button" class="sig" id="sig-evening" hidden onclick="sumBtn('evening')" title="Сложить">Σ</button></div><div class="lst" id="lst-evening"></div></div>
 </div>
 <div class="row">
-<div><label>Цена, рублей</label><input id="price" placeholder="x x x" /></div>
-<div><label>Оплата переводом, рублей</label><div class="inbox"><input id="transfers" placeholder="x x x" /></div></div>
+<div><label>Цена, рублей</label><div class="inbox"><input id="price" placeholder="x x x" /><button type="button" class="sig" id="sig-price" hidden onclick="sumBtn('price')" title="Сложить">Σ</button></div></div>
+<div><label>Оплата переводом, рублей</label><div class="inbox"><input id="transfers" placeholder="x x x" /><button type="button" class="sig" id="sig-transfers" hidden onclick="sumBtn('transfers')" title="Сложить">Σ</button></div></div>
 </div>
 <div class="lst" id="lst-price"></div><div class="lst" id="lst-transfers"></div>
 <label>Расходы, рублей</label>
-<div class="inbox"><input id="expenses" placeholder="x x x" /></div>
+<div class="inbox"><input id="expenses" placeholder="x x x" /><button type="button" class="sig" id="sig-expenses" hidden onclick="sumBtn('expenses')" title="Сложить">Σ</button></div>
 <div id="expTable"></div>
 <div class="muted" id="autoSaveNote" style="margin:6px 0">Пишется само, кнопку сохранять не нужно.</div><div class="btns"><button class="btn btn-danger" onclick="clearDay(this)">Стереть</button></div>
 <div class="stat" id="dayCalc" style="margin-top:8px"></div>
@@ -640,7 +640,7 @@ function mmAct(op,book,sid,date,fuel){
 }
 function mmGo(book,sid,date,fuel){
   if(!isBoss())return;
-  commitDrafts();
+  sumAllFields();commitDrafts();
   db.book=book;db.current=sid;view.fuel=fuel;
   const p=date.split('-');view.mode='day';view.y=+p[0];view.m=+p[1]-1;view.d=+p[2];view.stripY=view.y;view.stripM=view.m;view.smooth=true;
   persist();renderDayTab();
@@ -704,7 +704,7 @@ function renderFolders(){
   box.style.display=box.innerHTML?'':'none';
   renderMmBox();renderSaveBox();
 }
-function pickFolder(id){if(!isBoss())return;if(id===bookId())return;commitDrafts();db.book=id;persist();renderDayTab();}
+function pickFolder(id){if(!isBoss())return;if(id===bookId())return;sumAllFields();commitDrafts();db.book=id;persist();renderDayTab();}
 function ensureShifts(){if(!Array.isArray(db.shifts))db.shifts=[];}
 function currentShift(){ensureShifts();const pin=lsGet('azs-shift')||'';return db.shifts.filter(function(s){return s.pin===pin;})[0]||null;}
 function isBoss(){const s=currentShift();return !!(s&&s.boss);}
@@ -750,7 +750,7 @@ function shiftCancel(){
   if(cloudState()!=='online'){m.textContent='Подожди секунду, облако ещё сверяется, и нажми снова.';return;}
   cloudWipeDevice();
 }
-function shiftOut(){commitDrafts();gateSel=null;document.getElementById('shiftPin').value='';document.getElementById('shiftMsg').textContent='';openShiftGate();}
+function shiftOut(){sumAllFields();commitDrafts();gateSel=null;document.getElementById('shiftPin').value='';document.getElementById('shiftMsg').textContent='';openShiftGate();}
 function shiftCheck(pin,exceptId){return pin.length>=4&&!db.shifts.some(function(s){return s.id!==exceptId&&s.pin===pin;});}
 function shiftsPaint(){
   const box=document.getElementById('shiftsBox'),note=document.getElementById('shiftsNote');if(!box)return;ensureShifts();
@@ -1663,10 +1663,10 @@ function carryValue(date,fuel,field){
   const rec=getRec(date).fuels[fuel]||{};
   return rec[field]||'';
 }
-function pickStation(id){if(id===db.current)return;stashDay();db.current=id;persist();renderDayTab();}
-function setAllHist(){stashDay();view.mode='all';renderDayTab();}
-function setMonth(m){stashDay();view.mode='day';view.m=m;view.stripY=view.y;view.stripM=m;view.d=Math.min(view.d,new Date(view.y,m+1,0).getDate());view.smooth=true;renderDayTab();}
-function setDayDate(y,m,d,keepRight){if(view.mode==='day'&&view.y===y&&view.m===m&&view.d===d)return;stashDay();view.mode='day';view.y=y;view.m=m;view.d=d;if(!keepRight){view.stripY=y;view.stripM=m;}view.smooth=true;renderDayTab();}
+function pickStation(id){if(id===db.current)return;leaveDay();db.current=id;persist();renderDayTab();}
+function setAllHist(){leaveDay();view.mode='all';renderDayTab();}
+function setMonth(m){leaveDay();view.mode='day';view.m=m;view.stripY=view.y;view.stripM=m;view.d=Math.min(view.d,new Date(view.y,m+1,0).getDate());view.smooth=true;renderDayTab();}
+function setDayDate(y,m,d,keepRight){if(view.mode==='day'&&view.y===y&&view.m===m&&view.d===d)return;leaveDay();view.mode='day';view.y=y;view.m=m;view.d=d;if(!keepRight){view.stripY=y;view.stripM=m;}view.smooth=true;renderDayTab();}
 function renderDayFuels(){
   const box=document.getElementById('dayFuels');if(!box)return;
   const F=stFuels();if(F.indexOf(view.fuel)<0)view.fuel=F[0];
@@ -1674,7 +1674,7 @@ function renderDayFuels(){
   box.innerHTML=F.map(function(f){return '<div class="chip'+(f===view.fuel?' on':'')+'" data-fuel="'+f+'" onclick="setFuel(this)">АИ-'+f+' <span class="tick">✅</span></div>';}).join('');
   renderRepBtns();
 }
-function setFuel(el){if(el.dataset.fuel===view.fuel)return;stashDay();view.fuel=el.dataset.fuel;loadDayForm();}
+function setFuel(el){if(el.dataset.fuel===view.fuel)return;leaveDay();view.fuel=el.dataset.fuel;loadDayForm();}
 function getRec(date,sid){return db.days[key(date,sid)]||{fuels:fmap(function(){return {};})};}
 function setFuelOn(date,fuel,patch){const rec=getRec(date);rec.fuels[fuel]=Object.assign({},rec.fuels[fuel]||{},patch);db.days[key(date)]=rec;}
 function loadDayForm(){renderDayFuels();const date=iso(view.y,view.m,view.d);document.getElementById('dayTitle').textContent=view.d+' '+MONTHS[view.m].toLowerCase()+' '+view.y+(stationName()?' · '+stationName():'')+((getRec(date).fuels[view.fuel]||{}).byName?(' · '+(getRec(date).fuels[view.fuel]||{}).byName):'');const saved=getRec(date).fuels[view.fuel]||{};const draft=drafts[draftKey(date,view.fuel)];const f=draft?draft.v:saved;['morning','evening','price','transfers','expenses'].forEach(function(id){const el=document.getElementById(id);if(!el)return;el.autocomplete='off';el.value=(id==='price'?(f.price??stPrice(view.fuel,null,date)??''):(f[id]??''));});if(draft){restoreParts(draft.parts);NOTES.expenses=draft.notesE||[];NOTES.transfers=draft.notesT||[];}else loadParts(saved);
@@ -1688,6 +1688,7 @@ paintCalc();
 renderShiftNotes();
 }
 function paintCalc(){
+  paintSigma();
   const date=iso(view.y,view.m,view.d);
   const x={
     morning:document.getElementById('morning').value,
@@ -1945,7 +1946,7 @@ function writeFuel(date,fuel,v,parts,notesE,notesT){
   const out={},P={};
   FKEYS.forEach(function(k){
     const raw=v[k]||'';
-    const list=(parts&&parts[k]&&parts[k].length>=2)?parts[k]:null;
+    const list=(parts&&parts[k]&&parts[k].length>=2&&!hasPlus(raw)&&sumOf(parts[k])===ns(raw))?parts[k]:null;   // слагаемые берём, только пока они дают то же число, что в поле
     if(list){out[k]=fmtNum(sumOf(list));P[k]=list;} else out[k]=raw;
   });
   const who=currentShift();
@@ -1980,18 +1981,27 @@ function mirrorToMaster(date,fuel){
     setFuelOn(date,fuel,patch);
   }finally{db.book=prev;}
 }
+function draftParts(d){try{return (JSON.parse(d.parts)||{}).s||{};}catch(e){return {};}}   // в черновике слагаемые лежат строкой JSON
 function commitDrafts(){
   stashDay();
   Object.keys(drafts).forEach(function(k){
     const p=k.split('|'); if(p.length<4||p[0]!==bookId()||p[1]!==db.current) return;
     const d=drafts[k];
-    writeFuel(p[2],p[3],d.v,d.parts,d.notesE,d.notesT);
+    writeFuel(p[2],p[3],d.v,draftParts(d),d.notesE,d.notesT);
     delete drafts[k];
   });
 }
 let autoSaveT=null;
-function autoSave(){clearTimeout(autoSaveT);autoSaveT=setTimeout(function(){commitDrafts();persist();paintCalc();renderAllHistory();paintDots();const n=document.getElementById('autoSaveNote');if(n)n.textContent='Записано';},700);}
+function flushNow(){                                  // приложение свернули или закрыли: дописываем запись сразу, не дожидаясь пауз
+  if(saveDue){saveDue=false;clearTimeout(autoSaveT);clearTimeout(noteT);try{commitDrafts();persist();}catch(e){}}
+  if(typeof cloudFlush==='function'){clearTimeout(cloud.flushT);cloudFlush();}
+}
+document.addEventListener('visibilitychange',function(){if(document.hidden)flushNow();});
+window.addEventListener('pagehide',flushNow);
+var saveDue=false;                                    // есть ввод, который ещё ждёт записи
+function autoSave(){saveDue=true;clearTimeout(autoSaveT);autoSaveT=setTimeout(function(){saveDue=false;commitDrafts();persist();paintCalc();renderAllHistory();paintDots();const n=document.getElementById('autoSaveNote');if(n)n.textContent='Записано';},700);}
 function saveDay(btn){
+  const date=iso(view.y,view.m,view.d);
   markFx('gas');
   commitDrafts();
   const cur=getRec(date).fuels[view.fuel]||{};
@@ -2126,7 +2136,7 @@ const LST={
   expenses:{box:'expTable',title:'За что расход',ph:'за что',unit:'₽',word:'расходы'}
 };
 const FKEYS=['morning','evening','price','transfers','expenses'];
-let listOpen={}, STORED={}, NOTES={transfers:[],expenses:[]};
+let STORED={}, NOTES={transfers:[],expenses:[]};
 /* Как устроено: в поле после сохранения лежит СУММА. Слагаемые (то, что писали через «+») хранятся отдельно (STORED) и открываются кнопкой.
    Пока в поле есть «+», слагаемые берутся прямо из текста. Одно число — списка и кнопки нет. */
 function fmtNum(v){return String(Math.round(v*1000)/1000);}
@@ -2135,9 +2145,13 @@ function r3(v){return Math.round((v+Number.EPSILON)*1000)/1000;}    // литр�
 function sumOf(parts){return ns(parts.join('+'));}
 function hasPlus(t){return /[+＋]/.test(t);}
 function partsOf(k){
-  const t=document.getElementById(k).value;
-  if(hasPlus(t)) return splitParts(t);
-  const st=STORED[k], sm=ns(t);
+  const t=document.getElementById(k).value, st=STORED[k];
+  if(hasPlus(t)){
+    const sp=splitParts(t);                           // «прежний итог + ещё слагаемые»: прежние слагаемые остаются, новые дописываются
+    if(st&&st.length>=2&&sp.length>=2&&ns(sp[0])!=null&&sumOf(st)===ns(sp[0])) return st.concat(sp.slice(1));
+    return sp;
+  }
+  const sm=ns(t);
   if(st&&st.length>=2&&sm!=null&&sumOf(st)===sm) return st.slice();
   return t.trim()?[t.trim()]:[];
 }
@@ -2153,21 +2167,45 @@ function effParts(k){                                 // слагаемые по
   return {parts:parts,borrowed:true};
 }
 function loadParts(f){
-  f=f||{}; listOpen={}; STORED={};
+  f=f||{}; STORED={};
   FKEYS.forEach(function(k){const p=f.parts&&f.parts[k]; if(p&&p.length>=2) STORED[k]=p.slice();});
   NOTES={transfers:(f.notesT||[]).slice(),expenses:(f.notes||[]).slice()};
 }
-function snapParts(){return JSON.stringify({s:STORED,n:NOTES,o:listOpen});}
-function restoreParts(str){try{const v=JSON.parse(str);STORED=v.s||{};NOTES=v.n||{transfers:[],expenses:[]};listOpen=v.o||{};}catch(e){}}
-function toggleList(k){listOpen[k]=!listOpen[k];renderList(k);}
+function snapParts(){return JSON.stringify({s:STORED,n:NOTES});}
+function restoreParts(str){try{const v=JSON.parse(str);STORED=v.s||{};NOTES=v.n||{transfers:[],expenses:[]};}catch(e){}}
+function sumField(k){                                 // слагаемые из поля -> одна сумма; слагаемые остаются в списке «колонки»
+  const fld=document.getElementById(k);
+  if(!fld||!hasPlus(fld.value)) return false;
+  const parts=partsOf(k);
+  if(parts.length<2) return false;
+  const sm=sumOf(parts);
+  if(sm==null) return false;                          // в строке не только числа: ничего не трогаем
+  fld.value=fmtNum(sm);STORED[k]=parts;
+  return true;
+}
+function sumAllFields(){let ch=false;FKEYS.forEach(function(k){if(sumField(k))ch=true;});return ch;}
+function sumDone(){paintCalc();autoSave();}
+function sumBtn(k){if(sumField(k))sumDone();else toast('Проверь числа в этой строке');}
+function leaveDay(){sumAllFields();stashDay();}       // уходим с дня: незаконченные суммы складываются сами
+function paintSigma(){
+  FKEYS.forEach(function(k){
+    const b=document.getElementById('sig-'+k),f=document.getElementById(k);if(!b||!f)return;
+    const on=hasPlus(f.value)&&splitParts(f.value).length>=2;
+    b.hidden=!on;f.parentElement.classList.toggle('hasSig',on);
+  });
+}
+function hideMap(){try{return JSON.parse(lsGet('azs-lst-hide')||'{}')||{};}catch(e){return {};}}   // какие списки колонок скрыты: настройка этого телефона
+var noteT=null;
+function noteSave(){saveDue=true;clearTimeout(noteT);noteT=setTimeout(function(){saveDue=false;commitDrafts();persist();},700);}   // пометка пишется в запись сама; список не перерисовываем, чтобы не сбить ввод
+function toggleList(k){const h=hideMap();if(h[k])delete h[k];else h[k]=1;lsSet('azs-lst-hide',JSON.stringify(h));renderList(k);}
 function renderList(k){
   const C=LST[k],box=document.getElementById(C.box),fld=document.getElementById(k);
   if(!box||!fld) return;
-  const ae=document.activeElement, fi=(ae&&box.contains(ae)&&ae.classList.contains('lst-a'))?ae.dataset.i:null, fp=fi!=null?ae.selectionStart:0;
+  const ae=document.activeElement, fq=(ae&&box.contains(ae))?(ae.classList.contains('lst-a')?'.lst-a[data-i="'+ae.dataset.i+'"]':(ae.classList.contains('lst-nt')?'.lst-nt[data-note="'+ae.dataset.note+'"]':null)):null, fp=fq?ae.selectionStart:0;   // печатаемое поле (сумма или пометка) после перерисовки возвращаем под курсор
   const er=effParts(k), parts=er.parts;
   if(parts.length<(C.ph?1:2)){box.innerHTML='';return;}   // переводы и расходы: строка с пояснением открыта сразу, даже при одном значении
-  const open=C.ph?true:listOpen[k];                   // «за что» и «от кого» без кнопки: всегда открыто
-  let h=C.ph?'':'<button type="button" class="btn lst-btn" onclick="toggleList(\''+k+'\')">'+(listOpen[k]?'Скрыть ':'Посмотреть ')+C.word+' ('+parts.length+')</button>';
+  const open=C.ph?true:!hideMap()[k];                // колонки открыты, пока их не скрыли; «за что» и «от кого» без кнопки: всегда открыто
+  let h=C.ph?'':'<button type="button" class="btn lst-btn" onclick="toggleList(\''+k+'\')">'+(open?'Скрыть ':'Посмотреть ')+C.word+' ('+parts.length+')</button>';
   if(open){
     const cmp=(k==='evening'&&!er.borrowed)?effParts('morning').parts:null, doCmp=cmp&&cmp.length===parts.length;
     const notes=NOTES[k]||[];
@@ -2185,7 +2223,7 @@ function renderList(k){
     h+=(parts.length>=2?'<div class="lst-total"><span>Итого</span><b>'+(bad?'—':fmt(Math.round(sum*1000)/1000)+' '+C.unit)+'</b></div>':'')+'</div>';
   }
   box.innerHTML=h;
-  if(fi!=null){const t=box.querySelector('.lst-a[data-i="'+fi+'"]');if(t){t.focus();try{t.setSelectionRange(fp,fp);}catch(e){}}}
+  if(fq){const t=box.querySelector(fq);if(t){t.focus();try{t.setSelectionRange(fp,fp);}catch(e){}}}
 }
 function paintLists(){FKEYS.forEach(function(k){renderList(k);});}
 function applyParts(k,vals){                          // слагаемые из списка -> поле
@@ -2201,11 +2239,12 @@ function listRemove(k,i){
   applyParts(k,am.filter(Boolean)); paintCalc();
 }
 FKEYS.forEach(function(k){
+  document.getElementById(k).addEventListener('blur',function(){if(sumField(k)){paintSigma();commitDrafts();persist();}});   // ушёл из строки — сумма сложилась сама; список не перерисовываем, чтобы не сбить нажатие в нём
   const box=document.getElementById(LST[k].box); if(!box) return;
   box.addEventListener('input',function(e){
     const t=e.target;
     if(t.classList.contains('lst-a')){ applyParts(k,readAmounts(k).filter(Boolean)); paintCalc(); return; }
-    if(t.dataset&&t.dataset.note!=null){ const i=+t.dataset.note; NOTES[k]=NOTES[k]||[]; while(NOTES[k].length<i)NOTES[k].push(''); NOTES[k][i]=t.value; }
+    if(t.dataset&&t.dataset.note!=null){ const i=+t.dataset.note; NOTES[k]=NOTES[k]||[]; while(NOTES[k].length<i)NOTES[k].push(''); NOTES[k][i]=t.value; noteSave(); }
   });
   box.addEventListener('change',function(e){ if(e.target.classList.contains('lst-a')&&e.target.value.trim()==='') listRemove(k,+e.target.dataset.i); });
   box.addEventListener('click',function(e){ const x=e.target.closest&&e.target.closest('.lst-x'); if(x) listRemove(k,+x.dataset.x); });
@@ -2449,7 +2488,7 @@ function fieldConflict(a,b){
     const B=(b&&b.fuels&&b.fuels[f])||{};
     keys.forEach(function(k){
       const va=String(A[k]??''), vb=String(B[k]??'');
-      if(va!=='' && vb!=='' && va!==vb) hit.push('АИ-'+f+' '+k);
+      if(va!=='' && vb!=='' && !mmSame(va,vb)) hit.push('АИ-'+f+' '+k);   // «3000+1000» и «4000» — одно и то же число
     });
   });
   return hit;
