@@ -212,7 +212,7 @@ nav.tabbar svg{width:22px;height:22px}
 .iss-ok{display:block;width:100%;margin-top:8px}
 #skyFx{position:absolute;left:0;top:0;width:100%;height:100%;z-index:0;pointer-events:none}
 .st-line button.mm{border-color:#e53935;box-shadow:0 0 10px rgba(229,57,53,.6);color:#ffb4ab}
-.log-box{margin-top:10px;padding:8px 10px;border-radius:12px;border:1px solid var(--line);font-size:12.5px}.log-h{font-weight:800;margin-bottom:4px}.log-r{padding:2px 0}.log-t{opacity:.65}#dayStrip .chip.mine:not(.on){background:#2f7fb0;border-color:#4da3d9;color:#fff}#dayStrip .chip.other:not(.on):not(.mine){border:1px dashed #d4a017;opacity:.8}.lg.mine{display:inline-block;padding:0 7px;border-radius:8px;background:#2f7fb0;color:#fff;font-weight:700}.lg.other{display:inline-block;padding:0 7px;border-radius:8px;border:1px dashed #d4a017;font-weight:700}.save-card .save-q{font-weight:800;font-size:16px;margin-bottom:4px}.save-card .save-last{margin:8px 0;font-weight:700}.save-card.old{border-color:#c49a1a}.save-card.old .save-last{color:#ffd666}.save-card .btn{width:100%}.mm-card h2{color:#ff8a80}.mm-grp{margin-top:8px;font-weight:700}.mm-chip.over{border-color:#2e7d32;background:rgba(46,125,50,.2)}.mm-v{margin-top:6px;font-size:15px;font-weight:800}.mm-v.short{color:#ff5252}.mm-v.over{color:#69f0ae}.mm-v.zero{opacity:.8}.rc-card{margin-bottom:10px;padding:10px 12px;border-radius:12px;border:1px solid var(--line,#555)}.rc-card .short{color:#ff5252;font-weight:800}.rc-card .over{color:#69f0ae;font-weight:800}.mm-chip{display:inline-block;margin:4px 6px 0 0;padding:6px 10px;border-radius:10px;border:1px solid #e53935;background:rgba(229,57,53,.18);font-size:13px;font-weight:700;cursor:pointer}
+.log-box{margin-top:10px;padding:8px 10px;border-radius:12px;border:1px solid var(--line);font-size:12.5px}.log-h{font-weight:800;margin-bottom:4px}.log-r{padding:2px 0}.log-t{opacity:.65}#dayStrip .chip.mine:not(.on){background:#2f7fb0;border-color:#4da3d9;color:#fff}#dayStrip .chip.other:not(.on):not(.mine){border:1px dashed #d4a017;opacity:.8}.lg.mine{display:inline-block;padding:0 7px;border-radius:8px;background:#2f7fb0;color:#fff;font-weight:700}.lg.other{display:inline-block;padding:0 7px;border-radius:8px;border:1px dashed #d4a017;font-weight:700}.mm-card h2{color:#ff8a80}.mm-grp{margin-top:8px;font-weight:700}.mm-chip.over{border-color:#2e7d32;background:rgba(46,125,50,.2)}.mm-v{margin-top:6px;font-size:15px;font-weight:800}.mm-v.short{color:#ff5252}.mm-v.over{color:#69f0ae}.mm-v.zero{opacity:.8}.rc-card{margin-bottom:10px;padding:10px 12px;border-radius:12px;border:1px solid var(--line,#555)}.rc-card .short{color:#ff5252;font-weight:800}.rc-card .over{color:#69f0ae;font-weight:800}.mm-chip{display:inline-block;margin:4px 6px 0 0;padding:6px 10px;border-radius:10px;border:1px solid #e53935;background:rgba(229,57,53,.18);font-size:13px;font-weight:700;cursor:pointer}
 #morning::placeholder,#evening::placeholder{color:var(--muted);opacity:.85;font-weight:700}
 .arch-wrap{position:relative;margin:10px 0}
 .arch-wrap textarea.arch-chat{margin:0;font-family:monospace;overflow-wrap:break-word;word-break:normal}
@@ -318,7 +318,6 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 <main>
 <section class="screen on" id="sc-day">
 <div class="card" id="noSt" style="display:none"><h2>АЗС</h2><div class="muted">Сначала создай АЗС во вкладке «АЗС».</div></div>
-<div class="card save-card" id="saveBox" style="display:none"></div>
 <div class="card mm-card" id="mmBox" style="display:none"></div>
 <div class="hscroll" id="monthStrip"></div>
 <div class="hscroll" id="dayStrip"></div>
@@ -430,7 +429,7 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 </div>
 <div id="archStatus" class="muted"></div>
 </div>
-<div class="card" id="dataCard"><h2>Сохранить файл и стереть</h2><div class="btns"><button class="btn btn-beige" onclick="shareArchive(this)">Сохранить файлом на телефон</button><button class="btn btn-danger" id="wipeBtn" onclick="wipeAll(this)">Стереть все данные</button></div></div>
+<div class="card" id="dataCard"><h2>Сохранить файл и стереть</h2><div class="muted" id="saveLast" style="margin-bottom:8px"></div><div class="btns"><button class="btn btn-beige" onclick="shareArchive(this)">Сохранить файлом на телефон</button><button class="btn btn-danger" id="wipeBtn" onclick="wipeAll(this)">Стереть все данные</button></div></div>
 </div>
 </section>
 <section class="screen" id="sc-supply">
@@ -689,17 +688,11 @@ function renderMmBox(){
     }).join('');
   }).join('');
 }
-function renderSaveBox(){
-  const box=document.getElementById('saveBox');if(!box)return;
-  if(!canAdmin()){box.style.display='none';box.innerHTML='';return;}
+function paintSaveLast(){
+  const el=document.getElementById('saveLast');if(!el)return;
   const last=lsGet('azs-file-saved')||'';
   const days=last?Math.round((new Date(todayIso()+'T12:00:00')-new Date(last+'T12:00:00'))/86400000):null;
-  const old=days==null||days>7;
-  box.style.display='';box.className='card save-card'+(old?' old':'');
-  box.innerHTML='<div class="save-q">Сохранить текущие данные файлом на телефон?</div>'
-    +'<div class="muted">На всякий случай: если что-то пойдёт не так, этот файл можно загрузить обратно в Настройках.</div>'
-    +'<div class="save-last">'+(last?'Последнее сохранение: '+ruDate(last)+(days>0?' ('+days+' дн. назад)':' (сегодня)'):'Вы ещё ни разу не сохраняли.')+'</div>'
-    +'<button type="button" class="btn btn-ok" onclick="shareArchive(this)">Сохранить на телефон</button>';
+  el.textContent=last?'Последнее сохранение: '+ruDate(last)+(days>0?' ('+days+' дн. назад)':' (сегодня)'):'Вы ещё ни разу не сохраняли.';
 }
 function renderFolders(){
   ensureFolders();ensureShiftLock();
@@ -720,7 +713,7 @@ function renderFolders(){
   const others=boss?db.folders.filter(function(f){return f.id!==(curF&&curF.id);}):[];
   box.innerHTML=others.map(function(f){const c=cnt[f.id]||0;return '<button class="'+(c?'mm':'')+'" onclick="pickFolder(\''+f.id+'\')"><span>'+label(f)+mark(f)+'</span></button>';}).join('')+(me?'<button class="btn3d" onclick="shiftOut()">Смена</button>':'');
   box.style.display=box.innerHTML?'':'none';
-  renderMmBox();renderSaveBox();
+  renderMmBox();
 }
 function pickFolder(id){if(!isBoss())return;if(id===bookId())return;sumAllFields();commitDrafts();db.book=id;persist();renderDayTab();}
 function ensureShifts(){if(!Array.isArray(db.shifts))db.shifts=[];}
@@ -2396,7 +2389,7 @@ function renderAllHistory(){
 
 let pendingTheme=null;
 function setPane(el,name){document.querySelectorAll('#setTabs .chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.set-pane').forEach(p=>p.classList.remove('on'));document.getElementById('pane-'+name).classList.add('on');if(name==='cloud')cloudRenderPane();if(name==='shifts')shiftsPaint();}
-function fillSettings(){pendingTheme=pendingTheme||db.theme;const names={scarlet:'Алая',black:'Чёрная',paper:'Светлая',pitch:'Зелёная',ayasava:'Синяя',sunflower:'Янтарная'};document.getElementById('themeBox').innerHTML=Object.keys(names).map(k=>'<button class="theme-btn '+(pendingTheme===k?'on':'')+(db.theme===k?' applied':'')+'" data-k="'+k+'" style="background:linear-gradient(135deg,'+THEMES[k].bg+' 0 55%,'+THEMES[k].accent+' 55% 78%,'+THEMES[k]['accent-hi']+' 78% 100%)" onclick="previewTheme(\''+k+'\')"><span>'+names[k]+'</span></button>').join('');updThemeHint(names);}
+function fillSettings(){pendingTheme=pendingTheme||db.theme;const names={scarlet:'Алая',black:'Чёрная',paper:'Светлая',pitch:'Зелёная',ayasava:'Синяя',sunflower:'Янтарная'};document.getElementById('themeBox').innerHTML=Object.keys(names).map(k=>'<button class="theme-btn '+(pendingTheme===k?'on':'')+(db.theme===k?' applied':'')+'" data-k="'+k+'" style="background:linear-gradient(135deg,'+THEMES[k].bg+' 0 55%,'+THEMES[k].accent+' 55% 78%,'+THEMES[k]['accent-hi']+' 78% 100%)" onclick="previewTheme(\''+k+'\')"><span>'+names[k]+'</span></button>').join('');updThemeHint(names);paintSaveLast();}
 function updThemeHint(names){const h=document.getElementById('themeHint'),b=document.getElementById('themeApply');if(!h||!b)return;const dirty=pendingTheme&&pendingTheme!==db.theme;h.classList.toggle('dirty',!!dirty);b.classList.toggle('dirty',!!dirty);h.textContent=dirty?('Выбрано «'+names[pendingTheme]+'» — это пока только просмотр. Нажми «Применить тему», иначе останется «'+names[db.theme]+'».'):('Сейчас применена тема «'+names[db.theme]+'». Выбери другую плитку и нажми «Применить тему».');}
 function previewTheme(k){pendingTheme=k;applyTheme(k);fillSettings();}
 function applyTheme(k){if(!THEMES[k])k='scarlet';const th=THEMES[k];const r=document.documentElement.style;Object.keys(th).forEach(key=>r.setProperty('--'+key,th[key]));document.documentElement.setAttribute('data-theme',k);}
@@ -2404,7 +2397,7 @@ function applyThemeBtn(btn){db.theme=pendingTheme||db.theme;persist();applyTheme
 function archiveText(){return JSON.stringify({v:1,db:db});}
 function fileText(){const d=Object.assign({},db);delete d.shifts;return JSON.stringify({v:1,db:d});}   // файл для телефона: без кодов входа
 function fileName(){const t=todayIso(),m=['yanvarya','fevralya','marta','aprelya','maya','iyunya','iyulya','avgusta','sentyabrya','oktyabrya','noyabrya','dekabrya'][+t.slice(5,7)-1];return 'UchetAZS-'+(+t.slice(8,10))+'-'+m+'-'+t.slice(0,4)+'.json';}   // латиница: так имя не портится ни в одном браузере
-function markSaved(){lsSet('azs-file-saved',todayIso());renderSaveBox();}
+function markSaved(){lsSet('azs-file-saved',todayIso());paintSaveLast();}
 
 function pickArchiveFile(inp){
   const f=inp.files&&inp.files[0]; if(!f) return;
