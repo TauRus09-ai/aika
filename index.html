@@ -223,6 +223,7 @@ nav.tabbar svg{width:22px;height:22px}
 .arch-wrap.hl textarea.arch-chat::-webkit-scrollbar{display:none}
 #archStatus.err{color:#ff5a5a;font-weight:700}
 
+.btn-main{color:#2a1c00;background:linear-gradient(180deg,#f0c342,#c08f0c);box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 2px 0 #7a5a05,0 8px 16px rgba(0,0,0,.22)}
 .btn-beige{color:#2a1c10;background:linear-gradient(180deg,#ead7b8,#c9a87a);box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 3px 0 #7a5a32}
 .btn-white{color:#111;background:linear-gradient(180deg,#fff,#e6e6e6);box-shadow:0 1px 0 #fff inset,0 3px 0 #888}html[data-theme="paper"]{--line:rgba(0,0,0,.20)}html[data-theme="paper"] .card{background:rgba(255,255,255,.28);border-color:rgba(0,0,0,.14)}
 html[data-theme="paper"] input,html[data-theme="paper"] textarea{background:rgba(255,255,255,.82);color:var(--text)}
@@ -298,7 +299,9 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 .st-line button.btn3d{opacity:1;color:#fff;font-weight:800;font-size:13px;padding:0 16px;border:0;background:linear-gradient(180deg,#4aa8ff,#1f6fd0);box-shadow:0 4px 0 #134a91,0 6px 10px rgba(0,0,0,.4);transform:translateY(0)}
 .st-line button.btn3d:active{transform:translateY(3px);box-shadow:0 1px 0 #134a91,0 2px 4px rgba(0,0,0,.4);filter:none}
 .arch-flag.offline,.arch-flag.error,.arch-flag.connecting{background:#8a3b1f}
-#shiftGate{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:18px}#shiftGate.on{display:flex}#shiftGate .gate-box{width:min(420px,100%)}#shiftList{display:flex;flex-direction:column;gap:8px;margin:10px 0}.sh-pick{width:100%}.sh-pick.sh-boss{color:#ffd666;border:1px solid #d4a017}.sh-pick.on{outline:2px solid var(--accent-hi,#fff)}.who{display:inline-block;margin-right:8px;padding:6px 10px;font-weight:800;font-size:13px;border-radius:10px;border:1px solid transparent}.who.wb{color:#ffd666;border-color:#d4a017;background:rgba(212,160,23,.16)}.who.ws{color:#a9d8f5;border-color:#4da3d9;background:rgba(77,163,217,.14)}html[data-role=boss] header.brand{border-bottom:4px solid #d4a017}html[data-role=shift] header.brand{border-bottom:4px solid #4da3d9}.sh-row{margin:12px 0;padding:12px;border-radius:12px;border:1px solid var(--line)}.sh-role{font-weight:800;margin-bottom:6px}.sh-row input{width:100%;margin:4px 0;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:16px}#shiftGate input{width:100%;margin:8px 0;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:18px}
+#shiftGate{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:18px}#shiftGate.on{display:flex}#shiftGate .gate-box{width:min(420px,100%)}#shiftList{display:flex;flex-direction:column;gap:8px;margin:10px 0}.sh-pick{width:100%}.sh-pick.sh-boss{color:#ffd666;border:1px solid #d4a017}.sh-pick.on{outline:2px solid var(--accent-hi,#fff)}.who{display:inline-block;margin-right:8px;padding:6px 10px;font-weight:800;font-size:13px;border-radius:10px;border:1px solid transparent}.who.wb{color:#ffd666;border-color:#d4a017;background:rgba(212,160,23,.16)}.who.ws{color:#a9d8f5;border-color:#4da3d9;background:rgba(77,163,217,.14)}
+.who.wd{color:#dcc2f4;border-color:#a66bd6;background:rgba(166,107,214,.16)}
+.who.wv{color:#d3d9de;border-color:#8a949c;background:rgba(138,148,156,.16)}html[data-role=boss] header.brand{border-bottom:4px solid #d4a017}html[data-role=shift] header.brand{border-bottom:4px solid #4da3d9}html[data-role=dep] header.brand{border-bottom:4px solid #a66bd6}html[data-role=view] header.brand{border-bottom:4px solid #8a949c}html[data-role=shift] nav.tabbar button[data-tab=stations],html[data-role=dep] nav.tabbar button[data-tab=stations],html[data-role=view] nav.tabbar button[data-tab=stations]{display:none}html[data-role=shift] nav.tabbar,html[data-role=dep] nav.tabbar,html[data-role=view] nav.tabbar{grid-template-columns:repeat(4,1fr)}html[data-role=view] #dayForm button,html[data-role=view] #autoSaveNote,html[data-role=view] .iss-ok,html[data-role=view] #spBar,html[data-role=view] #spForm{display:none!important}.sh-row{margin:12px 0;padding:12px;border-radius:12px;border:1px solid var(--line)}.sh-role{font-weight:800;margin-bottom:6px}.sh-row input,.sh-row select{width:100%;margin:4px 0;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:16px}#shiftGate input{width:100%;margin:8px 0;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:18px}
 </style>
 </head>
 <body>
@@ -323,6 +326,7 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 <div class="card" id="dayCard" class="card">
 <h2 id="dayTitle">День</h2>
 <div class="fuel-tabs" id="dayFuels"></div>
+<div id="dayForm">
 <div class="row">
 <div><label>Открытие смены, литров</label><div class="inbox"><input id="morning" /><button type="button" class="sig" id="sig-morning" hidden onclick="sumBtn('morning')" title="Сложить">Σ</button></div><div class="muted" id="openHint"></div><div class="lst" id="lst-morning"></div></div>
 <div><label>Закрытие смены, литров</label><div class="inbox"><input id="evening" /><button type="button" class="sig" id="sig-evening" hidden onclick="sumBtn('evening')" title="Сложить">Σ</button></div><div class="lst" id="lst-evening"></div></div>
@@ -336,6 +340,7 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 <div class="inbox"><input id="expenses" placeholder="x x x" /><button type="button" class="sig" id="sig-expenses" hidden onclick="sumBtn('expenses')" title="Сложить">Σ</button></div>
 <div id="expTable"></div>
 <div class="muted" id="autoSaveNote" style="margin:6px 0">Пишется само, кнопку сохранять не нужно.</div><div class="btns"><button class="btn btn-danger" onclick="clearDay(this)">Стереть</button></div>
+</div>
 <div class="stat" id="dayCalc" style="margin-top:8px"></div>
 <div id="dayIssues"></div>
 <div id="shiftNotes"></div>
@@ -452,7 +457,7 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 <label>Проверить: сантиметры</label>
 <input id="calQ" inputmode="decimal" placeholder="например 133 или 22,5" oninput="calFind()">
 <div id="calRes" class="sp-info"></div>
-<div class="btns"><button class="btn btn-beige" onclick="calToggle()">Показать / скрыть таблицу</button><button class="btn btn-ok" onclick="calPasteOpen()">Внести или заменить</button></div>
+<div class="btns"><button class="btn btn-beige" onclick="calToggle()">Показать / скрыть таблицу</button><button class="btn btn-ok" id="calPasteBtn" onclick="calPasteOpen()">Внести или заменить</button></div>
 <div id="calPaste" style="display:none">
 <label>Название резервуара</label><input id="calName" placeholder="Резервуар № 10">
 <label>Таблица: в каждой строке сантиметры и объём (м³)</label>
@@ -552,7 +557,7 @@ function warnBar(msg){
   el.innerHTML='';el.appendChild(document.createTextNode(msg));
   const x=document.createElement('span');x.textContent='✕';x.style.cssText='position:absolute;right:12px;top:8px;font-size:16px;cursor:pointer';x.onclick=function(){el.remove();};el.appendChild(x);
 }
-function tab(name,btn){if(!btn)btn=document.querySelector('nav.tabbar button[data-tab="'+name+'"]');pendingTheme=db.theme;applyTheme(db.theme);document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById('sc-'+name).classList.add('on');document.querySelectorAll('nav.tabbar button').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');if(name==='day')renderDayTab();if(name==='stations')renderStations();if(name==='period'){periodGuard();anOpen();}if(name==='supply')spOpen();if(name==='set'){fillSettings();if(document.getElementById('pane-cloud').classList.contains('on'))cloudRenderPane();}}
+function tab(name,btn){if(name==='stations'&&!canAdmin()){tab('day');return;}if(!btn)btn=document.querySelector('nav.tabbar button[data-tab="'+name+'"]');pendingTheme=db.theme;applyTheme(db.theme);document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById('sc-'+name).classList.add('on');document.querySelectorAll('nav.tabbar button').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');if(name==='day')renderDayTab();if(name==='stations')renderStations();if(name==='period'){periodGuard();anOpen();}if(name==='supply')spOpen();if(name==='set'){fillSettings();if(document.getElementById('pane-cloud').classList.contains('on'))cloudRenderPane();}}
 function n(v){if(v===''||v==null)return null;if(/\d\s+\d/.test(String(v).trim()))return null;   // «500 700» без плюса — ошибка, а не 500700
   const x=Number(String(v).replace(/\s/g,'').replace(',','.'));return Number.isFinite(x)?x:null;}
 function nz(v){const x=n(v);return x==null?0:x;}
@@ -614,28 +619,38 @@ function mmList(sid,date){                            // начальник ви
   return isBoss()?all:all.filter(function(m){return m.book===db.book;});
 }
 function mmFind(book,sid,date,fuel){return (mmIndex()[sid+'|'+date]||[]).filter(function(m){return m.book===book&&m.fuel===fuel;})[0];}
+function mmTake(sid,date,fuel,his,keys){                // записать цифры сотрудника в основную запись
+  const prev=db.book,me=currentShift();db.book='main';
+  try{
+    const r=getRec(date,sid),cur=r.fuels[fuel]||{},parts=Object.assign({},cur.parts||{}),fby=Object.assign({},cur.fby||{}),patch={};
+    keys.forEach(function(k){
+      patch[k]=his[k];
+      if(his.parts&&his.parts[k])parts[k]=his.parts[k];else delete parts[k];
+      if(k==='expenses')patch.notes=his.notes||[];
+      if(k==='transfers')patch.notesT=his.notesT||[];
+      delete fby[k];
+    });
+    patch.parts=parts;patch.fby=fby;patch.by=me?me.id:cur.by;patch.byName=his.byName||cur.byName||'';
+    r.fuels[fuel]=Object.assign({},cur,patch);db.days[key(date,sid)]=r;
+  }finally{db.book=prev;}
+}
 function mmAct(op,book,sid,date,fuel){
   if(!isBoss())return;
   const m=mmFind(book,sid,date,fuel);if(!m)return;
-  if(op==='take'){                                    // принять цифры сотрудника в основную запись
-    const prev=db.book,me=currentShift();db.book='main';
-    try{
-      const r=getRec(date,sid),cur=r.fuels[fuel]||{},parts=Object.assign({},cur.parts||{}),fby=Object.assign({},cur.fby||{}),patch={};
-      m.keys.forEach(function(k){
-        patch[k]=m.his[k];
-        if(m.his.parts&&m.his.parts[k])parts[k]=m.his.parts[k];else delete parts[k];
-        if(k==='expenses')patch.notes=m.his.notes||[];
-        if(k==='transfers')patch.notesT=m.his.notesT||[];
-        delete fby[k];
-      });
-      patch.parts=parts;patch.fby=fby;patch.by=me?me.id:cur.by;patch.byName=m.his.byName||cur.byName||'';
-      r.fuels[fuel]=Object.assign({},cur,patch);db.days[key(date,sid)]=r;
-    }finally{db.book=prev;}
-  }else{
+  if(op==='take')mmTake(sid,date,fuel,m.his,m.keys);                 // принять цифры сотрудника в основную запись
+  else{
     const rec=db.days[book+'|'+sid+'|'+date];
     if(rec&&rec.fuels&&rec.fuels[fuel])rec.fuels[fuel].okMm=mmVals(rec.fuels[fuel]);
   }
   persist();renderDayTab();
+}
+function mmMainEmpty(sid,date,fuel){const m=db.days[sid+'|'+date];return !m||!m.fuels||emptyFuel(m.fuels[fuel]);}
+function mmMove(sid,date,fuel){                       // в основной записи пусто: переносим всё, что внёс сотрудник
+  if(!isBoss()||bookId()==='main'||!mmMainEmpty(sid,date,fuel))return;
+  const his=(getRec(date,sid).fuels[fuel])||{};
+  const keys=MM_KEYS.filter(function(k){return !mmEmpty(his[k]);});
+  if(!keys.length)return;
+  mmTake(sid,date,fuel,his,keys);persist();renderDayTab();
 }
 function mmGo(book,sid,date,fuel){
   if(!isBoss())return;
@@ -646,6 +661,9 @@ function mmGo(book,sid,date,fuel){
 }
 function mmPanel(date){                               // красные плашки под полями дня
   let h='';
+  if(isBoss()&&bookId()!=='main'&&mmMainEmpty(db.current,date,view.fuel)&&!emptyFuel(getRec(date).fuels[view.fuel])){
+    h+='<div class="iss warn">В основной записи за этот день пусто.<button type="button" class="btn btn-main iss-ok" onclick="mmMove(\''+escAttr(db.current)+'\',\''+date+'\',\''+escAttr(view.fuel)+'\')">Перенести в главный поток дней</button></div>';
+  }
   mmList(db.current,date).filter(function(m){return m.fuel===view.fuel;}).forEach(function(m){
     if(!isBoss()){h+='<div class="iss err">⛔ Не совпадает с записью управляющего. Перепроверь цифры.</div>';return;}
     const a=['\''+escAttr(m.book)+'\'','\''+escAttr(m.sid)+'\'','\''+m.date+'\'','\''+escAttr(m.fuel)+'\''].join(',');
@@ -685,7 +703,8 @@ function renderSaveBox(){
 }
 function renderFolders(){
   ensureFolders();ensureShiftLock();
-  document.documentElement.setAttribute('data-role',(function(){const s=currentShift();return s?(s.boss?'boss':'shift'):'';})());
+  document.documentElement.setAttribute('data-role',(function(){const s=currentShift();return s?(s.boss?'boss':(s.dep?'dep':(s.view?'view':'shift'))):'';})());
+  const dfm=document.getElementById('dayForm');if(dfm)dfm.inert=isView();
   const box=document.getElementById('folderMenu'),on=document.getElementById('folderOn');if(!box)return;
   const me=currentShift(),boss=isBoss(),cur=bookId();
   const bossS=db.shifts.filter(function(x){return x.boss;})[0];
@@ -695,7 +714,7 @@ function renderFolders(){
   let curF=db.folders.filter(function(f){return f.id===cur;})[0]||db.folders[0];
   if(on){
     if(me){const own=boss?curF:{id:me.folder,name:me.name};
-      on.innerHTML='<span class="who '+(own.id==='main'?'wb':'ws')+'">'+(boss?label(own):roleName(me))+(boss?mark(own):'')+'</span>';}
+      on.innerHTML='<span class="who '+(boss?(own.id==='main'?'wb':'ws'):(me.dep?'wd':(me.view?'wv':'ws')))+'">'+(boss?label(own):roleName(me))+(boss?mark(own):'')+'</span>';}
     else on.innerHTML='';
   }
   const others=boss?db.folders.filter(function(f){return f.id!==(curF&&curF.id);}):[];
@@ -707,11 +726,13 @@ function pickFolder(id){if(!isBoss())return;if(id===bookId())return;sumAllFields
 function ensureShifts(){if(!Array.isArray(db.shifts))db.shifts=[];}
 function currentShift(){ensureShifts();const pin=lsGet('azs-shift')||'';return db.shifts.filter(function(s){return s.pin===pin;})[0]||null;}
 function isBoss(){const s=currentShift();return !!(s&&s.boss);}
+function isView(){const s=currentShift();return !!(s&&s.view);}   // смотритель: только смотрит и копирует
+function visStations(){const s=currentShift();return (s&&!s.boss&&!s.dep&&s.st)?db.stations.filter(function(x){return x.id===s.st;}):db.stations;}   // сотрудник видит только свою АЗС; управляющий и зам все
 function canAdmin(){ensureShifts();return !db.shifts.length||isBoss();}   // опасные действия: начальник (или пока смены не заведены)
 function ensureShiftLock(){const s=currentShift();if(!s||s.boss)return;if(db.book!==s.folder){db.book=s.folder;}}
 function shiftGate(on){const g=document.getElementById('shiftGate');if(g)g.classList.toggle('on',!!on);}
 var gateSel=null;
-function roleName(s){const n=String(s.name||'').trim();return n||(s.boss?'Управляющий':'Ответственный');}   // показываем только то имя, которое человек вписал сам; роль видна по цвету
+function roleName(s){const n=String(s.name||'').trim();return n||(s.boss?'Управляющий':(s.dep?'Админ':(s.view?'Смотритель':'Ответственный')));}   // показываем только то имя, которое человек вписал сам; роль видна по цвету
 function shiftSetupMode(){
   ensureShifts();const first=!db.shifts.length;
   const $=function(i){return document.getElementById(i);};
@@ -757,19 +778,21 @@ function shiftsPaint(){
   if(!isBoss()){note.textContent='Эту вкладку видит только управляющий.';box.innerHTML='';return;}
   note.textContent='Код: от 4 символов, цифры или буквы. Ответственный нажимает своё имя и вводит код. Если забыл, посмотри здесь или поменяй. Удаление человека стирает и его папку с записями. Перед этим в облаке остаётся копия «как было».';
   box.innerHTML=db.shifts.map(function(s){
-    return '<div class="sh-row" data-id="'+escAttr(s.id)+'"><div class="sh-role">'+(s.boss?'Управляющий':'Ответственный за смену')+'</div>'
+    return '<div class="sh-row" data-id="'+escAttr(s.id)+'"><div class="sh-role">'+(s.boss?'Управляющий':(s.dep?'Админ':(s.view?'Смотритель':'Ответственный за смену')))+'</div>'
       +'<input class="sh-n" value="'+escAttr(s.name)+'" placeholder="Имя или должность" autocomplete="off"/>'
-      +'<input class="sh-p" value="'+escAttr(s.pin)+'" placeholder="Код" autocomplete="off" autocapitalize="off" spellcheck="false"/>'
+      +'<input class="sh-p" value="'+escAttr(s.pin)+'" placeholder="Код" autocomplete="off" autocapitalize="off" spellcheck="false"/>'+((s.boss||s.dep||s.view)?'':'<select class="sh-s">'+stOpts(s.st)+'</select>')
       +'<div class="btns"><button class="btn btn-ok" onclick="shiftSave(\''+escAttr(s.id)+'\',this)">Сохранить</button>'+(s.boss?'':'<button class="btn btn-danger" onclick="shiftDel(\''+escAttr(s.id)+'\',this)">Удалить</button>')+'</div></div>';
-  }).join('')+'<div class="sh-row"><div class="sh-role">Новый ответственный</div><input id="shNewN" placeholder="Имя или должность" autocomplete="off"/><input id="shNewP" placeholder="Код: от 4 символов" autocomplete="off" autocapitalize="off" spellcheck="false"/><div class="btns"><button class="btn btn-ok" onclick="shiftAdd(this)">Добавить</button></div></div>'+orphanRows();
+  }).join('')+'<div class="sh-row"><div class="sh-role">Новый человек</div><select id="shNewR" onchange="document.getElementById(\'shNewS\').style.display=this.value===\'emp\'?\'\':\'none\'"><option value="emp">Сотрудник: одна АЗС</option><option value="dep">Админ: все АЗС, вводит данные</option><option value="view">Смотритель: все АЗС, только смотрит</option></select><select id="shNewS">'+stOpts('')+'</select><input id="shNewN" placeholder="Имя или должность" autocomplete="off"/><input id="shNewP" placeholder="Код: от 4 символов" autocomplete="off" autocapitalize="off" spellcheck="false"/><div class="btns"><button class="btn btn-ok" onclick="shiftAdd(this)">Добавить</button></div></div>'+orphanRows();
 }
+function stOpts(sel){return '<option value=""'+(sel?'':' selected')+'>'+(db.stations.length?'Выбери АЗС':'АЗС ещё нет')+'</option>'+db.stations.map(function(x){return '<option value="'+escAttr(x.id)+'"'+(x.id===sel?' selected':'')+'>'+escHtml(spStName(x.id))+'</option>';}).join('');}
 function shiftSave(id,btn){
   if(!isBoss())return;const s=db.shifts.filter(function(x){return x.id===id;})[0];if(!s)return;
   const row=btn.closest('.sh-row'),name=row.querySelector('.sh-n').value.trim().slice(0,40),pin=row.querySelector('.sh-p').value.trim();
   if(!name){flashBtn(btn,'Впиши имя');return;}
   if(!shiftCheck(pin,id)){flashBtn(btn,pin.length<4?'Код: от 4':'Такой код есть');return;}
   const me=currentShift();
-  s.name=name;s.pin=pin;
+  const sel=row.querySelector('.sh-s');
+  s.name=name;s.pin=pin;if(sel&&sel.value)s.st=sel.value;
   const f=(db.folders||[]).filter(function(x){return x.id===s.folder&&x.id!=='main';})[0];if(f)f.name=name;
   if(me&&me.id===id)lsSet('azs-shift',pin);
   persist();renderFolders();flashBtn(btn,'Сохранено');
@@ -807,8 +830,12 @@ function shiftAdd(btn){
   const name=document.getElementById('shNewN').value.trim().slice(0,40),pin=document.getElementById('shNewP').value.trim();
   if(!name){flashBtn(btn,'Впиши имя');return;}
   if(!shiftCheck(pin,null)){flashBtn(btn,pin.length<4?'Код: от 4':'Такой код есть');return;}
-  const id='f'+Date.now().toString(36);
-  db.folders.push({id:id,name:name});db.shifts.push({id:id,name:name,pin:pin,folder:id,boss:false});
+  const role=document.getElementById('shNewR').value,st=document.getElementById('shNewS').value;
+  if(role==='emp'&&!st){flashBtn(btn,'Выбери АЗС');return;}
+  const id=(role==='emp'?'f':role==='dep'?'d':'v')+Date.now().toString(36);
+  if(role==='dep')db.shifts.push({id:id,name:name,pin:pin,folder:'main',dep:true});          // админ пишет в основную папку, как управляющий
+  else if(role==='view')db.shifts.push({id:id,name:name,pin:pin,folder:'main',view:true});   // смотритель читает основную папку
+  else{db.folders.push({id:id,name:name});db.shifts.push({id:id,name:name,pin:pin,folder:id,boss:false,st:st});}
   persist();renderFolders();shiftsPaint();
 }
 function shiftDate(date,delta){const dt=new Date(date+'T12:00:00');dt.setDate(dt.getDate()+delta);return dt.toISOString().slice(0,10);}
@@ -823,9 +850,9 @@ function renderStations(){
     return h;
   }).join('');
 }
-function addStation(btn){const name=document.getElementById('newStation').value.trim();if(!name)return;const id='s'+Date.now();const src=db.stations.find(function(x){return x.id===db.current;})||db.stations[0];db.stations.push({id:id,name:name,fuels:['95'],prices:fmap(function(){return '';}),calib:(src&&src.calib)?JSON.parse(JSON.stringify(src.calib)):{'95':{name:'Резервуар № 10',start:0,v:CAL95.slice()}}});db.current=id;document.getElementById('newStation').value='';persist();renderStations();flashBtn(btn,'Создано');}
+function addStation(btn){if(!canAdmin()){toast('Заправки создаёт только управляющий');return;}const name=document.getElementById('newStation').value.trim();if(!name)return;const id='s'+Date.now();const src=db.stations.find(function(x){return x.id===db.current;})||db.stations[0];db.stations.push({id:id,name:name,fuels:['95'],prices:fmap(function(){return '';}),calib:(src&&src.calib)?JSON.parse(JSON.stringify(src.calib)):{'95':{name:'Резервуар № 10',start:0,v:CAL95.slice()}}});db.current=id;document.getElementById('newStation').value='';persist();renderStations();flashBtn(btn,'Создано');}
 function startRename(id){const s=db.stations.find(x=>x.id===id);if(!s)return;const row=document.getElementById('row-'+id);row.innerHTML='<input class="ren" id="ren-'+id+'" value="'+s.name.replace(/"/g,'&quot;')+'" /><div class="side"><button class="btn btn-ok" onclick="saveRename(\''+id+'\')">Сохранить</button><button class="btn" onclick="renderStations()">Отмена</button></div>';const inp=document.getElementById('ren-'+id);inp.focus();inp.select();}
-function saveRename(id){const name=document.getElementById('ren-'+id).value.trim();if(!name)return;const s=db.stations.find(x=>x.id===id);if(s)s.name=name;persist();renderStations();}
+function saveRename(id){if(!canAdmin())return;const name=document.getElementById('ren-'+id).value.trim();if(!name)return;const s=db.stations.find(x=>x.id===id);if(s)s.name=name;persist();renderStations();}
 function delStation(id,btn){
   if(!canAdmin()){toast('Удалять АЗС может только управляющий');return;}
   const pre=id+'|',days=Object.keys(db.days).filter(function(k){return k.indexOf(pre)===0;}).length;
@@ -955,10 +982,11 @@ function anCustom(){an.preset='';anChips();anRender();}
 function anChips(){
   const pb=document.getElementById('anPresets');if(pb)[].forEach.call(pb.children,function(c){c.classList.toggle('on',c.dataset.p===an.preset);});
   const box=document.getElementById('anSt');if(!box)return;
-  if(!an.sel)an.sel=db.stations.map(function(s){return s.id;});
-  an.sel=an.sel.filter(function(id){return db.stations.some(function(s){return s.id===id;});});
-  if(!an.sel.length)an.sel=db.stations.map(function(s){return s.id;});
-  box.innerHTML=db.stations.map(function(s){return '<div class="chip'+(an.sel.indexOf(s.id)>=0?' on':'')+'" onclick="anTogSt(\''+s.id+'\')">'+escHtml(spStName(s.id))+'</div>';}).join('');
+  const V=visStations();
+  if(!an.sel)an.sel=V.map(function(s){return s.id;});
+  an.sel=an.sel.filter(function(id){return V.some(function(s){return s.id===id;});});
+  if(!an.sel.length)an.sel=V.map(function(s){return s.id;});
+  box.innerHTML=V.map(function(s){return '<div class="chip'+(an.sel.indexOf(s.id)>=0?' on':'')+'" onclick="anTogSt(\''+s.id+'\')">'+escHtml(spStName(s.id))+'</div>';}).join('');
 }
 function anTogSt(id){
   const i=an.sel.indexOf(id);
@@ -1243,18 +1271,18 @@ function spMath(r){
 }
 /* --- экран --- */
 function spOpen(){
-  const none=!db.stations.length;
+  const none=!visStations().length;
   document.getElementById('spNoSt').style.display=none?'':'none';
   const sel=document.getElementById('spStation');
   const keep=sel.value;
-  sel.innerHTML=db.stations.map(function(s){return '<option value="'+escAttr(s.id)+'">'+escHtml(spStName(s.id))+'</option>';}).join('');
-  sel.value=db.stations.some(function(s){return s.id===keep;})?keep:db.current;
+  sel.innerHTML=visStations().map(function(s){return '<option value="'+escAttr(s.id)+'">'+escHtml(spStName(s.id))+'</option>';}).join('');
+  sel.value=visStations().some(function(s){return s.id===keep;})?keep:db.current;
   const d=document.getElementById('spDate');if(!d.value)d.value=todayIso();
   calS.st=sel.value;calRender();spFormApply();spRender();
 }
 function spStChange(){const v=document.getElementById('spStation').value;if(v&&calS.st!==v){calS.st=v;calS.tbl=false;calRender();}spRender();}
 function spFormApply(){
-  const none=!db.stations.length;
+  const none=!visStations().length;
   const f=document.getElementById('spForm'),b=document.getElementById('spBar'),nb=document.getElementById('spNewBtn');
   if(!f||!b)return;
   b.style.display=none?'none':'';
@@ -1401,7 +1429,7 @@ function spDetail(r){
   m.warn.forEach(function(t){h+='<div class="iss warn">⚠ '+escHtml(t)+'</div>';});
   if(m.total!=null)h+='<div class="tot">Итого взято: '+fmt3(m.total)+' м³ ('+fmt3(m.total*1000)+' л)<br>Рейсов: '+m.cnt+'</div>';
   const id=escAttr(r.id);
-  h+='<div class="btns"><button class="btn btn-beige" onclick="spEditRec(\''+id+'\')">'+(r.closed?'Редактировать':'Продолжить ввод')+'</button><button class="btn btn-danger" onclick="spDel(\''+id+'\',this)">Удалить</button></div>';
+  if(!isView())h+='<div class="btns"><button class="btn btn-beige" onclick="spEditRec(\''+id+'\')">'+(r.closed?'Редактировать':'Продолжить ввод')+'</button><button class="btn btn-danger" onclick="spDel(\''+id+'\',this)">Удалить</button></div>';
   h+='<div class="btns"><button class="btn btn-ok" onclick="spCopyId(\''+id+'\',this,false)">Копировать кратко</button><button class="btn btn-ok" onclick="spCopyId(\''+id+'\',this,true)">Копировать подробно</button></div>';
   return h+'</div>';
 }
@@ -1441,8 +1469,9 @@ function spDel(id,btn){
 /* --- калибровка: экран --- */
 function calStRender(){
   const sel=document.getElementById('calStation');if(!sel)return;
-  if(!db.stations.some(function(x){return x.id===calS.st;}))calS.st=db.stations.some(function(x){return x.id===db.current;})?db.current:((db.stations[0]&&db.stations[0].id)||'');
-  sel.innerHTML=db.stations.map(function(x){return '<option value="'+escAttr(x.id)+'">'+escHtml(spStName(x.id))+'</option>';}).join('');
+  const V=visStations();
+  if(!V.some(function(x){return x.id===calS.st;}))calS.st=V.some(function(x){return x.id===db.current;})?db.current:((V[0]&&V[0].id)||'');
+  sel.innerHTML=V.map(function(x){return '<option value="'+escAttr(x.id)+'">'+escHtml(spStName(x.id))+'</option>';}).join('');
   sel.value=calS.st;
 }
 function calStSet(){calS.st=document.getElementById('calStation').value;calS.tbl=false;calRender();}
@@ -1457,12 +1486,13 @@ function calFuelRender(){
 function calFuelSet(el){calS.fuel=el.dataset.f;calRender();}
 function calRender(){
   calStRender();calFuelRender();
+  const pb=document.getElementById('calPasteBtn');if(pb)pb.style.display=canAdmin()?'':'none';   // калибровку вносит и правит только управляющий
   const c=calGet(calS.fuel,calS.st),info=document.getElementById('calInfo');if(!info)return;
   info.textContent=c?((c.name||'Резервуар')+' · '+spStName(calS.st)+': '+c.v.length+' строк, '+c.start+'–'+(c.start+c.v.length-1)+' см, максимум '+fmt3(c.v[c.v.length-1])+' м³'):'Калибровка для АИ-'+calS.fuel+' не внесена.';
   const t=document.getElementById('calTable');
   if(calS.tbl&&c){
     t.style.display='';
-    t.innerHTML='<div class="cal-t">'+c.v.map(function(v,i){return '<div class="cal-row"><span>'+(c.start+i)+' см</span><input inputmode="decimal" value="'+v+'" onchange="calEdit('+i+',this)"></div>';}).join('')+'</div><div class="muted" id="calEditMsg" style="margin-top:6px">Строку можно править: изменение сразу пересчитает все поставки.</div>';
+    t.innerHTML='<div class="cal-t">'+c.v.map(function(v,i){return '<div class="cal-row"><span>'+(c.start+i)+' см</span><input inputmode="decimal" value="'+v+'"'+(canAdmin()?' onchange="calEdit('+i+',this)"':' readonly')+'></div>';}).join('')+'</div><div class="muted" id="calEditMsg" style="margin-top:6px">'+(canAdmin()?'Строку можно править: изменение сразу пересчитает все поставки.':'Таблицу правит управляющий.')+'</div>';
   }else{t.style.display='none';t.innerHTML='';}
   calFind();
 }
@@ -1474,6 +1504,7 @@ function calFind(){
 }
 function calToggle(){calS.tbl=!calS.tbl;calRender();}
 function calEdit(i,inp){
+  if(!canAdmin())return;
   const c=calGet(calS.fuel,calS.st);if(!c)return;
   const x=n(inp.value),msg=document.getElementById('calEditMsg');
   if(x==null||x<0){inp.classList.add('bad');if(msg)msg.textContent='⛔ Нужно число, например 19,667';return;}
@@ -1485,6 +1516,7 @@ function calEdit(i,inp){
 function calPasteOpen(){document.getElementById('calPaste').style.display='';const c=calGet(calS.fuel,calS.st);document.getElementById('calName').value=c?(c.name||''):'';document.getElementById('calErr').textContent='';}
 function calPasteClose(){document.getElementById('calPaste').style.display='none';}
 function calApply(btn){
+  if(!canAdmin())return;
   const err=document.getElementById('calErr');
   const rows=[];
   document.getElementById('calTxt').value.split(/\r?\n/).forEach(function(line){
@@ -1598,22 +1630,22 @@ function spdCopyAll(id,btn){
 /* ===== конец блока ===== */
 
 function centerChip(box,smooth){if(!box)return;const on=box.querySelector('.chip.on');if(!on)return;const x=on.offsetLeft-(box.clientWidth-on.offsetWidth)/2;box.scrollTo({left:Math.max(0,x),behavior:smooth?'smooth':'auto'});}
-function periodGuard(){const none=!db.stations.length;const a=document.getElementById('noStP'),b=document.getElementById('anWrap');if(a)a.style.display=none?'':'none';if(b)b.style.display=none?'none':'';}
+function periodGuard(){const none=!visStations().length;const a=document.getElementById('noStP'),b=document.getElementById('anWrap');if(a)a.style.display=none?'':'none';if(b)b.style.display=none?'none':'';}
 function bindAutoSave(){if(window.__autoBound)return;window.__autoBound=1;['morning','evening','price','transfers','expenses'].forEach(function(id){const el=document.getElementById(id);if(!el)return;el.addEventListener('input',autoSave);});}
 function renderDayTab(){bindAutoSave();
-  const none=!db.stations.length;
+  const none=!visStations().length;
   ['dayCard','summaryCard','monthStrip','dayStrip'].forEach(function(id){const e=document.getElementById(id);if(e)e.style.display=none?'none':'';});
   const ns_=document.getElementById('noSt'); if(ns_) ns_.style.display=none?'':'none';
   if(none){
     const m=document.getElementById('stMenu'); if(m) m.innerHTML='';
     return;
   }
-  if(!db.stations.some(function(st){return st.id===db.current;})) db.current=db.stations[0].id;
+  if(!visStations().some(function(st){return st.id===db.current;})) db.current=visStations()[0].id;
   renderDayTabMain();
 }
 function renderDayTabMain(){
 const menu=document.getElementById('stMenu');
-menu.innerHTML=db.stations.map((s,i)=>'<button class="'+(s.id===db.current?'on':'')+'" onclick="pickStation(\''+s.id+'\')"><span class="num-ic">'+(i+1)+'</span><span>'+(String(s.name||'').trim()?s.name.replace(/</g,''):'Без названия')+'</span></button>').join('');renderFolders();
+menu.innerHTML=visStations().map((s,i)=>'<button class="'+(s.id===db.current?'on':'')+'" onclick="pickStation(\''+s.id+'\')"><span class="num-ic">'+(i+1)+'</span><span>'+(String(s.name||'').trim()?s.name.replace(/</g,''):'Без названия')+'</span></button>').join('');renderFolders();
 const on=menu.querySelector('button.on'); if(on) on.scrollIntoView({inline:'nearest',block:'nearest'});
 const ms=document.getElementById('monthStrip');const nowM=(new Date()).getMonth();const nowY=(new Date()).getFullYear();ms.innerHTML='<div class="chip '+(view.mode==='all'?'on':'')+'" onclick="setAllHist()">Вся история</div>'+MONTHS.map((name,i)=>'<div class="chip '+(view.mode==='day'&&i===view.m?'on':'')+(i===nowM&&view.y===nowY?' cur':'')+'" onclick="setMonth('+i+')">'+name+'</div>').join('');centerChip(ms,!!view.smooth);const ds=document.getElementById('dayStrip');if(view.mode==='all'){ds.innerHTML='';document.getElementById('dayCard').style.display='none';}else{document.getElementById('dayCard').style.display='block';paintDayStrip();view.smooth=false;loadDayForm();}renderAllHistory();paintDots();}
 function shiftYM(y,m,delta){const dt=new Date(y,m+delta,1);return {y:dt.getFullYear(),m:dt.getMonth()};}
@@ -1662,7 +1694,7 @@ function carryValue(date,fuel,field){
   const rec=getRec(date).fuels[fuel]||{};
   return rec[field]||'';
 }
-function pickStation(id){if(id===db.current)return;leaveDay();db.current=id;persist();renderDayTab();}
+function pickStation(id){if(id===db.current||!visStations().some(function(x){return x.id===id;}))return;leaveDay();db.current=id;persist();renderDayTab();}
 function setAllHist(){leaveDay();view.mode='all';renderDayTab();}
 function setMonth(m){leaveDay();view.mode='day';view.m=m;view.stripY=view.y;view.stripM=m;view.d=Math.min(view.d,new Date(view.y,m+1,0).getDate());view.smooth=true;renderDayTab();}
 function setDayDate(y,m,d,keepRight){if(view.mode==='day'&&view.y===y&&view.m===m&&view.d===d)return;leaveDay();view.mode='day';view.y=y;view.m=m;view.d=d;if(!keepRight){view.stripY=y;view.stripM=m;}view.smooth=true;renderDayTab();}
@@ -1901,7 +1933,7 @@ function logHtml(date){                                  // только упр�
 /* ---- заметки смены: свободный текст к дню (rec.sn), с автором, папкой и временем; цифры дня не трогают ---- */
 var snDraft='',snDraftKey='';
 function snList(date){const r=db.days[key(date)];return r&&Array.isArray(r.sn)?r.sn:[];}
-function snCanDel(n){const s=currentShift();return canAdmin()||!!(s&&n.i&&n.i===s.id);}   // удалить: автор или управляющий
+function snCanDel(n){const s=currentShift();return !isView()&&(canAdmin()||!!(s&&n.i&&n.i===s.id));}   // удалить: автор или управляющий
 function snFolderName(id){ensureFolders();const f=db.folders.filter(function(x){return x.id===id;})[0];return f?String(f.name||''):'';}
 function renderShiftNotes(){
   const box=document.getElementById('shiftNotes');if(!box)return;
@@ -1914,7 +1946,7 @@ function renderShiftNotes(){
     const d=new Date(n.t),fn=snFolderName(n.f);
     return '<div class="log-r"><span class="log-t">'+z(d.getDate())+'.'+z(d.getMonth()+1)+' '+z(d.getHours())+':'+z(d.getMinutes())+'</span> <b>'+escHtml(String(n.w||''))+'</b>'+(fn?' · '+escHtml(fn):'')+(snCanDel(n)?' <button type="button" class="btn btn-danger" style="padding:1px 9px" onclick="snDel('+i+',this)">×</button>':'')+'<div>'+escHtml(n.x)+'</div></div>';
   }).reverse().join('');
-  box.innerHTML='<div class="log-box"><div class="log-h">Заметки смены</div>'+rows+'<div style="display:flex;gap:8px;margin-top:8px"><input id="snText" maxlength="300" placeholder="Заметка к этому дню" style="flex:1;min-width:0" oninput="snDraft=this.value" onkeydown="if(event.key===\'Enter\')snAdd()"/><button type="button" class="btn btn-ok" onclick="snAdd()">Добавить</button></div></div>';
+  box.innerHTML='<div class="log-box"><div class="log-h">Заметки смены</div>'+rows+(isView()?'':'<div style="display:flex;gap:8px;margin-top:8px"><input id="snText" maxlength="300" placeholder="Заметка к этому дню" style="flex:1;min-width:0" oninput="snDraft=this.value" onkeydown="if(event.key===\'Enter\')snAdd()"/><button type="button" class="btn btn-ok" onclick="snAdd()">Добавить</button></div>')+'</div>';
   const inp=document.getElementById('snText');if(inp)inp.value=snDraft;
 }
 function snAdd(){
@@ -1982,6 +2014,7 @@ function mirrorToMaster(date,fuel){
 }
 function draftParts(d){try{return (JSON.parse(d.parts)||{}).s||{};}catch(e){return {};}}   // в черновике слагаемые лежат строкой JSON
 function commitDrafts(){
+  if(isView())return;
   stashDay();
   Object.keys(drafts).forEach(function(k){
     const p=k.split('|'); if(p.length<4||p[0]!==bookId()||p[1]!==db.current) return;
