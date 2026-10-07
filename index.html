@@ -386,7 +386,6 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 <section class="screen" id="sc-set">
 <div class="fuel-tabs" id="setTabs">
 <div class="chip on" data-pane="cloud" onclick="setPane(this,'cloud')">Облако и копии</div>
-<div class="chip" data-pane="shifts" onclick="setPane(this,'shifts')">Смены</div>
 <div class="chip" data-pane="theme" onclick="setPane(this,'theme')">Темы</div>
 </div>
 <div id="pane-theme" class="set-pane">
@@ -395,13 +394,6 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 <div class="themes" id="themeBox"></div>
 <div class="theme-hint" id="themeHint"></div>
 <div class="btns"><button class="btn btn-ok theme-apply" id="themeApply" onclick="applyThemeBtn(this)">Применить тему</button></div>
-</div>
-</div>
-<div id="pane-shifts" class="set-pane">
-<div class="card">
-<h2>Управляющий и ответственные</h2>
-<div class="muted" id="shiftsNote"></div>
-<div id="shiftsBox"></div>
 </div>
 </div>
 <div id="pane-cloud" class="set-pane on">
@@ -727,12 +719,12 @@ function canAdmin(){ensureShifts();return !db.shifts.length||isBoss();}   // о�
 function ensureShiftLock(){const s=currentShift();if(!s||s.boss)return;if(db.book!==s.folder){db.book=s.folder;}}
 function shiftGate(on){const g=document.getElementById('shiftGate');if(g)g.classList.toggle('on',!!on);}
 var gateSel=null;
-function roleName(s){const n=String(s.name||'').trim();return n||(s.boss?'Управляющий':(s.dep?'Админ':(s.view?'Смотритель':'Ответственный')));}   // показываем только то имя, которое человек вписал сам; роль видна по цвету
+function roleName(s){const n=String(s.name||'').trim();return n||(s.boss?'Управляющий':(s.dep?'Админ':(s.view?'Смотритель':'Сотрудник')));}   // показываем только то имя, которое человек вписал сам; роль видна по цвету
 function shiftSetupMode(){
   ensureShifts();const first=!db.shifts.length;
   const $=function(i){return document.getElementById(i);};
   const cur=currentShift();
-  $('shiftTitle').textContent=first?'Назначается управляющий':(cur?'Войти под другим именем':'Ответственные за смену');
+  $('shiftTitle').textContent=first?'Назначается управляющий':(cur?'Войти под другим именем':'Кто входит');
   $('shiftHint').textContent=first?'Впиши своё имя или должность и придумай код: от 4 символов, цифры или буквы. С этим кодом ты будешь заходить как управляющий.':(cur?'Сейчас ты: '+roleName(cur)+'. Чтобы посмотреть глазами другого человека, нажми на его имя и введи его код. Чтобы остаться как есть, нажми «Отмена».':'Нажми на своё имя или должность и введи свой код.');
   $('shiftCancel').style.display=(cur||first)?'':'none';
   $('shiftCancel').textContent=first?'Назад: выйти из облака':'Отмена, остаться как есть';
@@ -767,18 +759,33 @@ function shiftCancel(){
 }
 function shiftOut(){sumAllFields();commitDrafts();gateSel=null;document.getElementById('shiftPin').value='';document.getElementById('shiftMsg').textContent='';openShiftGate();}
 function shiftCheck(pin,exceptId){return pin.length>=4&&!db.shifts.some(function(s){return s.id!==exceptId&&s.pin===pin;});}
-function shiftsPaint(){
-  const box=document.getElementById('shiftsBox'),note=document.getElementById('shiftsNote');if(!box)return;ensureShifts();
-  if(!cloud.active||!db.shifts.length){note.textContent='Входы заводятся в облаке. Введи код доступа в облако и назначь управляющего.';box.innerHTML='';return;}
-  if(!isBoss()){note.textContent='Эту вкладку видит только управляющий.';box.innerHTML='';return;}
-  note.textContent='Код: от 4 символов, цифры или буквы. Ответственный нажимает своё имя и вводит код. Если забыл, посмотри здесь или поменяй. Удаление человека стирает и его папку с записями. Перед этим в облаке остаётся копия «как было».';
-  box.innerHTML=db.shifts.map(function(s){
-    return '<div class="sh-row" data-id="'+escAttr(s.id)+'"><div class="sh-role">'+(s.boss?'Управляющий':(s.dep?'Админ':(s.view?'Смотритель':'Ответственный за смену')))+'</div>'
-      +'<input class="sh-n" value="'+escAttr(s.name)+'" placeholder="Имя или должность" autocomplete="off"/>'
-      +'<input class="sh-p" value="'+escAttr(s.pin)+'" placeholder="Код" autocomplete="off" autocapitalize="off" spellcheck="false"/>'+((s.boss||s.dep||s.view)?'':'<select class="sh-s">'+stOpts(s.st)+'</select>')
-      +'<div class="btns"><button class="btn btn-ok" onclick="shiftSave(\''+escAttr(s.id)+'\',this)">Сохранить</button>'+(s.boss?'':'<button class="btn btn-danger" onclick="shiftDel(\''+escAttr(s.id)+'\',this)">Удалить</button>')+'</div></div>';
-  }).join('')+'<div class="sh-row"><div class="sh-role">Новый человек</div><select id="shNewR" onchange="document.getElementById(\'shNewS\').style.display=this.value===\'emp\'?\'\':\'none\'"><option value="emp">Сотрудник: одна АЗС</option><option value="dep">Админ: все АЗС, вводит данные</option><option value="view">Смотритель: все АЗС, только смотрит</option></select><select id="shNewS">'+stOpts('')+'</select><input id="shNewN" placeholder="Имя или должность" autocomplete="off"/><input id="shNewP" placeholder="Код: от 4 символов" autocomplete="off" autocapitalize="off" spellcheck="false"/><div class="btns"><button class="btn btn-ok" onclick="shiftAdd(this)">Добавить</button></div></div>'+orphanRows();
+var usr={open:null};
+function usrOpen(id){usr.open=usr.open===id?null:id;renderStations();}
+function usrOf(sid){                                         // кто в этой группе: сотрудники заправки или «все заправки» (управляющий, админы, смотрители и сотрудники без заправки)
+  ensureShifts();
+  const has=function(id){return db.stations.some(function(x){return x.id===id;});};
+  return db.shifts.filter(function(s){const emp=!s.boss&&!s.dep&&!s.view;return sid==='*'?(!emp||!has(s.st)):(emp&&s.st===sid);});
 }
+function shRow(s){
+  return '<div class="sh-row" data-id="'+escAttr(s.id)+'"><div class="sh-role">'+(s.boss?'Управляющий':(s.dep?'Админ':(s.view?'Смотритель':'Сотрудник')))+'</div>'
+    +'<input class="sh-n" value="'+escAttr(s.name)+'" placeholder="Имя или должность" autocomplete="off"/>'
+    +'<input class="sh-p" value="'+escAttr(s.pin)+'" placeholder="Код" autocomplete="off" autocapitalize="off" spellcheck="false"/>'+((s.boss||s.dep||s.view)?'':'<select class="sh-s">'+stOpts(s.st)+'</select>')
+    +'<div class="btns"><button class="btn btn-ok" onclick="shiftSave(\''+escAttr(s.id)+'\',this)">Сохранить</button>'+(s.boss?'':'<button class="btn btn-danger" onclick="shiftDel(\''+escAttr(s.id)+'\',this)">Удалить</button>')+'</div></div>';
+}
+function usrPanel(sid){
+  ensureShifts();
+  if(!cloud.active||!db.shifts.length)return '<div class="usr-p muted">Входы заводятся в облаке. Введи код доступа в облако и назначь управляющего.</div>';
+  if(!isBoss())return '';
+  const all=sid==='*';
+  return '<div class="usr-p"><div class="muted">Код: от 4 символов, цифры или буквы. Человек нажимает своё имя и вводит код. Если забыл, посмотри здесь или поменяй. Удаление человека стирает и его папку с записями. Перед этим в облаке остаётся копия «как было».</div>'
+    +usrOf(sid).map(shRow).join('')
+    +'<div class="sh-row"><div class="sh-role">'+(all?'Новый человек':'Новый сотрудник')+'</div>'
+    +(all?'<select id="shNewR"><option value="dep">Админ: все АЗС, вводит данные</option><option value="view">Смотритель: все АЗС, только смотрит</option></select>':'')
+    +'<input id="shNewN" placeholder="Имя или должность" autocomplete="off"/><input id="shNewP" placeholder="Код: от 4 символов" autocomplete="off" autocapitalize="off" spellcheck="false"/><div class="btns"><button class="btn btn-ok" onclick="shiftAdd(this,\''+escAttr(sid)+'\')">Добавить</button></div></div>'
+    +(all?orphanRows():'')+'</div>';
+}
+function usrBtn(sid){return '<button class="btn btn-beige" onclick="usrOpen(\''+escAttr(sid)+'\')">Пользователи ('+usrOf(sid).length+')</button>';}
+function usrAllItem(){return '<div class="item"><div class="name">Все заправки<div class="muted">Управляющий, админы, смотрители</div></div><div class="side">'+usrBtn('*')+'</div></div>'+(usr.open==='*'?usrPanel('*'):'');}
 function stOpts(sel){return '<option value=""'+(sel?'':' selected')+'>'+(db.stations.length?'Выбери АЗС':'АЗС ещё нет')+'</option>'+db.stations.map(function(x){return '<option value="'+escAttr(x.id)+'"'+(x.id===sel?' selected':'')+'>'+escHtml(spStName(x.id))+'</option>';}).join('');}
 function shiftSave(id,btn){
   if(!isBoss())return;const s=db.shifts.filter(function(x){return x.id===id;})[0];if(!s)return;
@@ -787,10 +794,11 @@ function shiftSave(id,btn){
   if(!shiftCheck(pin,id)){flashBtn(btn,pin.length<4?'Код: от 4':'Такой код есть');return;}
   const me=currentShift();
   const sel=row.querySelector('.sh-s');
+  const moved=!!(sel&&sel.value&&sel.value!==s.st);
   s.name=name;s.pin=pin;if(sel&&sel.value)s.st=sel.value;
   const f=(db.folders||[]).filter(function(x){return x.id===s.folder&&x.id!=='main';})[0];if(f)f.name=name;
   if(me&&me.id===id)lsSet('azs-shift',pin);
-  persist();renderFolders();flashBtn(btn,'Сохранено');
+  persist();renderFolders();if(moved)renderStations();flashBtn(btn,'Сохранено');
 }
 function orphanRows(){                                      // папки, у которых нет входа (остались от прежних версий)
   const o=(db.folders||[]).filter(function(f){return f.id!=='main'&&!db.shifts.some(function(x){return x.folder===f.id;});});
@@ -810,28 +818,27 @@ function shiftDel(id,btn){
   armDo(btn,function(){
     Promise.resolve(n?cloudBackup('pre'):0).catch(function(){}).then(function(){
       db.shifts=db.shifts.filter(function(x){return x.id!==id||x.boss;});folderKill(s.folder);
-      persist();shiftsPaint();renderFolders();renderDayTab();
+      persist();renderStations();renderFolders();renderDayTab();
     });
   },n?('Удалить вместе с '+n+' дн. записей?'):'Точно удалить?',7000);
 }
 function folderOrphanDel(fid,btn){
   if(!isBoss())return;const n=folderDayCount(fid);
   armDo(btn,function(){
-    Promise.resolve(n?cloudBackup('pre'):0).catch(function(){}).then(function(){folderKill(fid);persist();shiftsPaint();renderFolders();renderDayTab();});
+    Promise.resolve(n?cloudBackup('pre'):0).catch(function(){}).then(function(){folderKill(fid);persist();renderStations();renderFolders();renderDayTab();});
   },n?('Удалить папку и '+n+' дн. записей?'):'Точно удалить?',7000);
 }
-function shiftAdd(btn){
+function shiftAdd(btn,sid){
   if(!isBoss())return;ensureShifts();ensureFolders();
   const name=document.getElementById('shNewN').value.trim().slice(0,40),pin=document.getElementById('shNewP').value.trim();
   if(!name){flashBtn(btn,'Впиши имя');return;}
   if(!shiftCheck(pin,null)){flashBtn(btn,pin.length<4?'Код: от 4':'Такой код есть');return;}
-  const role=document.getElementById('shNewR').value,st=document.getElementById('shNewS').value;
-  if(role==='emp'&&!st){flashBtn(btn,'Выбери АЗС');return;}
+  const role=sid==='*'?document.getElementById('shNewR').value:'emp',st=sid;
   const id=(role==='emp'?'f':role==='dep'?'d':'v')+Date.now().toString(36);
   if(role==='dep')db.shifts.push({id:id,name:name,pin:pin,folder:'main',dep:true});          // админ пишет в основную папку, как управляющий
   else if(role==='view')db.shifts.push({id:id,name:name,pin:pin,folder:'main',view:true});   // смотритель читает основную папку
   else{db.folders.push({id:id,name:name});db.shifts.push({id:id,name:name,pin:pin,folder:id,boss:false,st:st});}
-  persist();renderFolders();shiftsPaint();
+  persist();renderFolders();renderStations();
 }
 function shiftDate(date,delta){const dt=new Date(date+'T12:00:00');dt.setDate(dt.getDate()+delta);return dt.toISOString().slice(0,10);}
 function stationName(id){const sid=id||db.current;const i=db.stations.findIndex(s=>s.id===sid);if(i<0)return '';const nm=String(db.stations[i].name||'').trim();return nm?((i+1)+' · '+nm):'';}
@@ -840,10 +847,11 @@ function emptyFuel(x){return !x||(!x.morning&&!x.evening&&!x.transfers&&!x.expen
 function renderStations(){
   const nm=function(s){return String(s.name||'').trim()?escHtml(String(s.name)):'<span style="opacity:.55;font-style:italic">Без названия</span>';};
   document.getElementById('stationList').innerHTML=(db.stations.length?'':'<div class="muted" style="margin:4px 0 10px">АЗС пока нет. Впиши название ниже и нажми «Создать».</div>')+db.stations.map(function(s){
-    let h='<div class="item" id="row-'+s.id+'"><div class="name">'+nm(s)+'<div class="st-pr">'+stFuels(s.id).map(function(f){return stPrCell(s.id,f);}).join('')+'</div>'+stFuelAddBtn(s.id)+'<div class="muted" style="margin-top:6px;font-weight:600" onclick="spdOpen(\''+s.id+'\')">Траты: '+fmt(spdTotal(s))+' ₽</div></div><div class="side"><button class="btn btn-beige" onclick="spdOpen(\''+s.id+'\')">Траты</button><button class="btn btn-ok" onclick="startRename(\''+s.id+'\')">Переименовать</button><button class="btn btn-danger" onclick="delStation(\''+s.id+'\',this)">Удалить</button></div></div>';
+    let h='<div class="item" id="row-'+s.id+'"><div class="name">'+nm(s)+'<div class="st-pr">'+stFuels(s.id).map(function(f){return stPrCell(s.id,f);}).join('')+'</div>'+stFuelAddBtn(s.id)+'<div class="muted" style="margin-top:6px;font-weight:600" onclick="spdOpen(\''+s.id+'\')">Траты: '+fmt(spdTotal(s))+' ₽</div></div><div class="side"><button class="btn btn-beige" onclick="spdOpen(\''+s.id+'\')">Траты</button>'+usrBtn(s.id)+'<button class="btn btn-ok" onclick="startRename(\''+s.id+'\')">Переименовать</button><button class="btn btn-danger" onclick="delStation(\''+s.id+'\',this)">Удалить</button></div></div>';
     if(spd.open===s.id) h+=spdPanel(s);
+    if(usr.open===s.id) h+=usrPanel(s.id);
     return h;
-  }).join('');
+  }).join('')+usrAllItem();
 }
 function addStation(btn){if(!canAdmin()){toast('Заправки создаёт только управляющий');return;}const name=document.getElementById('newStation').value.trim();if(!name)return;const id='s'+Date.now();const src=db.stations.find(function(x){return x.id===db.current;})||db.stations[0];db.stations.push({id:id,name:name,fuels:['95'],prices:fmap(function(){return '';}),calib:(src&&src.calib)?JSON.parse(JSON.stringify(src.calib)):{'95':{name:'Резервуар № 10',start:0,v:CAL95.slice()}}});db.current=id;document.getElementById('newStation').value='';persist();renderStations();flashBtn(btn,'Создано');}
 function startRename(id){const s=db.stations.find(x=>x.id===id);if(!s)return;const row=document.getElementById('row-'+id);row.innerHTML='<input class="ren" id="ren-'+id+'" value="'+s.name.replace(/"/g,'&quot;')+'" /><div class="side"><button class="btn btn-ok" onclick="saveRename(\''+id+'\')">Сохранить</button><button class="btn" onclick="renderStations()">Отмена</button></div>';const inp=document.getElementById('ren-'+id);inp.focus();inp.select();}
@@ -2300,7 +2308,7 @@ function paintIssues(x){
   const date=iso(view.y,view.m,view.d);
   const iss=dayIssues(date,view.fuel,x);
   const who=(getRec(date).fuels[view.fuel]||{}).byName||'';
-  let h=who?('<div class="muted">Вписал: '+escHtml(who)+'</div>'):'';
+  let h=(who&&isBoss())?('<div class="muted">Вписал: '+escHtml(who)+'</div>'):'';
   iss.err.forEach(function(t){h+='<div class="iss err">⛔ '+escHtml(t)+'</div>';});
   iss.warn.forEach(function(w){
     if(typeof w==='string') h+='<div class="iss warn">⚠ '+escHtml(w)+'</div>';
@@ -2409,7 +2417,7 @@ function renderAllHistory(){
 
 
 let pendingTheme=null;
-function setPane(el,name){document.querySelectorAll('#setTabs .chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.set-pane').forEach(p=>p.classList.remove('on'));document.getElementById('pane-'+name).classList.add('on');if(name==='cloud')cloudRenderPane();if(name==='shifts')shiftsPaint();}
+function setPane(el,name){document.querySelectorAll('#setTabs .chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.set-pane').forEach(p=>p.classList.remove('on'));document.getElementById('pane-'+name).classList.add('on');if(name==='cloud')cloudRenderPane();}
 function fillSettings(){pendingTheme=pendingTheme||db.theme;const names={scarlet:'Алая',black:'Чёрная',paper:'Светлая',pitch:'Зелёная',ayasava:'Синяя',sunflower:'Янтарная'};document.getElementById('themeBox').innerHTML=Object.keys(names).map(k=>'<button class="theme-btn '+(pendingTheme===k?'on':'')+(db.theme===k?' applied':'')+'" data-k="'+k+'" style="background:linear-gradient(135deg,'+THEMES[k].bg+' 0 55%,'+THEMES[k].accent+' 55% 78%,'+THEMES[k]['accent-hi']+' 78% 100%)" onclick="previewTheme(\''+k+'\')"><span>'+names[k]+'</span></button>').join('');updThemeHint(names);paintSaveLast();}
 function updThemeHint(names){const h=document.getElementById('themeHint'),b=document.getElementById('themeApply');if(!h||!b)return;const dirty=pendingTheme&&pendingTheme!==db.theme;h.classList.toggle('dirty',!!dirty);b.classList.toggle('dirty',!!dirty);h.textContent=dirty?('Выбрано «'+names[pendingTheme]+'» — это пока только просмотр. Нажми «Применить тему», иначе останется «'+names[db.theme]+'».'):('Сейчас применена тема «'+names[db.theme]+'». Выбери другую плитку и нажми «Применить тему».');}
 function previewTheme(k){pendingTheme=k;applyTheme(k);fillSettings();}
