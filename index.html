@@ -63,6 +63,7 @@ header.brand>*{position:relative;z-index:2}
 .st-line::-webkit-scrollbar{display:none}
 .st-line button{margin-right:8px;opacity:.42}
 .st-line button.on{opacity:1;border-color:#3AA0FF;box-shadow:0 0 10px rgba(58,160,255,.45)}
+#ptr{position:fixed;left:50%;top:env(safe-area-inset-top);transform:translate(-50%,-100%);z-index:130;padding:8px 16px;border-radius:0 0 14px 14px;background:var(--card);color:var(--text);border:1px solid var(--line);font-size:13px;font-weight:700;pointer-events:none;transition:transform .12s;white-space:nowrap}
 main{position:relative;z-index:2;flex:1;min-height:0;overflow:auto;padding:8px 12px 96px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .screen{display:none}.screen.on{display:block}
 .card{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 18px rgba(0,0,0,.16);backdrop-filter:blur(8px)}
@@ -315,6 +316,7 @@ html[data-theme="paper"] .an-t th:first-child,html[data-theme="paper"] .an-t td:
 </div>
 <button type="button" class="arch-flag off" id="cloudDot" onclick="openCloudPane()"><span id="archL1">Не идёт</span><span id="archL2">в архив</span></button>
 </header>
+<div id="ptr"></div>
 <main>
 <section class="screen on" id="sc-day">
 <div class="card" id="noSt" style="display:none"><h2>АЗС</h2><div class="muted">Сначала создай АЗС во вкладке «АЗС».</div></div>
@@ -2023,6 +2025,25 @@ function flushNow(){                                  // приложение с
 }
 document.addEventListener('visibilitychange',function(){if(document.hidden)flushNow();});
 window.addEventListener('pagehide',flushNow);
+/* потянуть вниз с самого верха страницы: обновить приложение (браузер сам этого не делает, прокрутка у нас внутри <main>) */
+(function(){
+  var M=document.querySelector('main'),y0=null,pull=0,bar=document.getElementById('ptr');
+  function show(px,ready){bar.style.transform='translate(-50%,calc(-100% + '+px+'px))';bar.textContent=ready?'Отпусти, чтобы обновить':'Потяни вниз, чтобы обновить';}
+  document.addEventListener('touchstart',function(e){
+    y0=null;if(e.touches.length!==1||!M||M.scrollTop>0||document.getElementById('shiftGate').classList.contains('on'))return;
+    if(e.target.closest&&e.target.closest('input,textarea,select,.hscroll'))return;
+    y0=e.touches[0].clientY;pull=0;
+  },{passive:true});
+  document.addEventListener('touchmove',function(e){
+    if(y0==null)return;pull=e.touches[0].clientY-y0;
+    if(pull<=0||M.scrollTop>0){y0=null;show(0,false);return;}
+    show(Math.min(pull,90),pull>=100);
+  },{passive:true});
+  document.addEventListener('touchend',function(){
+    if(y0==null)return;var go=pull>=100;y0=null;pull=0;
+    if(go){bar.textContent='Обновляю…';flushNow();setTimeout(function(){location.reload();},250);}else show(0,false);
+  },{passive:true});
+})();
 var saveDue=false;                                    // есть ввод, который ещё ждёт записи
 function autoSave(){saveDue=true;clearTimeout(autoSaveT);autoSaveT=setTimeout(function(){saveDue=false;commitDrafts();persist();paintCalc();renderAllHistory();paintDots();const n=document.getElementById('autoSaveNote');if(n)n.textContent='Записано';},700);}
 function saveDay(btn){
