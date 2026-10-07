@@ -225,6 +225,10 @@ nav.tabbar svg{width:22px;height:22px}
 #archStatus.err{color:#ff5a5a;font-weight:700}
 
 .btn-main{color:#2a1c00;background:linear-gradient(180deg,#f0c342,#c08f0c);box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 2px 0 #7a5a05,0 8px 16px rgba(0,0,0,.22)}
+.btn-black{color:#e8ecef;background:linear-gradient(180deg,#4a4f55,#1b1e21);border:1px solid rgba(255,255,255,.16);box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 2px 0 #050607,0 8px 16px rgba(0,0,0,.22)}
+.btn-violet{color:#fff;background:linear-gradient(180deg,#b57be0,#7b45b3);box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 2px 0 #4a2a70,0 8px 16px rgba(0,0,0,.22)}
+.btn-blue{color:#fff;background:linear-gradient(180deg,#4aa8ff,#1f6fd0);box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 2px 0 #134a91,0 8px 16px rgba(0,0,0,.22)}
+.usr-all{border-style:dashed;background:transparent}
 .btn-beige{color:#2a1c10;background:linear-gradient(180deg,#ead7b8,#c9a87a);box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 3px 0 #7a5a32}
 .btn-white{color:#111;background:linear-gradient(180deg,#fff,#e6e6e6);box-shadow:0 1px 0 #fff inset,0 3px 0 #888}html[data-theme="paper"]{--line:rgba(0,0,0,.20)}html[data-theme="paper"] .card{background:rgba(255,255,255,.28);border-color:rgba(0,0,0,.14)}
 html[data-theme="paper"] input,html[data-theme="paper"] textarea{background:rgba(255,255,255,.82);color:var(--text)}
@@ -784,8 +788,8 @@ function usrPanel(sid){
     +'<input id="shNewN" placeholder="Имя или должность" autocomplete="off"/><input id="shNewP" placeholder="Код: от 4 символов" autocomplete="off" autocapitalize="off" spellcheck="false"/><div class="btns"><button class="btn btn-ok" onclick="shiftAdd(this,\''+escAttr(sid)+'\')">Добавить</button></div></div>'
     +(all?orphanRows():'')+'</div>';
 }
-function usrBtn(sid){return '<button class="btn btn-beige" onclick="usrOpen(\''+escAttr(sid)+'\')">Пользователи ('+usrOf(sid).length+')</button>';}
-function usrAllItem(){return '<div class="item"><div class="name">Все заправки<div class="muted">Управляющий, админы, смотрители</div></div><div class="side">'+usrBtn('*')+'</div></div>'+(usr.open==='*'?usrPanel('*'):'');}
+function usrBtn(sid){return '<button class="btn btn-violet" onclick="usrOpen(\''+escAttr(sid)+'\')">Пользователи ('+usrOf(sid).length+')</button>';}
+function usrAllItem(){return '<div class="item usr-all"><div class="name">Доступ ко всем заправкам<div class="muted">Управляющий, админы и смотрители. К одной заправке не привязаны.</div></div><div class="side">'+usrBtn('*')+'</div></div>'+(usr.open==='*'?usrPanel('*'):'');}
 function stOpts(sel){return '<option value=""'+(sel?'':' selected')+'>'+(db.stations.length?'Выбери АЗС':'АЗС ещё нет')+'</option>'+db.stations.map(function(x){return '<option value="'+escAttr(x.id)+'"'+(x.id===sel?' selected':'')+'>'+escHtml(spStName(x.id))+'</option>';}).join('');}
 function shiftSave(id,btn){
   if(!isBoss())return;const s=db.shifts.filter(function(x){return x.id===id;})[0];if(!s)return;
@@ -846,12 +850,12 @@ function parseExp(str){return String(str||'').replace(/[＋]/g,'+').split('+').m
 function emptyFuel(x){return !x||(!x.morning&&!x.evening&&!x.transfers&&!x.expenses);}
 function renderStations(){
   const nm=function(s){return String(s.name||'').trim()?escHtml(String(s.name)):'<span style="opacity:.55;font-style:italic">Без названия</span>';};
-  document.getElementById('stationList').innerHTML=(db.stations.length?'':'<div class="muted" style="margin:4px 0 10px">АЗС пока нет. Впиши название ниже и нажми «Создать».</div>')+db.stations.map(function(s){
-    let h='<div class="item" id="row-'+s.id+'"><div class="name">'+nm(s)+'<div class="st-pr">'+stFuels(s.id).map(function(f){return stPrCell(s.id,f);}).join('')+'</div>'+stFuelAddBtn(s.id)+'<div class="muted" style="margin-top:6px;font-weight:600" onclick="spdOpen(\''+s.id+'\')">Траты: '+fmt(spdTotal(s))+' ₽</div></div><div class="side"><button class="btn btn-beige" onclick="spdOpen(\''+s.id+'\')">Траты</button>'+usrBtn(s.id)+'<button class="btn btn-ok" onclick="startRename(\''+s.id+'\')">Переименовать</button><button class="btn btn-danger" onclick="delStation(\''+s.id+'\',this)">Удалить</button></div></div>';
+  document.getElementById('stationList').innerHTML=usrAllItem()+(db.stations.length?'':'<div class="muted" style="margin:4px 0 10px">АЗС пока нет. Впиши название ниже и нажми «Создать».</div>')+db.stations.map(function(s){
+    let h='<div class="item" id="row-'+s.id+'"><div class="name">'+nm(s)+'<div class="st-pr">'+stFuels(s.id).map(function(f){return stPrCell(s.id,f);}).join('')+'</div>'+stFuelAddBtn(s.id)+'<div class="muted" style="margin-top:6px;font-weight:600" onclick="spdOpen(\''+s.id+'\')">Траты: '+fmt(spdTotal(s))+' ₽</div></div><div class="side"><button class="btn btn-black" onclick="spdOpen(\''+s.id+'\')">Траты</button>'+usrBtn(s.id)+'<button class="btn btn-blue" onclick="startRename(\''+s.id+'\')">Переименовать</button><button class="btn btn-danger" onclick="delStation(\''+s.id+'\',this)">Удалить</button></div></div>';
     if(spd.open===s.id) h+=spdPanel(s);
     if(usr.open===s.id) h+=usrPanel(s.id);
     return h;
-  }).join('')+usrAllItem();
+  }).join('');
 }
 function addStation(btn){if(!canAdmin()){toast('Заправки создаёт только управляющий');return;}const name=document.getElementById('newStation').value.trim();if(!name)return;const id='s'+Date.now();const src=db.stations.find(function(x){return x.id===db.current;})||db.stations[0];db.stations.push({id:id,name:name,fuels:['95'],prices:fmap(function(){return '';}),calib:(src&&src.calib)?JSON.parse(JSON.stringify(src.calib)):{'95':{name:'Резервуар № 10',start:0,v:CAL95.slice()}}});db.current=id;document.getElementById('newStation').value='';persist();renderStations();flashBtn(btn,'Создано');}
 function startRename(id){const s=db.stations.find(x=>x.id===id);if(!s)return;const row=document.getElementById('row-'+id);row.innerHTML='<input class="ren" id="ren-'+id+'" value="'+s.name.replace(/"/g,'&quot;')+'" /><div class="side"><button class="btn btn-ok" onclick="saveRename(\''+id+'\')">Сохранить</button><button class="btn" onclick="renderStations()">Отмена</button></div>';const inp=document.getElementById('ren-'+id);inp.focus();inp.select();}
@@ -909,7 +913,7 @@ function stPrCell(sid,f){
 function stFuelAddBtn(sid){
   return '<div style="display:flex;gap:6px;margin-top:8px;align-items:center"><span style="font-size:13px;font-weight:700">АИ-</span>'+
     '<input id="fnew-'+sid+'" inputmode="numeric" maxlength="3" placeholder="номер, например 98" style="flex:1;min-height:0;padding:8px;font-size:13px">'+
-    '<button class="btn btn-beige" style="padding:8px 10px;font-size:12px;min-height:0;white-space:nowrap" onclick="stFuelNew(\''+sid+'\',this)">＋ Создать</button></div>';
+    '<button class="btn btn-ok" style="padding:8px 10px;font-size:12px;min-height:0;white-space:nowrap" onclick="stFuelNew(\''+sid+'\',this)">＋ Создать</button></div>';
 }
 function stFuelNew(sid,btn){
   const inp=document.getElementById('fnew-'+sid);if(!inp)return;
