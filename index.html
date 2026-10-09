@@ -3554,7 +3554,7 @@ function draw(t){
   }
   scene={W:W,H:H,hy:hy,amp:amp,dk:clamp((hs+6)/12,0,1),fy:0,mid:0};
   var mt=mountains(g,W,H,hy,amp,hs,col,I.sun.az);scene.fy=mt.fy;scene.mid=mt.mid;
-  layoutSheep();fxIdle();
+  layoutSheep();fxKick();
 }
 /* Живой слой шапки: днём птицы, ночью метеоры и спутник, на холмах арба. Кадры идут только пока что-то на экране. */
 var fx=[],raf=0,lastT=0,calm=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches);
@@ -3604,19 +3604,34 @@ function paintSat(g,e){
 }
 function gY(x){x=clamp(x,0,scene.W);return Math.min(scene.mid(x)+1,scene.fy(x)-2);}   // дорога по верхнему из холмов: фон светлый, силуэт виден
 function gSlope(x){return Math.atan2(gY(x+3)-gY(x-3),6);}
-function paintHorse(g,ph){
-  var bob=Math.sin(ph*2)*.35,legs=[[-4.6,0],[4.4,1.571],[-4.6,3.1416],[4.4,4.712]],i;
-  g.lineWidth=1.15;
-  for(i=0;i<4;i++){
-    var hx=legs[i][0],ps=ph+legs[i][1],fx_=hx+3.2*Math.sin(ps),fy_=-1.6*Math.max(0,Math.cos(ps)),hy=-6.6+bob;
-    g.globalAlpha=i%2?.72:1;g.beginPath();g.moveTo(hx,hy);g.lineTo((hx+fx_)/2+(hx>0?.9:-.9),(hy+fy_)/2);g.lineTo(fx_,fy_);g.stroke();
-  }
+/* Лошадь в профиль (смотрит вправо, копыта на y=0, холка ≈ 10 ед.). Контуры туловища и шеи с головой сняты с фото вороной лошади; ноги — две кости с суставами (колено у передней, скакательный сустав у задней). */
+var HB=[[100,40],[110,36],[130,34],[150,33],[170,37],[179,44],[183,55],[183,75],[180,85],[160,88],[140,92],[115,93],[100,90],[88,82],[85,76],[90,55]];
+var HN=[[104,44],[90,31],[72,21],[50,15],[33,11],[29,5],[27,12],[24,18],[22,30],[17,42],[11,52],[13,58],[19,58],[30,52],[40,46],[52,47],[62,56],[72,68],[86,80],[100,82]];
+function hx(p){return[(110-p[0])/11.7,(p[1]-148)/11.7];}
+function hSmooth(g,pts){var n=pts.length,m=function(a,b){return[(a[0]+b[0])/2,(a[1]+b[1])/2];},s=m(pts[n-1],pts[0]);g.beginPath();g.moveTo(s[0],s[1]);for(var i=0;i<n;i++){var c=pts[i],e=m(c,pts[(i+1)%n]);g.quadraticCurveTo(c[0],c[1],e[0],e[1]);}g.closePath();}
+function hIK(tx,ty,fx,fy,a,b,dir){var dx=fx-tx,dy=fy-ty,d=Math.min(Math.hypot(dx,dy),a+b-.02),c=(a*a-b*b+d*d)/(2*d),h=Math.sqrt(Math.max(0,a*a-c*c)),ux=dx/(d||1),uy=dy/(d||1);return[tx+ux*c-uy*h*dir,ty+uy*c+ux*h*dir];}
+var HBODY=HB.map(hx),HNECK=HN.map(hx),HPIV=[1.9,-7.9];
+function drawHorse(g,x,y,s,f,p){
+  var ph=p.ph,wk=p.wk,th=p.th,col=p.col;
+  g.save();g.translate(x,y);g.scale(f*s,s);g.fillStyle=col;g.strokeStyle=col;g.lineCap='round';g.lineJoin='round';
+  var bob=Math.abs(Math.sin(ph*2))*.1*wk;
+  // ноги: [x верха, y верха, фаза шага, передняя, дальняя, длина верхней кости, нижней, толщина верха, толщина низа]
+  [[-3.9,-6.2,0,0,1,3.1,3.2,1.5,.8],[1.7,-6,.25,1,1,3,3.1,1.3,.75],[-3.4,-6.2,.5,0,0,3.1,3.2,1.6,.85],[2.3,-6,.75,1,0,3,3.1,1.35,.8]].forEach(function(l){
+    var a=ph+l[2]*6.2832,fx=l[0]+(l[3]?.3:-.4)+(l[4]&&l[3]?.8:0)+Math.sin(a)*1.4*wk,fy=-Math.max(0,Math.cos(a))*1*wk,ty=l[1]+bob;
+    var k=hIK(l[0],ty,fx,fy-.35,l[5],l[6],l[3]?-1:1);
+    g.globalAlpha=l[4]?.8:1;
+    g.lineWidth=l[7];g.beginPath();g.moveTo(l[0],ty);g.lineTo(k[0],k[1]);g.stroke();
+    g.lineWidth=l[8];g.beginPath();g.moveTo(k[0],k[1]);g.lineTo(fx,fy-.35);g.stroke();
+    g.lineWidth=l[8]*1.25;g.beginPath();g.moveTo(fx,fy-.35);g.lineTo(fx+.3,fy);g.stroke();
+  });
   g.globalAlpha=1;
-  g.beginPath();g.ellipse(0,-8.4+bob,7.2,3.3,0,0,6.2832);g.fill();                                           // туловище
-  g.beginPath();g.moveTo(4.2,-10.8+bob);g.lineTo(7.4,-15.6+bob*1.5);g.lineTo(9.4,-14.9+bob*1.5);g.lineTo(7.6,-9.6+bob);g.closePath();g.fill();   // шея
-  g.beginPath();g.ellipse(10.8,-14.4+bob*1.5,2.9,1.35,.6,0,6.2832);g.fill();                                 // голова
-  g.beginPath();g.moveTo(8.3,-15.8+bob*1.5);g.lineTo(8.8,-17.7+bob*1.5);g.lineTo(9.7,-15.8+bob*1.5);g.closePath();g.fill();   // ухо
-  g.lineWidth=1.3;g.beginPath();g.moveTo(-7,-9.6+bob);g.quadraticCurveTo(-10.4+Math.sin(ph)*.8,-9,-10.6+Math.sin(ph)*1.1,-4.6);g.stroke();   // хвост
+  g.save();g.translate(0,bob);
+  hSmooth(g,HBODY);g.fill();
+  var tw=Math.sin(p.sw)*.6;                                                                       // хвост
+  g.lineWidth=1.05;g.beginPath();g.moveTo(-6.1,-8.3);g.quadraticCurveTo(-7+tw*.4,-5.6,-6.5+tw,-1.2);g.stroke();
+  g.save();g.translate(HPIV[0],HPIV[1]);g.rotate(th);g.translate(-HPIV[0],-HPIV[1]);               // шея и голова поворачиваются вокруг основания шеи
+  hSmooth(g,HNECK);g.fill();g.restore();
+  g.restore();g.restore();
 }
 function paintCart(g,dist,ph){
   var R=5.6,k,sw=Math.sin(ph*2+1)*.05;
@@ -3636,52 +3651,94 @@ function paintCart(g,dist,ph){
 function paintArba(g,e){
   var d=e.dir,K=1.25,hx=e.x,cx=hx-d*22*K,ph=e.dist*.5,m=scene.dk,col='rgba('+Math.round(mix(3,14,m))+','+Math.round(mix(6,28,m))+','+Math.round(mix(8,26,m))+',.95)';
   g.fillStyle=col;g.strokeStyle=col;g.lineCap='round';g.lineJoin='round';
-  g.save();g.translate(hx,gY(hx));g.rotate(gSlope(hx));g.scale(d*K,K);paintHorse(g,ph);g.restore();
+  g.save();g.translate(hx,gY(hx));g.rotate(gSlope(hx));g.scale(d*K,K);drawHorse(g,0,0,1,1,{ph:ph,wk:1,th:.1,sw:ph,col:col});g.restore();
   g.save();g.translate(cx,gY(cx)+Math.sin(e.dist*.9)*.3);g.rotate(gSlope(cx));g.scale(d*K,K);paintCart(g,e.dist,ph);g.restore();
   g.lineWidth=1;g.beginPath();g.moveTo(hx+d*2*K,gY(hx)-7.6*K);g.lineTo(cx+d*10.5*K,gY(cx)-7.4*K);g.stroke();            // оглобля
 }
-/* Отара пасётся на лугу: три стайки вразброс, чабан с собакой. Овцы опускают и поднимают голову, изредка переступают. Ночью лежат тёмными пятнами. */
-var FLOCKS=[7,10,6],SHEP=.57,sheep=[],sheepW=0;
+/* Отара живёт на лугу плавно: щиплет траву, подолгу стоит, медленно бредёт, плавно поднимает и опускает голову. Чабан ходит с посохом, собака обегает отару. Ночью овцы лежат тёмными пятнами. */
+var FLOCKS=[7,10,6],sheep=[],sheepW=0,hz={x:0,x0:0,t:.4,face:1,st:'graze',tm:5,th:1.2,sp:0,ph:0,sw:0},hd={cx:0,sx:0,tx:0,st:'idle',tm:3,face:1,ph:0,t:0,dx:0,dy:.5,dtx:0,dty:.5,dmode:'lie',dtm:4,dph:0,dface:1};
+function bandAt(x){return scene.fy(x)-4-(scene.mid(x)+3);}
+function yAt(x,t){return scene.mid(x)+3+bandAt(x)*t;}
 function layoutSheep(){        // стайки ставим там, где луг виден шире всего; пересчёт только при смене ширины экрана
   var W=scene.W;if(W===sheepW)return;sheepW=W;sheep=[];
   var r=987654;function R(){r=(r*16807)%2147483647;return r/2147483647;}
-  var band=function(x){return scene.fy(x)-4-(scene.mid(x)+3);},cs=[],x;
+  var cs=[],x;
   FLOCKS.forEach(function(n,fi){
     var best=-1,bx=W*.5;
-    for(x=W*.2;x<=W*.85;x+=6){if(cs.some(function(c){return Math.abs(c-x)<W*.16;}))continue;var b=band(x);if(b>best){best=b;bx=x;}}
+    for(x=W*.2;x<=W*.85;x+=6){if(cs.some(function(c){return Math.abs(c-x)<W*.16;}))continue;var b=bandAt(x);if(b>best){best=b;bx=x;}}
     cs.push(bx);
-    for(var i=0;i<n;i++){var xx=clamp(bx+(R()-.5)*W*.09,2,W-2);if(band(xx)<6)xx=bx;sheep.push({f:xx/W,f0:xx/W,t:R(),face:R()<.5?1:-1,up:R()<.3?1:0,dark:R()<.1,k:.9+R()*.2});}
+    for(var i=0;i<n;i++){var xx=clamp(bx+(R()-.5)*W*.09,2,W-2);if(bandAt(xx)<6)xx=bx;sheep.push({x:xx,x0:xx,t:R(),face:R()<.5?1:-1,st:'graze',tm:R()*8,head:0,chew:R()*6,leg:R()*6,sp:0,dark:R()<.1,k:.9+R()*.2});}
   });
-  SHEP=cs.length>1?(cs[1]+W*.05)/W:.57;
+  var hb=-1,hbx=W*.5;                                                                  // лошадь — там, где луг широкий и стайки не мешают
+  for(x=W*.3;x<=W*.76;x+=6){if(cs.some(function(c){return Math.abs(c-x)<W*.1;}))continue;var b2=bandAt(x);if(b2>hb){hb=b2;hbx=x;}}
+  hz.x=hz.x0=hbx;
+  var c=cs.length>1?cs[1]:cs[0];hd.cx=c;hd.sx=hd.tx=c+W*.05;hd.dx=hd.dtx=c;
+}
+function sheepStep(dt){
+  var W=scene.W,e=function(k){return 1-Math.exp(-dt*k);};
+  sheep.forEach(function(sh){
+    sh.tm-=dt;
+    if(sh.tm<=0){var q=Math.random();
+      if(sh.st==='graze'){if(q<.62)sh.tm=rr(5,12);else if(q<.8){sh.st='look';sh.tm=rr(2,5);}else{sh.st='walk';sh.tm=rr(3,7);if(Math.random()<.35)sh.face=-sh.face;}}
+      else if(sh.st==='look'){sh.st=q<.8?'graze':'walk';sh.tm=sh.st==='graze'?rr(5,12):rr(3,6);}
+      else{sh.st='graze';sh.tm=rr(6,14);}
+    }
+    sh.head+=((sh.st==='look'?1:(sh.st==='walk'?.4:0))-sh.head)*e(4);               // голова плавно идёт к нужному положению
+    sh.sp+=((sh.st==='walk'?5:(sh.st==='graze'?.9:0))-sh.sp)*e(3);                     // пасясь, овца понемногу продвигается
+    var nx=sh.x+sh.face*sh.sp*dt;
+    if(nx<sh.x0-W*.055||nx>sh.x0+W*.055||bandAt(clamp(nx,1,W-1))<6)sh.face=-sh.face;else sh.x=nx;
+    sh.chew+=dt*(sh.st==='graze'?2.4:.6);sh.leg+=sh.sp*dt*1.5;
+  });
+  hz.tm-=dt;                                                                           // лошадь: щиплет траву, иногда осматривается или бредёт
+  if(hz.tm<=0){var q2=Math.random();
+    if(hz.st==='graze'){if(q2<.55)hz.tm=rr(6,14);else if(q2<.75){hz.st='look';hz.tm=rr(3,6);}else{hz.st='walk';hz.tm=rr(4,8);if(Math.random()<.4)hz.face=-hz.face;}}
+    else if(hz.st==='look'){hz.st='graze';hz.tm=rr(6,14);}
+    else{hz.st='graze';hz.tm=rr(8,16);}
+  }
+  hz.th+=((hz.st==='look'?-.3:(hz.st==='walk'?.35:1.2))-hz.th)*e(2);                       // шея и голова идут плавно
+  hz.sp+=((hz.st==='walk'?6:(hz.st==='graze'?.5:0))-hz.sp)*e(2);
+  var hxn=hz.x+hz.face*hz.sp*dt;
+  if(hxn<hz.x0-W*.09||hxn>hz.x0+W*.09||bandAt(clamp(hxn,1,W-1))<3)hz.face=-hz.face;else hz.x=hxn;
+  hz.ph+=hz.sp*dt*1.1;hz.sw+=dt*1.3;
+  hd.t+=dt;hd.tm-=dt;                                                                  // чабан: стоит, потом неспешно переходит
+  if(hd.tm<=0){if(hd.st==='idle'){hd.st='walk';hd.tx=clamp(hd.cx+(Math.random()-.5)*W*.14,4,W-4);hd.tm=20;}else{hd.st='idle';hd.tm=rr(6,14);}}
+  if(hd.st==='walk'){var d=hd.tx-hd.sx;if(Math.abs(d)<1.5){hd.st='idle';hd.tm=rr(6,14);}else{hd.face=d>0?1:-1;hd.sx+=hd.face*3.2*dt;hd.ph+=dt*5;}}
+  else if(Math.random()<dt*.12)hd.face=-hd.face;
+  hd.dtm-=dt;                                                                          // собака: то лежит, то обегает отару
+  if(hd.dmode==='lie'){if(hd.dtm<=0){hd.dmode='trot';hd.dtx=clamp(hd.cx+(Math.random()-.5)*W*.2,4,W-4);hd.dty=rr(.2,.9);}}
+  else{var dd=hd.dtx-hd.dx;if(Math.abs(dd)<2){if(Math.random()<.5){hd.dmode='lie';hd.dtm=rr(4,10);}else{hd.dtx=clamp(hd.cx+(Math.random()-.5)*W*.2,4,W-4);hd.dty=rr(.2,.9);}}
+    else{hd.dface=dd>0?1:-1;hd.dx+=hd.dface*15*dt;hd.dy+=(hd.dty-hd.dy)*e(1.5);hd.dph+=dt*14;}}
 }
 function paintSheep(g){
   var m=scene.dk,night=m<.15,wool=[mix(52,240,m),mix(54,238,m),mix(66,228,m)],dkc='rgb('+Math.round(mix(12,50,m))+','+Math.round(mix(12,44,m))+','+Math.round(mix(14,40,m))+')';
   sheep.forEach(function(sh){
-    var x=sh.f*scene.W,top=scene.mid(x)+3,bot=scene.fy(x)-4;if(bot-top<5)return;      // только там, где виден луг
-    var y=top+(bot-top)*sh.t,s=(.75+.5*sh.t)*sh.k,w=sh.dark?[wool[0]*.35,wool[1]*.35,wool[2]*.38]:wool,f=sh.face;
+    var x=sh.x;if(bandAt(x)<5)return;                                                    // только там, где виден луг
+    var y=yAt(x,sh.t),s=(.75+.5*sh.t)*sh.k,w=sh.dark?[wool[0]*.35,wool[1]*.35,wool[2]*.38]:wool,f=sh.face,wk=clamp(sh.sp/5,0,1);
     g.fillStyle='rgba(0,0,0,.2)';g.beginPath();g.ellipse(x,y+.3*s,3.3*s,.75*s,0,0,6.2832);g.fill();
     if(night){g.fillStyle=rgb(w);g.beginPath();g.ellipse(x,y-1*s,2.6*s,1.1*s,0,0,6.2832);g.fill();return;}
-    g.strokeStyle=dkc;g.lineWidth=Math.max(.6,.7*s);g.lineCap='round';g.beginPath();g.moveTo(x-1.3*s,y-1.2*s);g.lineTo(x-1.3*s,y);g.moveTo(x+1.3*s,y-1.2*s);g.lineTo(x+1.3*s,y);g.stroke();
-    g.fillStyle=rgb(w);g.beginPath();g.ellipse(x-.5*s,y-2.4*s,2.5*s,1.9*s,0,0,6.2832);g.ellipse(x+.9*s,y-2.5*s,2.2*s,1.7*s,0,0,6.2832);g.fill();
-    g.fillStyle=rgb([w[0]*.82,w[1]*.82,w[2]*.84],.7);g.beginPath();g.ellipse(x,y-1.5*s,2.8*s,.9*s,0,0,6.2832);g.fill();
-    g.fillStyle=dkc;g.beginPath();g.ellipse(x+f*3.1*s,y-(sh.up?3.6:1.9)*s,1.15*s,.85*s,f*.5,0,6.2832);g.fill();
+    var bob=Math.abs(Math.sin(sh.leg))*.18*s*wk,sw=Math.sin(sh.leg)*.8*s*wk,hy=(1.9+1.7*sh.head)*s+(sh.st==='graze'?Math.sin(sh.chew)*.14*s:0);
+    g.strokeStyle=dkc;g.lineWidth=Math.max(.6,.7*s);g.lineCap='round';g.beginPath();g.moveTo(x-1.3*s+sw,y-1.2*s);g.lineTo(x-1.3*s+sw,y);g.moveTo(x+1.3*s-sw,y-1.2*s);g.lineTo(x+1.3*s-sw,y);g.stroke();
+    g.fillStyle=rgb(w);g.beginPath();g.ellipse(x-.5*s,y-2.4*s-bob,2.5*s,1.9*s,0,0,6.2832);g.ellipse(x+.9*s,y-2.5*s-bob,2.2*s,1.7*s,0,0,6.2832);g.fill();
+    g.fillStyle=rgb([w[0]*.82,w[1]*.82,w[2]*.84],.7);g.beginPath();g.ellipse(x,y-1.5*s-bob,2.8*s,.9*s,0,0,6.2832);g.fill();
+    g.fillStyle=dkc;g.beginPath();g.ellipse(x+f*(3.1-.3*sh.head)*s,y-hy-bob,1.15*s,.85*s,f*.5,0,6.2832);g.fill();
   });
-  var sx=SHEP*scene.W,top=scene.mid(sx)+3,bot=scene.fy(sx)-4;
-  if(!night&&bot-top>5){var sy=top+(bot-top)*.7,k=1.25;                                   // чабан со своей собакой
-    g.fillStyle=dkc;g.strokeStyle=dkc;g.lineWidth=.8*k;
-    g.beginPath();g.ellipse(sx,sy-4.2*k,1.5*k,3*k,0,0,6.2832);g.fill();g.beginPath();g.arc(sx,sy-8.1*k,1.15*k,0,6.2832);g.fill();
-    g.beginPath();g.ellipse(sx,sy-9*k,1.7*k,.7*k,0,0,6.2832);g.fill();
-    g.beginPath();g.moveTo(sx+2.2*k,sy-9*k);g.lineTo(sx+2.2*k,sy);g.stroke();
-    g.beginPath();g.moveTo(sx-.6*k,sy-1.5*k);g.lineTo(sx-.6*k,sy);g.moveTo(sx+.6*k,sy-1.5*k);g.lineTo(sx+.6*k,sy);g.stroke();
-    g.beginPath();g.ellipse(sx-4.6*k,sy-1.4*k,1.8*k,.9*k,0,0,6.2832);g.fill();g.beginPath();g.arc(sx-6.2*k,sy-2.2*k,.7*k,0,6.2832);g.fill();}
-}
-function sheepTick(){
-  if(!scene||document.hidden)return;
-  if(scene.dk>.15)sheep.forEach(function(sh){
-    if(Math.random()<.22)sh.up=1-sh.up;
-    if(Math.random()<.1){var st=(Math.random()<.5?-1:1)*rr(.5,1.4);sh.face=st>0?1:-1;sh.f=clamp(sh.f+st/scene.W,sh.f0-.03,sh.f0+.03);}
-  });
-  fxIdle();
+  if(bandAt(hz.x)>3){var hy2=yAt(hz.x,hz.t),hs=.9+.3*hz.t;                          // лошадь (ночью стоит тёмным силуэтом)
+    drawHorse(g,hz.x,hy2,hs,hz.face,{ph:hz.ph,wk:clamp(hz.sp/6,0,1),th:night?.8:hz.th,sw:hz.sw,col:night?'rgba(8,10,16,.9)':dkc});}
+  if(night)return;
+  var sx=hd.sx,k=1.25;
+  if(bandAt(sx)>5){var sy=yAt(sx,.7),mv=hd.st==='walk',sw2=mv?Math.sin(hd.ph)*1.1*k:0,br=1+.03*Math.sin(hd.t*1.6),f2=hd.face;   // чабан со своим посохом
+    g.fillStyle=dkc;g.strokeStyle=dkc;g.lineWidth=.8*k;g.lineCap='round';
+    g.beginPath();g.moveTo(sx-.6*k+sw2,sy-1.5*k);g.lineTo(sx-.6*k+sw2,sy);g.moveTo(sx+.6*k-sw2,sy-1.5*k);g.lineTo(sx+.6*k-sw2,sy);g.stroke();
+    g.beginPath();g.ellipse(sx,sy-4.2*k,1.5*k,3*k*br,0,0,6.2832);g.fill();g.beginPath();g.arc(sx+f2*.3*k,sy-8.1*k*br,1.15*k,0,6.2832);g.fill();
+    g.beginPath();g.ellipse(sx+f2*.3*k,sy-9*k*br,1.7*k,.7*k,0,0,6.2832);g.fill();
+    g.beginPath();g.moveTo(sx+f2*2.2*k+(mv?Math.sin(hd.ph+1.5)*.5*k:0),sy-9*k);g.lineTo(sx+f2*2.2*k,sy);g.stroke();}
+  var dx=hd.dx;
+  if(bandAt(dx)>5){var dy=yAt(dx,hd.dy),fd=hd.dface,tr=hd.dmode==='trot';                                                          // собака
+    g.fillStyle=dkc;g.strokeStyle=dkc;g.lineWidth=.7*k;
+    if(tr){var l=Math.sin(hd.dph)*1.2;g.beginPath();g.moveTo(dx-1.2*k,dy-1.3*k);g.lineTo(dx-1.2*k+l,dy);g.moveTo(dx+1.2*k,dy-1.3*k);g.lineTo(dx+1.2*k-l,dy);g.stroke();
+      g.beginPath();g.ellipse(dx,dy-1.9*k-Math.abs(l)*.12,1.9*k,.95*k,0,0,6.2832);g.fill();g.beginPath();g.arc(dx+fd*2.3*k,dy-2.4*k,.75*k,0,6.2832);g.fill();
+      g.beginPath();g.moveTo(dx-fd*1.8*k,dy-2.2*k);g.lineTo(dx-fd*3*k,dy-3.1*k);g.stroke();}
+    else{g.beginPath();g.ellipse(dx,dy-.7*k,2.1*k,.8*k,0,0,6.2832);g.fill();g.beginPath();g.arc(dx+fd*2.2*k,dy-.9*k,.7*k,0,6.2832);g.fill();}}
 }
 function fxCtx(){
   var cv=document.getElementById('skyAnim');if(!cv||!scene)return null;
@@ -3689,16 +3746,19 @@ function fxCtx(){
   if(cv.width!==pw||cv.height!==ph){cv.width=pw;cv.height=ph;}
   var g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,H);return g;
 }
-function fxIdle(){if(raf)return;var g=fxCtx();if(g)paintSheep(g);}      // кадры не идут: рисуем только отару
+function sheepLive(){return !calm&&!!scene&&scene.dk>.15&&!document.hidden;}                // днём отара живая, ночью рисуем один раз
+function fxIdle(){if(raf)return;var g=fxCtx();if(g)paintSheep(g);}
+function fxKick(){if(raf)return;if(fx.length||sheepLive()){lastT=performance.now();raf=requestAnimationFrame(fxFrame);}else fxIdle();}
 function fxFrame(now){
   raf=0;
-  if(now-lastT<30){raf=requestAnimationFrame(fxFrame);return;}   // около 30 кадров в секунду
+  if(now-lastT<(fx.length?30:50)){raf=requestAnimationFrame(fxFrame);return;}   // 30 кадров в секунду, когда летят птицы или едет арба, иначе 20
   var dt=Math.min((now-lastT)/1000,.1);lastT=now;
   var g=fxCtx();if(!g){fx=[];return;}
   fx=fx.filter(function(e){return fxStep(e,dt);});
+  if(sheepLive())sheepStep(dt);
   paintSheep(g);
   fx.forEach(function(e){if(e.k==='birds')paintBirds(g,e);else if(e.k==='met')paintMeteor(g,e);else if(e.k==='sat')paintSat(g,e);else paintArba(g,e);});
-  if(fx.length)raf=requestAnimationFrame(fxFrame);else fxIdle();
+  if(fx.length||sheepLive())raf=requestAnimationFrame(fxFrame);else fxIdle();
 }
 function fxSpawn(kind){
   if(calm||document.hidden||!scene)return;
@@ -3708,13 +3768,12 @@ function fxSpawn(kind){
   else if(kind==='sat'&&alt<-7&&!fxHas('sat'))addSat();
   else if(kind==='arba'&&alt>-2&&!fxHas('arba'))addArba();
   else return;
-  if(!raf){lastT=performance.now();raf=requestAnimationFrame(fxFrame);}
+  fxKick();
 }
 function fxEvery(kind,a,b,first){setTimeout(function(){fxSpawn(kind);fxEvery(kind,a,b);},(first==null?rr(a,b):first)*1000);}
 var timer=null;
 function start(){
   draw();
-  if(!calm)setInterval(sheepTick,1300);
   if(!calm){fxEvery('birds',18,55,rr(5,12));fxEvery('meteor',22,55,rr(6,14));fxEvery('sat',70,150,rr(20,40));fxEvery('arba',50,110,rr(6,10));}
   clearInterval(timer);timer=setInterval(function(){if(!document.hidden)draw();},30000);
   window.addEventListener('resize',function(){draw();});
