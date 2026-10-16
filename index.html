@@ -96,7 +96,8 @@ input[type=date]{min-height:42px;min-width:0;width:100%;max-width:100%;display:b
 #monthStrip .chip.on{background:var(--acc);color:var(--acc-t)}
 #dayStrip{align-items:flex-end;gap:2px;padding-bottom:10px}
 #dayStrip .chip,#monthStrip .chip{position:relative}
-#dayStrip .chip{display:flex;flex-direction:column;align-items:center;gap:3px;width:46px;padding:6px 0 4px;background:transparent;box-shadow:none;color:var(--text);border-radius:14px}
+#dayStrip .chip{display:flex;flex-direction:column;align-items:center;gap:3px;width:46px;padding:20px 0 4px;background:transparent;box-shadow:none;color:var(--text);border-radius:14px}
+#dayStrip .zl{position:absolute;top:1px;left:50%;transform:translateX(-50%);padding:2px 8px;border-radius:8px;background:#000;font-size:11px;font-weight:900;color:#fff;letter-spacing:.03em;white-space:nowrap;pointer-events:none}
 #dayStrip .wd{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
 #dayStrip .dn{width:32px;height:32px;line-height:32px;border-radius:50%;text-align:center;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;transition:background .15s,box-shadow .15s}
 #dayStrip .chip.today:not(.on) .dn{color:var(--acc-hi);box-shadow:inset 0 0 0 1.5px var(--acc)}
@@ -1721,7 +1722,8 @@ function paintCalc(){
     transfers:document.getElementById('transfers').value,
     acq:document.getElementById('acq').value,
     expenses:document.getElementById('expenses').value,
-    okSold:rawFuel(date,view.fuel).okSold
+    okSold:rawFuel(date,view.fuel).okSold,
+    fresh:rawFuel(date,view.fuel).fresh
   };
   const r=resolveEnds(date,view.fuel,x);
   const open=r.open, close=r.close;
@@ -2006,7 +2008,7 @@ function mirrorToMaster(date,fuel){
       if(mmEmpty(src[k]))delete fby[k];else fby[k]=who.id;
     });
     if(mmEmpty(m.price)&&!mmEmpty(src.price))patch.price=src.price;
-    if(emptyFuel(m)){patch.by=src.by||who.id;patch.byName=src.byName||who.name||'';if(src.okSold!=null)patch.okSold=src.okSold;}
+    if(emptyFuel(m)){patch.by=src.by||who.id;patch.byName=src.byName||who.name||'';if(src.okSold!=null)patch.okSold=src.okSold;if(src.fresh!=null)patch.fresh=src.fresh;}
     patch.parts=parts;patch.fby=fby;
     patch.log=logMake(m,patch,who,' (из своей папки)',MM_KEYS.concat('price'));
     setFuelOn(date,fuel,patch);
@@ -2113,7 +2115,7 @@ function gapInfo(date,f){
 }
 function dayIssues(date,f,x){
   x=x||rawFuel(date,f);
-  const err=[],warn=[];
+  const err=[],warn=[];let fresh=null;
   if(emptyFuel(x)){
     const g=gapInfo(date,f);
     if(g) warn.push('День не заполнен: между закрытием '+ruDate(g.a)+' ('+fmt(g.ca)+' л) и открытием '+ruDate(g.b)+' ('+fmt(g.ob)+' л) нигде не учтено '+fmt(g.liters)+' л');
@@ -2138,9 +2140,9 @@ function dayIssues(date,f,x){
   if(r.open!=null&&r.close!=null&&r.close<r.open) err.push('Закрытие ('+fmt(r.close)+') меньше открытия ('+fmt(r.open)+')');
   const own=ns(x.morning), ownC=ns(x.evening);
   const pe=ns(rawFuel(shiftDate(date,-1),f).evening);
-  if(own!=null&&pe!=null&&Math.abs(own-pe)>1e-9) err.push('Открытие ('+fmt(own)+') не равно закрытию вчера ('+fmt(pe)+')');
-  const nm=ns(rawFuel(shiftDate(date,1),f).morning);
-  if(ownC!=null&&nm!=null&&Math.abs(ownC-nm)>1e-9) err.push('Закрытие ('+fmt(ownC)+') не равно открытию завтра ('+fmt(nm)+')');
+  if(own!=null&&pe!=null&&Math.abs(own-pe)>1e-9&&!isFresh(date,f,x)){err.push('Открытие ('+fmt(own)+') не равно закрытию вчера ('+fmt(pe)+')');if(own<pe)fresh=own;}
+  const nxt=shiftDate(date,1), nm=ns(rawFuel(nxt,f).morning);
+  if(ownC!=null&&nm!=null&&Math.abs(ownC-nm)>1e-9&&!isFresh(nxt,f)) err.push('Закрытие ('+fmt(ownC)+') не равно открытию завтра ('+fmt(nm)+')');
   const fm=fuelMath(f,x,date);
   if(fm.sold!=null&&fm.sold>0&&!(fm.price>0)) err.push('Есть проданные литры, а цена не задана');
   if(fm.sold!=null&&fm.sold>0){
@@ -2150,7 +2152,12 @@ function dayIssues(date,f,x){
       warn.push({t:'Продано в '+Math.round(fm.sold/py.sold)+' раз больше, чем вчера ('+fmt(py.sold)+' → '+fmt(fm.sold)+' л)',confirm:fm.sold});
     }
   }
-  return {err:err,warn:warn};
+  return {err:err,warn:warn,fresh:fresh};
+}
+function isFresh(date,f,x){                              // «счётчик начат заново»: подтверждено для этого значения открытия, а оно меньше вчерашнего закрытия
+  x=x||rawFuel(date,f);
+  const own=ns(x.morning), pe=ns(rawFuel(shiftDate(date,-1),f).evening);
+  return x.fresh!=null&&x.fresh!==''&&own!=null&&pe!=null&&own<pe&&Number(x.fresh)===own;
 }
 function dayStatus(date){
   let st='';
@@ -2177,7 +2184,7 @@ function dayKind(date){                                  // только для 
 function paintDots(){
   const set=function(el,st){const o=el.querySelector('.dot');if(o)o.remove();if(st){const i=document.createElement('i');i.className='dot '+st;el.appendChild(i);}};
   const lg=document.getElementById('dayLegend');if(lg){const sh=currentShift();lg.style.display=(sh&&!sh.boss)?'':'none';}
-  document.querySelectorAll('#dayStrip .chip').forEach(function(el){const y=+el.dataset.y,m=+el.dataset.m,d=+el.dataset.d;el.classList.remove('mine','other');if(d){set(el,dayStatus(iso(y,m,d)));const kd=dayKind(iso(y,m,d));if(kd)el.classList.add(kd);}});
+  document.querySelectorAll('#dayStrip .chip').forEach(function(el){const y=+el.dataset.y,m=+el.dataset.m,d=+el.dataset.d;el.classList.remove('mine','other');if(d){set(el,dayStatus(iso(y,m,d)));const kd=dayKind(iso(y,m,d));if(kd)el.classList.add(kd);const zl=el.querySelector('.zl');const fr=FUELS.some(function(f){return isFresh(iso(y,m,d),f);});if(fr&&!zl)el.insertAdjacentHTML('afterbegin','<span class="zl">с нуля</span>');else if(!fr&&zl)zl.remove();}});
   document.querySelectorAll('#monthStrip .chip').forEach(function(el,i){if(i>0)set(el,monthStatus(view.y,i-1));});
 }
 
@@ -2309,7 +2316,8 @@ function paintIssues(x){
   const iss=dayIssues(date,view.fuel,x);
   const who=(getRec(date).fuels[view.fuel]||{}).byName||'';
   let h=(who&&isBoss())?('<div class="muted">Вписал: '+escHtml(who)+'</div>'):'';
-  iss.err.forEach(function(t){h+='<div class="iss err">⛔ '+escHtml(t)+'</div>';});
+  iss.err.forEach(function(t){h+='<div class="iss err">⛔ '+escHtml(t)+(iss.fresh!=null&&t.indexOf('Открытие (')===0&&t.indexOf('не равно закрытию вчера')>0?'<button type="button" class="btn btn-ok iss-ok" onclick="confirmFresh('+iss.fresh+',this)">Счётчик начат заново</button>':'')+'</div>';});
+  if(isFresh(date,view.fuel,x)){const pv=ns(rawFuel(shiftDate(date,-1),view.fuel).evening);if(pv!=null)h+='<div class="iss ok">✓ Счётчик начат с нуля (вчера закрыто '+fmt(pv)+')</div>';}
   iss.warn.forEach(function(w){
     if(typeof w==='string') h+='<div class="iss warn">⚠ '+escHtml(w)+'</div>';
     else h+='<div class="iss warn">⚠ '+escHtml(w.t)+'<button type="button" class="btn btn-ok iss-ok" onclick="confirmSold('+w.confirm+',this)">Данные верны</button></div>';
@@ -2321,6 +2329,11 @@ function paintIssues(x){
   h+=mmPanel(date);
   h+=logHtml(date);
   box.innerHTML=h;
+}
+function confirmFresh(v,btn){
+  const date=iso(view.y,view.m,view.d);
+  setFuelOn(date,view.fuel,{fresh:v});
+  saveDay(btn);
 }
 function confirmSold(v,btn){
   const date=iso(view.y,view.m,view.d);
