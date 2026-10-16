@@ -185,6 +185,62 @@ nav.tabbar svg{width:21px;height:21px}
 .arch-wrap.hl textarea.arch-chat{position:relative;z-index:1;background:transparent;color:transparent;caret-color:#fff;scrollbar-width:none}
 .arch-wrap.hl textarea.arch-chat::-webkit-scrollbar{display:none}
 #archStatus.err{color:#ff5a5a;font-weight:700}
+/* --- вкладка «Облако и копии»: плитки по две в ряд. Открытая плитка срастается с панелью под ней в одну фигуру (вкладка + панель), остальные плитки размыты. Цвет плитки задаётся в JS (SG), здесь только форма --- */
+.sg{--g:12px;display:grid;grid-template-columns:1fr 1fr;gap:var(--g)}
+.sg-tile,.sg-fig{--tc:color-mix(in srgb,var(--c) 22%,var(--bg2))}
+.sg-tile{position:relative;display:grid;gap:10px;align-content:start;text-align:left;border:0;border-radius:var(--r);padding:14px;font:inherit;color:var(--text);cursor:pointer;background:var(--tc);box-shadow:0 8px 20px rgba(0,0,0,.35);transition:filter .3s,opacity .3s,transform .15s}
+.sg-tile b{font-size:15.5px;line-height:1.2}
+.sg-tile small{font-size:12.5px;font-weight:600;line-height:1.3;color:color-mix(in srgb,var(--c) 45%,#fff)}
+.sg-tile:active{transform:scale(.98)}
+.sg-tile.dim{filter:blur(3px) brightness(.5) saturate(.7);opacity:.7}
+.sg-ic{width:36px;height:36px;border-radius:11px;background:var(--ico) center/19px no-repeat,var(--c);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.sg-fig{grid-column:1/-1;position:relative;z-index:1;display:grid;grid-template-columns:subgrid;grid-template-rows:subgrid}
+.sg-ol{position:absolute;left:0;top:0;width:100%;overflow:visible;pointer-events:none;z-index:2}
+.sg-ol path{fill:none;stroke:var(--c);stroke-width:2}
+.sg-tab{grid-row:1;border-radius:var(--r) var(--r) 0 0;box-shadow:none}
+.sg-tab:active{transform:none}
+.sg-tab::before{content:"";position:absolute;left:0;right:0;top:100%;height:var(--g);background:inherit}   /* перемычка через промежуток между рядами */
+.sg-tab::after{content:"";position:absolute;top:100%;width:var(--g);height:var(--g)}                    /* вогнутый изгиб на стыке */
+.sg-fig.L .sg-tab{grid-column:1}
+.sg-fig.R .sg-tab{grid-column:2}
+.sg-fig.L .sg-tab::after{left:100%;background:radial-gradient(circle at 100% 0,transparent calc(var(--g) - .5px),var(--tc) var(--g))}
+.sg-fig.R .sg-tab::after{right:100%;background:radial-gradient(circle at 0 0,transparent calc(var(--g) - .5px),var(--tc) var(--g))}
+.sg-pane{grid-row:2;grid-column:1/-1;border-radius:var(--r);overflow:hidden}
+.sg-fig.L .sg-pane{border-top-left-radius:0}
+.sg-fig.R .sg-pane{border-top-right-radius:0}
+.sg-top{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--tc)}
+.sg-top span{flex:1;font-size:13.5px;line-height:1.35;color:color-mix(in srgb,var(--c) 30%,#fff)}
+.sg-x{flex:none;width:30px;height:30px;border:0;border-radius:50%;cursor:pointer;background:var(--ico) center/15px no-repeat,rgba(255,255,255,.1)}
+.sg-body{background:var(--blk);padding:14px;display:grid;gap:10px}
+.sg-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sg-a{--k:#5b6d63;position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;min-height:52px;text-align:left;border:0;border-radius:14px;padding:12px;font:inherit;font-weight:700;font-size:14px;color:var(--text);cursor:pointer;background:rgba(0,0,0,.2)}
+.sg-a::before{content:"";flex:none;width:28px;height:28px;border-radius:9px;background:var(--ico) center/16px no-repeat,var(--k)}
+.sg-a:not(.main):not(.red):last-child:nth-child(even){grid-column:1/-1}   /* одиночная обычная кнопка в последнем ряду — на всю ширину */
+.sg-a.main{--k:#2f9e5c;grid-column:1/-1;background:var(--k)}
+.sg-a.main::before{background:var(--ico) center/16px no-repeat,rgba(0,0,0,.2)}
+.sg-a.red{--k:rgba(196,61,82,.3);grid-column:1/-1;background:transparent;box-shadow:inset 0 0 0 1.5px rgba(255,110,110,.55);color:#ff8f8f}
+.sg-a.arm-warn{color:#2a1c00;background:var(--warn);box-shadow:none}
+.sg-kv{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:rgba(0,0,0,.18)}
+.sg-kv span{flex:1;color:var(--muted);font-weight:600}
+.sg-kv b{font-family:ui-monospace,Menlo,monospace;font-weight:600;letter-spacing:.06em}
+.sg-mini{border:0;border-radius:8px;padding:6px 10px;font:inherit;font-size:12.5px;font-weight:700;color:var(--text);cursor:pointer;background:rgba(255,255,255,.1)}
+@media (prefers-reduced-motion:reduce){.sg-tile{transition:none}}
+.i-cloud{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.2 9.2 4.5 4.5 0 0 0 7 18z'/%3E%3C/svg%3E")}
+.i-key{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='8' cy='15' r='4'/%3E%3Cpath d='M11 12l9-9M17 6l3 3M15 8l2 2'/%3E%3C/svg%3E")}
+.i-load{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3v12M7 10l5 5 5-5M4 20h16'/%3E%3C/svg%3E")}
+.i-save{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 15V3M7 8l5-5 5 5M4 20h16'/%3E%3C/svg%3E")}
+.i-info{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v6M12 7.5v.5'/%3E%3C/svg%3E")}
+.i-snap{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 1 0 3-6.7L3 8'/%3E%3Cpath d='M3 3v5h5M12 7v5l3 2'/%3E%3C/svg%3E")}
+.i-check{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E")}
+.i-exit{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3'/%3E%3C/svg%3E")}
+.i-link{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7'/%3E%3Cpath d='M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7'/%3E%3C/svg%3E")}
+.i-users{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='8' r='4'/%3E%3Cpath d='M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3'/%3E%3C/svg%3E")}
+.i-file{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z'/%3E%3Cpath d='M14 3v6h6'/%3E%3C/svg%3E")}
+.i-paste{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='3' width='8' height='4' rx='1'/%3E%3Cpath d='M16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2'/%3E%3C/svg%3E")}
+.i-clear{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6L6 18M6 6l12 12'/%3E%3C/svg%3E")}
+.i-trash{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14'/%3E%3C/svg%3E")}
+.i-list{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01'/%3E%3C/svg%3E")}
+.i-cam{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z'/%3E%3Ccircle cx='12' cy='13' r='4'/%3E%3C/svg%3E")}
 .fx-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:10px;z-index:6}.fx-layer canvas{width:100%;height:100%;display:block}
 /* --- окна входа --- */
 #cloudGate,#cloudBoot{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px}
@@ -384,33 +440,41 @@ nav.tabbar button:hover{background:var(--glass);opacity:1}
 </div>
 </div>
 <div id="pane-cloud" class="set-pane on">
-<div class="card">
-<h2>Облако</h2>
+<div class="sg" id="sgGrid"></div>
+<div id="sgStore" hidden>
+<div class="sg-sec" id="sgs-cloud">
 <div class="cloud-status off" id="cloudStatus"></div>
-<div class="muted" id="cloudCodeLine" style="margin:8px 0"></div>
-<div class="btns" id="cloudBtnsOn"><button class="btn btn-ok" onclick="cloudTest(this)">Проверить облако</button><button class="btn btn-copy" onclick="cloudCopyLink(this)">Скопировать ссылку</button></div>
-<div class="btns" id="cloudBtnsOff" style="display:none"><button class="btn btn-ok" onclick="cloudEnter()">Ввести код доступа</button></div>
-<div class="btns"><button class="btn btn-danger" onclick="cloudLeave(this)">Выйти из облака</button></div>
-<div class="muted">После выхода на этом устройстве ничего не остаётся: все данные хранятся только в облаке. Чтобы вернуть их, введи код доступа снова.</div>
+<div class="sg-acts" id="cloudBtnsOn"><button class="sg-a main i-check" type="button" onclick="cloudTest(this)">Проверить облако</button></div>
+<div class="sg-acts" id="cloudBtnsOff" style="display:none"><button class="sg-a main i-key" type="button" onclick="cloudEnter()">Ввести код доступа</button></div>
 <div class="muted" id="cloudNote"></div>
+<div class="sg-acts"><button class="sg-a red i-exit" type="button" onclick="cloudLeave(this)">Выйти из облака</button></div>
 </div>
-<div class="card" id="inCloudCard"><h2>Что сейчас в облаке</h2><div id="inCloud" class="muted"></div></div>
-<div class="card" id="bkCard"><h2>Если что-то пропало</h2><div class="muted">Ваши записи лежат в облаке бессрочно, они сами не пропадают. А это запасные снимки: каждый день приложение делает снимок всех данных, и последние 45 дней можно открыть. Старые снимки сами удаляются, чтобы не копился мусор. Если кто-то случайно стёр записи, можно вернуть базу к нужному дню.</div><div class="muted" style="margin-top:6px"><b>Внимание:</b> кнопка «Вернуть» заменяет ВСЕ текущие данные снимком. Всё, что записано после даты снимка, пропадёт. Перед возвратом приложение само делает снимок «как было сейчас», так что откатить можно обратно. Чтобы подмешать к текущим данным файл, «Вернуть» не нужно, для этого есть «Загрузить файл» ниже.</div><div class="muted" id="bkStat" style="margin:8px 0"></div><div class="btns"><button class="btn btn-ok" onclick="bkShow()">Показать снимки</button><button class="btn btn-copy" onclick="bkNow(this)">Сделать снимок сейчас</button></div><div id="bkList"></div></div>
-<div class="card" id="archCard">
-<h2>Загрузить копию из файла или текста</h2>
+<div class="sg-sec" id="sgs-key">
+<div class="sg-kv"><span>Код облака</span><b id="cloudCodeLine"></b><button class="sg-mini" type="button" onclick="cloudPeek(this)">Показать</button></div>
+<div class="sg-acts"><button class="sg-a main i-link" type="button" style="--k:#3a74d8" onclick="cloudCopyLink(this)">Скопировать ссылку для работника</button><button class="sg-a i-users" type="button" onclick="sgPeople()">Люди и коды</button></div>
+</div>
+<div class="sg-sec" id="sgs-load">
 <div class="arch-wrap" id="archWrap"><pre class="arch-mirror" id="archMirror" aria-hidden="true"></pre><textarea id="archBox" class="arch-chat" placeholder="Сюда вставь текст архива или период. Либо выбери файл — он появится в этом окне."></textarea></div>
-<div class="btns">
-<button class="btn btn-white" type="button" onclick="document.getElementById('archFile').click()">Выбрать файл</button>
-<button class="btn b-cancel" type="button" onclick="pasteArchText()">Вставить текст</button>
-</div>
 <input id="archFile" type="file" accept="application/json,.json,text/plain" onchange="pickArchiveFile(this)" style="position:absolute;left:-9999px;opacity:0"/>
-<div class="btns">
-<button class="btn btn-ok" onclick="applyArchChat(this)">Применить архив</button>
-<button class="btn btn-danger" onclick="clearArchChat(this)">Стереть чат</button>
+<div class="sg-acts">
+<button class="sg-a main i-check" type="button" onclick="applyArchChat(this)">Применить архив</button>
+<button class="sg-a i-file" type="button" onclick="document.getElementById('archFile').click()">Выбрать файл</button>
+<button class="sg-a i-paste" type="button" onclick="pasteArchText()">Вставить текст</button>
+<button class="sg-a i-clear" type="button" onclick="clearArchChat(this)">Стереть чат</button>
 </div>
 <div id="archStatus" class="muted"></div>
 </div>
-<div class="card" id="dataCard"><h2>Сохранить файл и стереть</h2><div class="muted" id="saveLast" style="margin-bottom:8px"></div><div class="btns"><button class="btn btn-beige" onclick="shareArchive(this)">Сохранить файлом на телефон</button><button class="btn btn-danger" id="wipeBtn" onclick="wipeAll(this)">Стереть все данные</button></div></div>
+<div class="sg-sec" id="sgs-save">
+<div class="muted" id="saveLast"></div>
+<div class="sg-acts"><button class="sg-a main i-save" type="button" onclick="shareArchive(this)">Сохранить файлом на телефон</button><button class="sg-a red i-trash" type="button" id="wipeBtn" onclick="wipeAll(this)">Стереть все данные</button></div>
+</div>
+<div class="sg-sec" id="sgs-info"><div id="inCloud" class="muted"></div></div>
+<div class="sg-sec" id="sgs-snap">
+<div class="muted" id="bkStat"></div>
+<div class="sg-acts"><button class="sg-a main i-list" type="button" onclick="bkShow()">Показать снимки</button><button class="sg-a i-cam" type="button" style="--k:#3a74d8" onclick="bkNow(this)">Сделать снимок сейчас</button></div>
+<div id="bkList"></div>
+</div>
+</div>
 </div>
 </section>
 <section class="screen" id="sc-supply">
@@ -666,11 +730,108 @@ function renderMmBox(){
     }).join('');
   }).join('');
 }
+/* ===== вкладка «Облако и копии»: плитки. Содержимое разделов лежит в #sgStore и переносится в открытую фигуру — сами элементы не пересоздаются ===== */
+var SG=[                                             // порядок = порядок плиток; all — видна всем, остальные только управляющему
+  {id:'cloud',c:'#3f7fe0',t:'Облако',hint:'Данные живут в облаке, на устройстве их нет.',all:1},
+  {id:'key',c:'#d9a21b',t:'Доступ',hint:'Ссылку отправляй только лично: в ней код облака.'},
+  {id:'load',c:'#2fa565',t:'Загрузить',hint:'Добавит данные из файла к тем, что уже есть.'},
+  {id:'save',c:'#d0553a',t:'Сохранить / стереть',hint:'Файл — твоя запасная копия на телефоне.'},
+  {id:'info',c:'#7d9488',t:'В облаке сейчас',hint:'Сводка: что лежит в облаке.'},
+  {id:'snap',c:'#9466e0',t:'Снимки',hint:'Снимок делается каждый день и хранится 45 дней. «Вернуть» заменит все данные снимком.'}
+];
+var sg={open:null,busy:false,vis:'',ro:null,peek:false};
+var SG_MS=(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)?0:320;
+function sgState(id){                                // строка состояния на плитке
+  if(id==='cloud')return {online:'Подключено',pending:'Сохраняю…',connecting:'Подключаюсь…',offline:'Нет интернета',error:'Ошибка связи'}[cloudState()]||'Не подключено';
+  if(id==='key')return 'Только управляющий';
+  if(id==='load')return 'Из файла или текста';
+  if(id==='save'){const f=fileSaved();return f?(f.days>0?'Файл: '+f.days+' дн. назад':'Файл: сегодня'):'Файл ещё не сохраняли';}
+  if(id==='info'){const n=inCloudStats();return n?n.ds.length+' дн. · '+n.sh+' чел.':'Сверяюсь…';}
+  if(cloud.bkErr)return 'Снимок не записался';
+  const t=+lsGet('azs-bk-at')||0;return t?'Последний '+bkWhen(t):'Снимков ещё нет';
+}
+function sgList(){return SG.filter(function(x){return x.all||canAdmin();});}
+function sgTileHtml(x,cls,style){return '<button type="button" class="sg-tile'+cls+'" data-sg="'+x.id+'" style="--c:'+x.c+';'+style+'"><span class="sg-ic i-'+x.id+'"></span><b>'+x.t+'</b><small>'+sgState(x.id)+'</small></button>';}
+function sgRender(){
+  const grid=document.getElementById('sgGrid'),store=document.getElementById('sgStore');if(!grid||!store)return;
+  grid.querySelectorAll('.sg-sec').forEach(function(s){store.appendChild(s);});   // разделы — обратно на склад, прежде чем перерисовать плитки
+  const list=sgList();sg.vis=list.map(function(x){return x.id;}).join();
+  const oi=list.findIndex(function(x){return x.id===sg.open;});if(oi<0)sg.open=null;
+  const orow=oi<0?-1:Math.floor(oi/2),rowAt=[];let n=1;
+  for(let r=0;r*2<list.length;r++){rowAt[r]=n;n+=r===orow?2:1;}
+  grid.innerHTML=list.map(function(x,i){
+    const r=rowAt[Math.floor(i/2)],c=i%2+1;
+    if(i!==oi)return sgTileHtml(x,oi<0?'':' dim','grid-row:'+r+';grid-column:'+c);
+    return '<div class="sg-fig '+(c===1?'L':'R')+'" id="sgFig" style="--c:'+x.c+';grid-row:'+r+' / span 2"><svg class="sg-ol" aria-hidden="true"><path/></svg>'
+      +sgTileHtml(x,' sg-tab','').replace('<button ','<button data-sgclose="1" aria-expanded="true" ')
+      +'<div class="sg-pane"><div class="sg-top"><span>'+x.hint+'</span><button type="button" class="sg-x i-clear" data-sgclose="1" aria-label="Закрыть"></button></div><div class="sg-body" id="sgBody"></div></div></div>';
+  }).join('');
+  if(sg.ro){sg.ro.disconnect();sg.ro=null;}
+  const fig=document.getElementById('sgFig');
+  if(fig){
+    document.getElementById('sgBody').appendChild(document.getElementById('sgs-'+sg.open));
+    sgOutline();
+    if(window.ResizeObserver){sg.ro=new ResizeObserver(sgOutline);sg.ro.observe(fig);}
+  }
+}
+function sgPaint(){                                  // обновить строки состояния; если поменялся набор плиток — перерисовать. Скрытую вкладку не трогаем: её нарисует открытие
+  const grid=document.getElementById('sgGrid');if(!grid||!grid.offsetParent)return;
+  if(sgList().map(function(x){return x.id;}).join()!==sg.vis){sgRender();return;}
+  document.querySelectorAll('#sgGrid .sg-tile[data-sg]').forEach(function(t){t.querySelector('small').textContent=sgState(t.dataset.sg);});
+}
+function sgOutline(){                                // одна линия по контуру фигуры: вкладка, вогнутый изгиб, панель. Всё меряется на месте
+  const f=document.getElementById('sgFig');if(!f)return;
+  const fb=f.getBoundingClientRect(),tb=f.querySelector('.sg-tab').getBoundingClientRect(),pb=f.querySelector('.sg-pane').getBoundingClientRect();
+  const W=fb.width,H=pb.bottom-fb.top,P=pb.top-fb.top,g=P-tb.height,R=parseFloat(getComputedStyle(f).getPropertyValue('--r'))||18;
+  const r=Math.max(0,Math.min(R,(H-P)/2)),x0=tb.left-fb.left,x1=x0+tb.width,A=function(q,x,y,sw){return 'A'+q+' '+q+' 0 0 '+sw+' '+x+' '+y;};
+  let d=f.classList.contains('L')
+    ?'M0 '+R+A(R,R,0,1)+'H'+(x1-R)+A(R,x1,R,1)+'V'+(P-g)+A(g,x1+g,P,0)+'H'+(W-r)+A(r,W,P+r,1)
+    :'M0 '+(P+r)+A(r,r,P,1)+'H'+(x0-g)+A(g,x0,P-g,0)+'V'+R+A(R,x0+R,0,1)+'H'+(W-R)+A(R,W,R,1);
+  d+='V'+(H-r)+A(r,W-r,H,1)+'H'+r+A(r,0,H-r,1)+'Z';
+  const s=f.querySelector('.sg-ol');s.setAttribute('viewBox','0 0 '+W+' '+H);s.style.height=H+'px';s.querySelector('path').setAttribute('d',d);
+}
+function sgCenter(fig,h){                            // плавно поставить фигуру посередине видимой части экрана (над нижним меню)
+  const mn=document.querySelector('main'),nav=document.querySelector('nav.tabbar');if(!mn)return;
+  const mr=mn.getBoundingClientRect(),bottom=nav?Math.min(mr.bottom,nav.getBoundingClientRect().top):mr.bottom,view=bottom-mr.top;
+  const top=fig.getBoundingClientRect().top-mr.top+mn.scrollTop;
+  mn.scrollTo({top:Math.max(0,h<view-24?top-(view-h)/2:top-12),behavior:SG_MS?'smooth':'auto'});
+}
+function sgOpen(id){
+  sg.open=id;sgRender();
+  const fig=document.getElementById('sgFig'),p=fig.querySelector('.sg-pane'),full=p.offsetHeight;
+  sgCenter(fig,fig.querySelector('.sg-tab').offsetHeight+parseFloat(getComputedStyle(fig).rowGap)+full);
+  if(!SG_MS||!p.animate)return;
+  sg.busy=true;
+  p.animate([{height:'0px',opacity:.2},{height:full+'px',opacity:1}],{duration:SG_MS,easing:'cubic-bezier(.2,.8,.2,1)'}).onfinish=function(){sg.busy=false;sgOutline();};
+}
+function sgClose(){
+  const fig=document.getElementById('sgFig');
+  if(!fig||!SG_MS||!fig.animate){sg.open=null;sgRender();return;}
+  sg.busy=true;
+  document.querySelectorAll('#sgGrid .sg-tile.dim').forEach(function(t){t.classList.remove('dim');});
+  const p=fig.querySelector('.sg-pane');
+  p.animate([{height:p.offsetHeight+'px',opacity:1},{height:'0px',opacity:.2}],{duration:SG_MS*.8,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'}).onfinish=function(){sg.busy=false;sg.open=null;sgRender();};
+}
+document.addEventListener('click',function(e){       // плитка открывает; пока открыто, любой тап мимо фигуры только закрывает
+  const grid=document.getElementById('sgGrid');
+  if(!grid||!grid.offsetParent||sg.busy)return;
+  if(sg.open){
+    if(!e.target.closest('#sgFig'))sgClose();
+    else if(e.target.closest('[data-sgclose]'))sgClose();
+    return;
+  }
+  const t=e.target.closest('#sgGrid .sg-tile[data-sg]');if(t)sgOpen(t.dataset.sg);
+});
+window.addEventListener('resize',sgOutline);
+function fileSaved(){                                // когда последний раз сохраняли файл: {last, days} или null
+  const last=lsGet('azs-file-saved')||'';
+  return last?{last:last,days:Math.round((new Date(todayIso()+'T12:00:00')-new Date(last+'T12:00:00'))/86400000)}:null;
+}
 function paintSaveLast(){
   const el=document.getElementById('saveLast');if(!el)return;
-  const last=lsGet('azs-file-saved')||'';
-  const days=last?Math.round((new Date(todayIso()+'T12:00:00')-new Date(last+'T12:00:00'))/86400000):null;
-  el.textContent=last?'Последнее сохранение: '+ruDate(last)+(days>0?' ('+days+' дн. назад)':' (сегодня)'):'Вы ещё ни разу не сохраняли.';
+  const f=fileSaved();
+  el.textContent=f?'Последнее сохранение: '+ruDate(f.last)+(f.days>0?' ('+f.days+' дн. назад)':' (сегодня)'):'Вы ещё ни разу не сохраняли.';
+  sgPaint();
 }
 function renderFolders(){
   ensureFolders();ensureShiftLock();
@@ -1886,10 +2047,10 @@ function copyDay(btn){
   const F=stFuels();
   const lines=F.map(function(f){return fuelLine(f,rec.fuels[f]||{},date);}).filter(Boolean);
   if(!lines.length){flashBtn(btn,'Нет данных');return;}
-  // «Всего» — когда в дне два бензина и больше: литры и выручка по всем вместе
-  let L=0,V=0,n=0;
-  F.forEach(function(f){const x=rec.fuels[f]||{};if(emptyFuel(x))return;const m=fuelMath(f,x,date);if(m.sold==null)return;L+=m.sold;V+=m.rev;n++;});
-  const total=n>=2?'\n\nВсего:\n'+fmt(r3(L))+' литров - '+fmt(r2(V))+' ₽':'';
+  // «Всего» — когда в дне два бензина и больше: литры и касса по всем вместе
+  let L=0,K=0,n=0;
+  F.forEach(function(f){const x=rec.fuels[f]||{};if(emptyFuel(x))return;const m=fuelMath(f,x,date);if(m.sold==null)return;L+=m.sold;K+=m.cash;n++;});
+  const total=n>=2?'\n\nВсего:\n'+fmt(r3(L))+' литров\n'+fmt(r2(K))+' ₽ касса':'';
   copyText('ДЕНЬ · '+dmy(date)+'\nАЗС: '+stationName()+'\n\n'+lines.join('\n\n')+total);
   flashBtn(btn,'Скопировано');
 }
@@ -3189,12 +3350,14 @@ function cloudRenderPane(){
   if(!line) return;
   const box=document.getElementById('cloudBtnsOn'),box2=document.getElementById('cloudBtnsOff');
   const on=!!cloud.code&&cloud.active;
-  if(box)box.style.display=on?'flex':'none';
-  if(box2)box2.style.display=on?'none':'flex';
-  line.textContent=on?('Код доступа: '+cloud.code.slice(0,4)+'••••••••'):'Код не введён.';
-  bkStatPaint();inCloudPaint();
-  ['archCard','dataCard','bkCard','inCloudCard'].forEach(function(i){const c=document.getElementById(i);if(c)c.style.display=canAdmin()?'':'none';});
+  if(box)box.style.display=on?'':'none';
+  if(box2)box2.style.display=on?'none':'';
+  line.textContent=on?(sg.peek?cloud.code:cloud.code.slice(0,4)+'••••••••'):'не введён';
+  bkStatPaint();inCloudPaint();sgPaint();
 }
+function cloudPeek(btn){sg.peek=!sg.peek;btn.textContent=sg.peek?'Скрыть':'Показать';cloudRenderPane();}
+function sgPeople(){usr.open='*';tab('stations');}   // люди и их коды живут в списке АЗС
+
 try{Object.keys(localStorage).filter(function(k){return /^azs-snap-/.test(k);}).forEach(function(k){localStorage.removeItem(k);});}catch(e){}   // старые копии на телефоне больше не ведутся
 function pad2(v){return String(v).padStart(2,'0');}
 /* ===== копии в облаке: раз в день сами + перед опасными действиями ===== */
@@ -3229,23 +3392,29 @@ function bkId(kind){
   const d=new Date(),day=iso(d.getFullYear(),d.getMonth(),d.getDate());
   return kind==='auto'?day+'_auto':day+'T'+pad2(d.getHours())+'-'+pad2(d.getMinutes())+'-'+pad2(d.getSeconds())+'_'+kind;
 }
+function inCloudStats(){                             // что лежит в облаке: даты с записями, поставки, АЗС, люди; null — облако ещё не сверено
+  if(!cloud.active||!cloud.server.meta||!cloud.server.months||!cloud.server.supply)return null;
+  const dates={};
+  Object.keys(db.days||{}).forEach(function(k){const d=db.days[k];if(d&&typeof d==='object'&&Object.keys(d).length){const p=k.split('|');dates[p[p.length-1]]=1;}});
+  return {ds:Object.keys(dates).sort(),sup:(db.supply||[]).length,st:(db.stations||[]).length,sh:(db.shifts||[]).length};
+}
 function inCloudPaint(){
   const e=document.getElementById('inCloud');if(!e)return;
   if(!cloud.active){e.textContent='Облако не подключено.';return;}
-  if(!cloud.server.meta||!cloud.server.months||!cloud.server.supply){e.textContent='Сверяюсь с облаком… Открой эту вкладку ещё раз через несколько секунд.';return;}
-  const dates={},recs=Object.keys(db.days||{}).filter(function(k){const d=db.days[k];return d&&typeof d==='object'&&Object.keys(d).length;});
-  recs.forEach(function(k){const p=k.split('|');dates[p[p.length-1]]=1;});
-  const ds=Object.keys(dates).sort(),sup=(db.supply||[]).length,st=(db.stations||[]).length,sh=(db.shifts||[]).length;
-  if(!ds.length&&!sup&&!st){e.innerHTML='<b>Облако пустое.</b> Записей, АЗС и смен нет.';return;}
+  const n=inCloudStats();
+  if(!n){e.textContent='Сверяюсь с облаком… Открой эту вкладку ещё раз через несколько секунд.';return;}
+  if(!n.ds.length&&!n.sup&&!n.st){e.innerHTML='<b>Облако пустое.</b> Записей, АЗС и смен нет.';return;}
   const row=function(a,b){return '<div class="item"><div class="name">'+a+'</div><div class="side">'+b+'</div></div>';};
-  e.innerHTML=row('АЗС',st)+row('Дней с записями',ds.length+(ds.length?' <span class="muted">('+dmy(ds[0])+' — '+dmy(ds[ds.length-1])+')</span>':''))+row('Поставок',sup)+row('Смен (людей)',sh)+
+  e.innerHTML=row('АЗС',n.st)+row('Дней с записями',n.ds.length+(n.ds.length?' <span class="muted">('+dmy(n.ds[0])+' — '+dmy(n.ds[n.ds.length-1])+')</span>':''))+row('Поставок',n.sup)+row('Смен (людей)',n.sh)+
     '<div style="margin-top:6px">'+(cloud.pending?'Идёт сохранение в облако…':'Всё сохранено в облаке.')+'</div>';
 }
+function bkWhen(t){return new Date(t).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
 function bkStatPaint(){
   const e=document.getElementById('bkStat');if(!e)return;
   const t=+lsGet('azs-bk-at')||0;
-  e.textContent=cloud.bkErr?('⛔ Копия в облако не записалась: '+cloud.bkErr):(t?('Последняя копия: '+new Date(t).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})):'Копия на этом устройстве ещё не делалась.');
+  e.textContent=cloud.bkErr?('⛔ Копия в облако не записалась: '+cloud.bkErr):(t?('Последняя копия: '+bkWhen(t)):'Копия на этом устройстве ещё не делалась.');
   e.style.color=cloud.bkErr?'#ff8a80':'';
+  sgPaint();
 }
 function cloudBackup(kind){
   if(!cloud.active||!cloud.readyAll||!window.__fbAdapter)return Promise.resolve(false);
