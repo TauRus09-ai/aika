@@ -153,9 +153,16 @@ input[type=date]{min-height:42px;min-width:0;width:100%;max-width:100%;display:b
 .item .name{font-weight:700;font-size:15px;flex:1;min-width:0}
 .item .side{display:flex;flex-direction:column;gap:6px;flex-shrink:0;width:118px}
 .item .side .btn{padding:6px 8px;font-size:11px;width:100%;min-height:34px}
-.item input.ren{flex:1;margin:0}
-.st-tag{display:inline-block;margin:8px 0 4px 2px;padding:2px 11px;border-radius:9px;background:var(--acc-glow);color:var(--text);font-size:11px;font-weight:700;letter-spacing:.04em}
-.usr-all{background:rgba(58,160,255,.10);margin-bottom:14px}.usr-all .muted{color:#a9c4ea}
+.st-head{display:flex;align-items:center;gap:10px}
+.st-num{flex:none;font-size:12px;font-weight:800;padding:4px 9px;border-radius:8px;background:rgba(0,0,0,.25)}
+.st-name{flex:1;min-width:0;overflow-wrap:anywhere}
+.st-ren{flex:1;min-width:0;margin:0;padding:6px 10px;font-size:15px}
+.st-pen{flex:none;width:34px;height:34px;border:0;border-radius:10px;display:grid;place-items:center;cursor:pointer;font:inherit;font-weight:800;background:#f1e6c8;color:#3a2a00}.st-pen svg{width:17px;height:17px}
+.st-pen.st-x{background:rgba(0,0,0,.25);color:var(--text)}
+.st-sw{display:flex;flex-wrap:wrap;gap:10px;margin:-4px 0 12px;padding:12px;border-radius:14px;background:rgba(0,0,0,.25)}.st-sw button{width:34px;height:34px;border:0;border-radius:50%;cursor:pointer;box-shadow:inset 0 0 0 2px rgba(255,255,255,.15)}.st-sw button.on{box-shadow:0 0 0 3px #fff}
+.st-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.st-del{width:100%;margin-top:10px;background:transparent;box-shadow:inset 0 0 0 1.5px rgba(255,110,110,.55);color:#ff8f8f}
+.st-new{display:grid;gap:8px;padding:14px 16px;margin-bottom:12px;border-radius:var(--r);border:1.5px dashed var(--hair)}
 /* --- нижнее меню: стеклянные пилюли --- */
 nav.tabbar{position:fixed;left:12px;right:12px;max-width:680px;margin:0 auto;bottom:calc(10px + env(safe-area-inset-bottom));z-index:20;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:6px;background:var(--navbg);border-radius:26px;box-shadow:0 14px 36px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.10)}
 nav.tabbar button{background:var(--glass);border:0;color:var(--muted);font-size:10px;font-weight:650;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0;border-radius:20px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);cursor:pointer;transition:background .15s,color .15s}
@@ -212,6 +219,7 @@ nav.tabbar svg{width:21px;height:21px}
 .sg-top span{flex:1;font-size:13.5px;line-height:1.35;color:color-mix(in srgb,var(--c) 30%,#fff)}
 .sg-x{flex:none;width:30px;height:30px;border:0;border-radius:50%;cursor:pointer;background:var(--ico) center/15px no-repeat,rgba(255,255,255,.1)}
 .sg-body{background:var(--blk);padding:14px;display:grid;gap:10px}
+.sg-sec,.sg-stack{display:grid;gap:10px}
 .sg-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .sg-a{--k:#5b6d63;position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;min-height:52px;text-align:left;border:0;border-radius:14px;padding:12px;font:inherit;font-weight:700;font-size:14px;color:var(--text);cursor:pointer;background:rgba(0,0,0,.2)}
 .sg-a::before{content:"";flex:none;width:28px;height:28px;border-radius:9px;background:var(--ico) center/16px no-repeat,var(--k)}
@@ -249,7 +257,13 @@ nav.tabbar svg{width:21px;height:21px}
 .gate-box h2{margin:0 0 8px}.gate-box input{margin:12px 0 6px;text-align:center}.gate-msg{color:var(--bad);font-size:13px;min-height:16px;margin-bottom:8px}
 #shiftGate{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px}#shiftGate.on{display:flex}#shiftGate .gate-box{width:min(420px,100%)}
 #shiftList{display:flex;flex-direction:column;gap:8px;margin:10px 0}.sh-pick{width:100%}.sh-pick.sh-boss{color:#ffd666;background:rgba(212,160,23,.16)}.sh-pick.on{box-shadow:0 0 0 2px var(--acc-hi)}
-.sh-row{margin:12px 0;padding:12px;border-radius:var(--ri);background:var(--glass)}.sh-role{font-weight:800;margin-bottom:6px}
+.sh-row{margin:10px 0;padding:10px 12px;border-radius:var(--ri);background:var(--glass)}.sh-add{border:1.5px dashed var(--hair);background:transparent}
+.sh-line{display:flex;align-items:center;gap:10px}.sh-line .btn{flex:none;min-height:34px;padding:6px 12px}
+.sh-who{flex:1;min-width:0;font-weight:700;overflow-wrap:anywhere}.sh-who small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+.sh-role{font-weight:800;margin-bottom:6px}.sh-line .sh-role{flex:none;margin:0;font-size:11.5px;padding:4px 9px;border-radius:8px}
+.r-own{background:rgba(217,162,27,.2);color:#f3d48a}.r-dep{background:rgba(58,116,216,.22);color:#a9c6ff}.r-view{background:rgba(148,102,224,.22);color:#d4bcff}.r-emp{background:rgba(52,178,79,.2);color:#9ce8b0}
+.sh-edit{margin-top:8px}
+.sh-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin:4px 0;border-radius:12px;background:var(--fill)}.sh-seg button{border:0;border-radius:9px;padding:9px;font:inherit;font-weight:700;color:var(--text);background:transparent;cursor:pointer}.sh-seg button.on{background:var(--glass2)}
 .sh-row input,.sh-row select,#shiftGate input{width:100%;margin:4px 0;padding:10px;border-radius:10px;border:0;background:var(--fill);color:var(--text);font-size:16px}
 #shiftGate input{margin:8px 0;padding:12px;border-radius:12px;font-size:18px}
 /* --- списки значений, замечания, проблемы --- */
@@ -450,8 +464,11 @@ nav.tabbar button:hover{background:var(--glass);opacity:1}
 <div class="sg-acts"><button class="sg-a red i-exit" type="button" onclick="cloudLeave(this)">Выйти из облака</button></div>
 </div>
 <div class="sg-sec" id="sgs-key">
+<div id="keyMain" class="sg-stack">
 <div class="sg-kv"><span>Код облака</span><b id="cloudCodeLine"></b><button class="sg-mini" type="button" onclick="cloudPeek(this)">Показать</button></div>
-<div class="sg-acts"><button class="sg-a main i-link" type="button" style="--k:#3a74d8" onclick="cloudCopyLink(this)">Скопировать ссылку для работника</button><button class="sg-a i-users" type="button" onclick="sgPeople()">Люди и коды</button></div>
+<div class="sg-acts"><button class="sg-a main i-link" type="button" style="--k:#3a74d8" onclick="cloudCopyLink(this)">Скопировать ссылку для работника</button><button class="sg-a i-users" type="button" onclick="usrShow(true)">Пользователи</button></div>
+</div>
+<div id="keyUsers" class="sg-stack" hidden><button class="sg-mini" type="button" onclick="usrShow(false)">← Назад</button><div id="usrBox"></div></div>
 </div>
 <div class="sg-sec" id="sgs-load">
 <div class="arch-wrap" id="archWrap"><pre class="arch-mirror" id="archMirror" aria-hidden="true"></pre><textarea id="archBox" class="arch-chat" placeholder="Сюда вставь текст архива или период. Либо выбери файл — он появится в этом окне."></textarea></div>
@@ -513,13 +530,8 @@ nav.tabbar button:hover{background:var(--glass);opacity:1}
 </div>
 </section>
 <section class="screen" id="sc-stations">
-<div class="card">
-<h2>АЗС</h2>
 <div id="stationList"></div>
-<label>Новая АЗС</label>
-<input id="newStation" placeholder="Название" />
-<div class="btns"><button class="btn btn-ok" onclick="addStation(this)">Создать</button></div>
-</div>
+<div class="st-new"><b>+ Новая АЗС</b><input id="newStation" placeholder="Название" autocomplete="off"/><div class="btns"><button class="btn btn-ok" onclick="addStation(this)">Создать</button></div></div>
 </section>
 </main>
 <nav class="tabbar">
@@ -541,6 +553,7 @@ black:{bg:'#18171c',bg2:'#070708',card:'rgba(26,25,31,.95)',text:'#f0f0f4',muted
 };
 const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const KEY='azs-v3';
+var ST_COLORS=['#22935a','#3f7fe0','#d9a21b','#d0553a','#9466e0','#1fa3a3','#c4457e','#7d9488'];   // цвета заправок по порядку; нужны уже при загрузке данных
 var FUELS=['95'];          // список растёт сам: любой АИ-номер, найденный в данных или созданный вручную
 function fuelOk(f){return /^\d{1,3}$/.test(String(f))&&+f>0;}
 function fuelAdd(f){                                  // 95 первым, остальные по возрастанию
@@ -706,7 +719,7 @@ function mmPanel(date){                               // красные плаш
     h+='<div class="iss warn">В основной записи за этот день пусто.<button type="button" class="btn btn-main iss-ok" onclick="mmMove(\''+escAttr(db.current)+'\',\''+date+'\',\''+escAttr(view.fuel)+'\')">Перенести в главный поток дней</button></div>';
   }
   mmList(db.current,date).filter(function(m){return m.fuel===view.fuel;}).forEach(function(m){
-    if(!isBoss()){h+='<div class="iss err">⛔ Не совпадает с записью управляющего. Перепроверь цифры.</div>';return;}
+    if(!isBoss()){h+='<div class="iss err">⛔ Не совпадает с записью владельца. Перепроверь цифры.</div>';return;}
     const a=['\''+escAttr(m.book)+'\'','\''+escAttr(m.sid)+'\'','\''+m.date+'\'','\''+escAttr(m.fuel)+'\''].join(',');
     h+='<div class="iss err">⛔ Расхождение с «'+escHtml(mmFolderName(m.book))+'»'
       +m.keys.map(function(k){return '<br>'+MM_LBL[k]+': у тебя '+mmShow(m.main[k])+' · у него '+mmShow(m.his[k]);}).join('')
@@ -731,7 +744,7 @@ function renderMmBox(){
   }).join('');
 }
 /* ===== вкладка «Облако и копии»: плитки. Содержимое разделов лежит в #sgStore и переносится в открытую фигуру — сами элементы не пересоздаются ===== */
-var SG=[                                             // порядок = порядок плиток; all — видна всем, остальные только управляющему
+var SG=[                                             // порядок = порядок плиток; all — видна всем, остальные только владельцу
   {id:'cloud',c:'#3f7fe0',t:'Облако',hint:'Данные живут в облаке, на устройстве их нет.',all:1},
   {id:'key',c:'#d9a21b',t:'Доступ',hint:'Ссылку отправляй только лично: в ней код облака.'},
   {id:'load',c:'#2fa565',t:'Загрузить',hint:'Добавит данные из файла к тем, что уже есть.'},
@@ -743,7 +756,7 @@ var sg={open:null,busy:false,vis:'',ro:null,peek:false};
 var SG_MS=(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)?0:320;
 function sgState(id){                                // строка состояния на плитке
   if(id==='cloud')return {online:'Подключено',pending:'Сохраняю…',connecting:'Подключаюсь…',offline:'Нет интернета',error:'Ошибка связи'}[cloudState()]||'Не подключено';
-  if(id==='key')return 'Только управляющий';
+  if(id==='key')return 'Только владелец';
   if(id==='load')return 'Из файла или текста';
   if(id==='save'){const f=fileSaved();return f?(f.days>0?'Файл: '+f.days+' дн. назад':'Файл: сегодня'):'Файл ещё не сохраняли';}
   if(id==='info'){const n=inCloudStats();return n?n.ds.length+' дн. · '+n.sh+' чел.':'Сверяюсь…';}
@@ -814,7 +827,7 @@ function sgClose(){
 }
 document.addEventListener('click',function(e){       // плитка открывает; пока открыто, любой тап мимо фигуры только закрывает
   const grid=document.getElementById('sgGrid');
-  if(!grid||!grid.offsetParent||sg.busy)return;
+  if(!grid||!grid.offsetParent||sg.busy||!e.target.isConnected)return;   // кнопка, которую её же действие перерисовало, — это клик внутри, не мимо
   if(sg.open){
     if(!e.target.closest('#sgFig'))sgClose();
     else if(e.target.closest('[data-sgclose]'))sgClose();
@@ -840,7 +853,7 @@ function renderFolders(){
   const box=document.getElementById('folderMenu'),on=document.getElementById('folderOn');if(!box)return;
   const me=currentShift(),boss=isBoss(),cur=bookId();
   const bossS=db.shifts.filter(function(x){return x.boss;})[0];
-  const label=function(f){return f.id==='main'?(bossS?roleName(bossS):'Управляющий'):String(f.name||'Папка').replace(/</g,'');};
+  const label=function(f){return f.id==='main'?(bossS?roleName(bossS):'Владелец'):String(f.name||'Папка').replace(/</g,'');};
   const cnt={};if(boss)Object.keys(mmIndex()).forEach(function(k){mmIndex()[k].forEach(function(m){cnt[m.book]=(cnt[m.book]||0)+1;});});
   const mark=function(f){const c=cnt[f.id]||0;return c?' ('+c+')':'';};
   let curF=db.folders.filter(function(f){return f.id===cur;})[0]||db.folders[0];
@@ -859,18 +872,18 @@ function ensureShifts(){if(!Array.isArray(db.shifts))db.shifts=[];}
 function currentShift(){ensureShifts();const pin=lsGet('azs-shift')||'';return db.shifts.filter(function(s){return s.pin===pin;})[0]||null;}
 function isBoss(){const s=currentShift();return !!(s&&s.boss);}
 function isView(){const s=currentShift();return !!(s&&s.view);}   // смотритель: только смотрит и копирует
-function visStations(){const s=currentShift();return (s&&!s.boss&&!s.dep&&s.st)?db.stations.filter(function(x){return x.id===s.st;}):db.stations;}   // сотрудник видит только свою АЗС; управляющий и зам все
+function visStations(){const s=currentShift();return (s&&!s.boss&&!s.dep&&s.st)?db.stations.filter(function(x){return x.id===s.st;}):db.stations;}   // сотрудник видит только свою АЗС; владелец и зам все
 function canAdmin(){ensureShifts();return !db.shifts.length||isBoss();}   // опасные действия: начальник (или пока смены не заведены)
 function ensureShiftLock(){const s=currentShift();if(!s||s.boss)return;if(db.book!==s.folder){db.book=s.folder;}}
 function shiftGate(on){const g=document.getElementById('shiftGate');if(g)g.classList.toggle('on',!!on);}
 var gateSel=null;
-function roleName(s){const n=String(s.name||'').trim();return n||(s.boss?'Управляющий':(s.dep?'Админ':(s.view?'Смотритель':'Сотрудник')));}   // показываем только то имя, которое человек вписал сам; роль видна по цвету
+function roleName(s){const n=String(s.name||'').trim();return n||(s.boss?'Владелец':(s.dep?'Админ':(s.view?'Смотритель':'Сотрудник')));}   // показываем только то имя, которое человек вписал сам; роль видна по цвету
 function shiftSetupMode(){
   ensureShifts();const first=!db.shifts.length;
   const $=function(i){return document.getElementById(i);};
   const cur=currentShift();
-  $('shiftTitle').textContent=first?'Назначается управляющий':(cur?'Войти под другим именем':'Кто входит');
-  $('shiftHint').textContent=first?'Впиши своё имя или должность и придумай код: от 4 символов, цифры или буквы. С этим кодом ты будешь заходить как управляющий.':(cur?'Сейчас ты: '+roleName(cur)+'. Чтобы посмотреть глазами другого человека, нажми на его имя и введи его код. Чтобы остаться как есть, нажми «Отмена».':'Нажми на своё имя или должность и введи свой код.');
+  $('shiftTitle').textContent=first?'Назначается владелец':(cur?'Войти под другим именем':'Кто входит');
+  $('shiftHint').textContent=first?'Впиши своё имя или должность и придумай код: от 4 символов, цифры или буквы. С этим кодом ты будешь заходить как владелец.':(cur?'Сейчас ты: '+roleName(cur)+'. Чтобы посмотреть глазами другого человека, нажми на его имя и введи его код. Чтобы остаться как есть, нажми «Отмена».':'Нажми на своё имя или должность и введи свой код.');
   $('shiftCancel').style.display=(cur||first)?'':'none';
   $('shiftCancel').textContent=first?'Назад: выйти из облака':'Отмена, остаться как есть';
   $('shiftName').style.display=first?'':'none';
@@ -885,7 +898,7 @@ function shiftGo(){
   const pin=(document.getElementById('shiftPin').value||'').trim(),msg=document.getElementById('shiftMsg');
   if(pin.length<4){msg.textContent='Код: минимум 4 символа.';return;}
   if(!db.shifts.length){
-    const name=(document.getElementById('shiftName').value||'').trim().slice(0,40)||'Управляющий';
+    const name=(document.getElementById('shiftName').value||'').trim().slice(0,40)||'Владелец';
     db.shifts.push({id:'boss',name:name,pin:pin,folder:'main',boss:true});
     lsSet('azs-shift',pin);db.book='main';persist();shiftGate(false);renderDayTab();return;
   }
@@ -898,7 +911,7 @@ function shiftCancel(){
   if(currentShift()){shiftGate(false);return;}
   ensureShifts();
   if(db.shifts.length)return;                               // смены есть — закрыть окно нельзя, нужно выбрать себя
-  const m=document.getElementById('shiftMsg');             // управляющий ещё не назначен: человек зашёл в облако случайно, даём выйти
+  const m=document.getElementById('shiftMsg');             // владелец ещё не назначен: человек зашёл в облако случайно, даём выйти
   if(cloudState()!=='online'){m.textContent='Подожди секунду, облако ещё сверяется, и нажми снова.';return;}
   cloudWipeDevice();
 }
@@ -906,31 +919,44 @@ function shiftOut(){sumAllFields();commitDrafts();gateSel=null;document.getEleme
 function shiftCheck(pin,exceptId){return pin.length>=4&&!db.shifts.some(function(s){return s.id!==exceptId&&s.pin===pin;});}
 var usr={open:null};
 function usrOpen(id){usr.open=usr.open===id?null:id;renderStations();}
-function usrOf(sid){                                         // кто в этой группе: сотрудники заправки или «все заправки» (управляющий, админы, смотрители и сотрудники без заправки)
+function usrRefresh(){                                       // после правки людей: перерисовать заправки и, если открыт, список «Пользователи» в настройках
+  renderStations();
+  const box=document.getElementById('usrBox');if(box&&!box.closest('[hidden]'))box.innerHTML=usrPanel('*');
+}
+function usrShow(on){                                        // Настройки → Доступ: переключить на список пользователей и обратно
+  document.getElementById('keyMain').hidden=on;document.getElementById('keyUsers').hidden=!on;
+  if(on)document.getElementById('usrBox').innerHTML=usrPanel('*');
+}
+function shEdit(btn){const e=btn.closest('.sh-row').querySelector('.sh-edit');e.hidden=!e.hidden;btn.textContent=e.hidden?'Изменить':'Свернуть';}
+var SH_ROLE={dep:'Вводит данные по всем заправкам.',view:'Смотрит и копирует отчёты по всем заправкам, ничего не меняет.'};
+function shRolePick(btn){const f=btn.closest('.sh-add');btn.parentNode.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b===btn);});f.querySelector('.sh-new-r').value=btn.dataset.r;f.querySelector('.sh-new-hint').textContent=SH_ROLE[btn.dataset.r];}
+function usrOf(sid){                                         // кто в этой группе: сотрудники заправки или «все заправки» (владелец, админы, смотрители и сотрудники без заправки)
   ensureShifts();
   const has=function(id){return db.stations.some(function(x){return x.id===id;});};
   return db.shifts.filter(function(s){const emp=!s.boss&&!s.dep&&!s.view;return sid==='*'?(!emp||!has(s.st)):(emp&&s.st===sid);});
 }
-function shRow(s){
-  return '<div class="sh-row" data-id="'+escAttr(s.id)+'"><div class="sh-role">'+(s.boss?'Управляющий':(s.dep?'Админ':(s.view?'Смотритель':'Сотрудник')))+'</div>'
-    +'<input class="sh-n" value="'+escAttr(s.name)+'" placeholder="Имя или должность" autocomplete="off"/>'
-    +'<input class="sh-p" value="'+escAttr(s.pin)+'" placeholder="Код" autocomplete="off" autocapitalize="off" spellcheck="false"/>'+((s.boss||s.dep||s.view)?'':'<select class="sh-s">'+stOpts(s.st)+'</select>')
-    +'<div class="btns"><button class="btn btn-ok" onclick="shiftSave(\''+escAttr(s.id)+'\',this)">Сохранить</button>'+(s.boss?'':'<button class="btn btn-danger" onclick="shiftDel(\''+escAttr(s.id)+'\',this)">Удалить</button>')+'</div></div>';
+function shRow(s){                                           // строка человека: роль, имя, скрытый код; «Изменить» раскрывает поля
+  const role=s.boss?'own':(s.dep?'dep':(s.view?'view':'emp')),emp=role==='emp';
+  return '<div class="sh-row" data-id="'+escAttr(s.id)+'"><div class="sh-line"><span class="sh-role r-'+role+'">'+{own:'Владелец',dep:'Админ',view:'Смотритель',emp:'Сотрудник'}[role]+'</span>'
+    +'<span class="sh-who">'+escHtml(String(s.name||''))+(emp&&!db.stations.some(function(x){return x.id===s.st;})?'<small>не привязан к заправке</small>':'<small>••••</small>')+'</span>'
+    +'<button class="btn b-cancel" type="button" onclick="shEdit(this)">Изменить</button></div>'
+    +'<div class="sh-edit" hidden><input class="sh-n" value="'+escAttr(s.name)+'" placeholder="Имя" autocomplete="off"/>'
+    +'<input class="sh-p" value="'+escAttr(s.pin)+'" placeholder="Код" autocomplete="off" autocapitalize="off" spellcheck="false"/>'+(emp?'<select class="sh-s">'+stOpts(s.st)+'</select>':'')
+    +'<div class="btns"><button class="btn btn-ok" onclick="shiftSave(\''+escAttr(s.id)+'\',this)">Сохранить</button>'+(s.boss?'':'<button class="btn btn-danger" onclick="shiftDel(\''+escAttr(s.id)+'\',this)">Удалить</button>')+'</div></div></div>';
 }
-function usrPanel(sid){
+function usrPanel(sid){                                      // sid='*' — Пользователи в настройках (владелец, админы, смотрители); иначе сотрудники одной заправки
   ensureShifts();
-  if(!cloud.active||!db.shifts.length)return '<div class="usr-p muted">Входы заводятся в облаке. Введи код доступа в облако и назначь управляющего.</div>';
+  if(!cloud.active||!db.shifts.length)return '<div class="usr-p muted">Входы заводятся в облаке. Введи код доступа в облако и назначь владельца.</div>';
   if(!isBoss())return '';
   const all=sid==='*';
-  return '<div class="usr-p"><div class="muted">Код: от 4 символов, цифры или буквы. Человек нажимает своё имя и вводит код. Если забыл, посмотри здесь или поменяй. Удаление человека стирает и его папку с записями. Перед этим в облаке остаётся копия «как было».</div>'
+  return '<div class="usr-p"><div class="muted">'+(all?'Видят все заправки. Сотрудники одной заправки заводятся в АЗС, у каждой своей.':'Сотрудник видит и вводит данные только этой заправки.')+' Удаление человека стирает и его записи; перед этим в облаке остаётся копия «как было».</div>'
     +usrOf(sid).map(shRow).join('')
-    +'<div class="sh-row"><div class="sh-role">'+(all?'Новый человек':'Новый сотрудник')+'</div>'
-    +(all?'<select id="shNewR"><option value="dep">Админ: все АЗС, вводит данные</option><option value="view">Смотритель: все АЗС, только смотрит</option></select>':'')
-    +'<input id="shNewN" placeholder="Имя или должность" autocomplete="off"/><input id="shNewP" placeholder="Код: от 4 символов" autocomplete="off" autocapitalize="off" spellcheck="false"/><div class="btns"><button class="btn btn-ok" onclick="shiftAdd(this,\''+escAttr(sid)+'\')">Добавить</button></div></div>'
+    +'<div class="sh-row sh-add"><div class="sh-role">'+(all?'Добавить':'Новый сотрудник')+'</div>'
+    +(all?'<div class="sh-seg"><button type="button" class="on" data-r="dep" onclick="shRolePick(this)">Админ</button><button type="button" data-r="view" onclick="shRolePick(this)">Смотритель</button></div><input type="hidden" class="sh-new-r" value="dep"/><div class="muted sh-new-hint">'+SH_ROLE.dep+'</div>':'')
+    +'<input class="sh-new-n" placeholder="Имя" autocomplete="off"/><input class="sh-new-p" placeholder="Код: от 4 символов" autocomplete="off" autocapitalize="off" spellcheck="false"/><div class="btns"><button class="btn btn-ok" onclick="shiftAdd(this,\''+escAttr(sid)+'\')">Добавить</button></div></div>'
     +(all?orphanRows():'')+'</div>';
 }
-function usrBtn(sid){return '<button class="btn btn-violet" onclick="usrOpen(\''+escAttr(sid)+'\')">Пользователи ('+usrOf(sid).length+')</button>';}
-function usrAllItem(){return '<div class="item usr-all"><div class="name">Доступ ко всем заправкам<div class="muted">Управляющий, админы и смотрители. К одной заправке не привязаны.</div></div><div class="side">'+usrBtn('*')+'</div></div>'+(usr.open==='*'?usrPanel('*'):'');}
+function usrBtn(sid){return '<button class="btn btn-violet" onclick="usrOpen(\''+escAttr(sid)+'\')">Сотрудники ('+usrOf(sid).length+')</button>';}
 function stOpts(sel){return '<option value=""'+(sel?'':' selected')+'>'+(db.stations.length?'Выбери АЗС':'АЗС ещё нет')+'</option>'+db.stations.map(function(x){return '<option value="'+escAttr(x.id)+'"'+(x.id===sel?' selected':'')+'>'+escHtml(spStName(x.id))+'</option>';}).join('');}
 function shiftSave(id,btn){
   if(!isBoss())return;const s=db.shifts.filter(function(x){return x.id===id;})[0];if(!s)return;
@@ -943,7 +969,8 @@ function shiftSave(id,btn){
   s.name=name;s.pin=pin;if(sel&&sel.value)s.st=sel.value;
   const f=(db.folders||[]).filter(function(x){return x.id===s.folder&&x.id!=='main';})[0];if(f)f.name=name;
   if(me&&me.id===id)lsSet('azs-shift',pin);
-  persist();renderFolders();if(moved)renderStations();flashBtn(btn,'Сохранено');
+  row.querySelector('.sh-who').firstChild.textContent=name;
+  persist();renderFolders();if(moved)usrRefresh();else flashBtn(btn,'Сохранено');
 }
 function orphanRows(){                                      // папки, у которых нет входа (остались от прежних версий)
   const o=(db.folders||[]).filter(function(f){return f.id!=='main'&&!db.shifts.some(function(x){return x.folder===f.id;});});
@@ -963,27 +990,27 @@ function shiftDel(id,btn){
   armDo(btn,function(){
     Promise.resolve(n?cloudBackup('pre'):0).catch(function(){}).then(function(){
       db.shifts=db.shifts.filter(function(x){return x.id!==id||x.boss;});folderKill(s.folder);
-      persist();renderStations();renderFolders();renderDayTab();
+      persist();usrRefresh();renderFolders();renderDayTab();
     });
   },n?('Удалить вместе с '+n+' дн. записей?'):'Точно удалить?',7000);
 }
 function folderOrphanDel(fid,btn){
   if(!isBoss())return;const n=folderDayCount(fid);
   armDo(btn,function(){
-    Promise.resolve(n?cloudBackup('pre'):0).catch(function(){}).then(function(){folderKill(fid);persist();renderStations();renderFolders();renderDayTab();});
+    Promise.resolve(n?cloudBackup('pre'):0).catch(function(){}).then(function(){folderKill(fid);persist();usrRefresh();renderFolders();renderDayTab();});
   },n?('Удалить папку и '+n+' дн. записей?'):'Точно удалить?',7000);
 }
 function shiftAdd(btn,sid){
   if(!isBoss())return;ensureShifts();ensureFolders();
-  const name=document.getElementById('shNewN').value.trim().slice(0,40),pin=document.getElementById('shNewP').value.trim();
+  const f=btn.closest('.sh-add'),name=f.querySelector('.sh-new-n').value.trim().slice(0,40),pin=f.querySelector('.sh-new-p').value.trim();
   if(!name){flashBtn(btn,'Впиши имя');return;}
   if(!shiftCheck(pin,null)){flashBtn(btn,pin.length<4?'Код: от 4':'Такой код есть');return;}
-  const role=sid==='*'?document.getElementById('shNewR').value:'emp',st=sid;
+  const role=sid==='*'?f.querySelector('.sh-new-r').value:'emp',st=sid;
   const id=(role==='emp'?'f':role==='dep'?'d':'v')+Date.now().toString(36);
-  if(role==='dep')db.shifts.push({id:id,name:name,pin:pin,folder:'main',dep:true});          // админ пишет в основную папку, как управляющий
+  if(role==='dep')db.shifts.push({id:id,name:name,pin:pin,folder:'main',dep:true});          // админ пишет в основную папку, как владелец
   else if(role==='view')db.shifts.push({id:id,name:name,pin:pin,folder:'main',view:true});   // смотритель читает основную папку
   else{db.folders.push({id:id,name:name});db.shifts.push({id:id,name:name,pin:pin,folder:id,boss:false,st:st});}
-  persist();renderFolders();renderStations();
+  persist();renderFolders();usrRefresh();
 }
 function shiftDate(date,delta){const dt=new Date(date+'T12:00:00');dt.setDate(dt.getDate()+delta);return dt.toISOString().slice(0,10);}
 function stationName(id){const sid=id||db.current;const i=db.stations.findIndex(s=>s.id===sid);if(i<0)return '';const nm=String(db.stations[i].name||'').trim();return nm?((i+1)+' · '+nm):'';}
@@ -991,18 +1018,35 @@ function parseExp(str){return String(str||'').replace(/[＋]/g,'+').split('+').m
 function emptyFuel(x){return !x||(!x.morning&&!x.evening&&!x.transfers&&!x.acq&&!x.expenses);}
 function renderStations(){
   const nm=function(s){return String(s.name||'').trim()?escHtml(String(s.name)):'<span style="opacity:.55;font-style:italic">Без названия</span>';};
-  document.getElementById('stationList').innerHTML=usrAllItem()+(db.stations.length?'':'<div class="muted" style="margin:4px 0 10px">АЗС пока нет. Впиши название ниже и нажми «Создать».</div>')+db.stations.map(function(s,i){
-    let h='<div class="st-tag">АЗС '+(i+1)+'</div><div class="item" id="row-'+s.id+'"><div class="name">'+nm(s)+'<div class="st-pr">'+stFuels(s.id).map(function(f){return stPrCell(s.id,f);}).join('')+'</div>'+stFuelAddBtn(s.id)+'<div class="muted" style="margin-top:6px;font-weight:600" onclick="spdOpen(\''+s.id+'\')">Траты: '+fmt(spdTotal(s))+' ₽</div></div><div class="side"><button class="btn btn-black" onclick="spdOpen(\''+s.id+'\')">Траты</button>'+usrBtn(s.id)+'<button class="btn btn-blue" onclick="startRename(\''+s.id+'\')">Переименовать</button><button class="btn btn-danger" onclick="delStation(\''+s.id+'\',this)">Удалить</button></div></div>';
-    if(spd.open===s.id) h+=spdPanel(s);
-    if(usr.open===s.id) h+=usrPanel(s.id);
-    return h;
+  const PEN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+  const PAL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A4.7 4.7 0 0 0 21 9.7C21 6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/></svg>';
+  document.getElementById('stationList').innerHTML=(db.stations.length?'':'<div class="muted" style="margin:4px 0 10px">АЗС пока нет. Впиши название ниже и нажми «Создать».</div>')+db.stations.map(function(s,i){
+    const head=stRen===s.id
+      ?'<input class="st-ren" id="ren-'+s.id+'" value="'+escAttr(s.name)+'" autocomplete="off"/><button class="st-pen" type="button" aria-label="Сохранить название" onclick="saveRename(\''+s.id+'\')">✓</button><button class="st-pen st-x" type="button" aria-label="Отмена" onclick="stRen=null;renderStations()">✕</button>'
+      :'<span class="st-name">'+nm(s)+'</span><button class="st-pen" type="button" aria-label="Переименовать" onclick="startRename(\''+s.id+'\')">'+PEN+'</button>';
+    return '<div class="card st-card" id="row-'+s.id+'" style="'+stVars(s)+'"><h2 class="st-head"><span class="st-num">АЗС '+(i+1)+'</span>'+head+'<button class="st-pen st-x" type="button" aria-label="Цвет заправки" onclick="stPalOpen(\''+s.id+'\')">'+PAL+'</button></h2>'
+      +(stPal===s.id?'<div class="st-sw">'+ST_COLORS.map(function(c){return '<button type="button" class="'+(c===stColor(s)?'on':'')+'" style="background:'+c+'" aria-label="Цвет" onclick="stSetColor(\''+s.id+'\',\''+c+'\')"></button>';}).join('')+'</div>':'')
+      +'<div class="st-pr">'+stFuels(s.id).map(function(f){return stPrCell(s.id,f);}).join('')+'</div>'+stFuelAddBtn(s.id)
+      +'<div class="st-acts">'+usrBtn(s.id)+'<button class="btn btn-black" onclick="spdOpen(\''+s.id+'\')">Траты · '+fmt(spdTotal(s))+' ₽</button></div>'
+      +(spd.open===s.id?spdPanel(s):'')+(usr.open===s.id?usrPanel(s.id):'')
+      +'<button class="btn st-del" onclick="delStation(\''+s.id+'\',this)">Удалить заправку</button></div>';
   }).join('');
 }
-function addStation(btn){if(!canAdmin()){toast('Заправки создаёт только управляющий');return;}const name=document.getElementById('newStation').value.trim();if(!name)return;const id='s'+Date.now();const src=db.stations.find(function(x){return x.id===db.current;})||db.stations[0];db.stations.push({id:id,name:name,fuels:['95'],prices:fmap(function(){return '';}),calib:(src&&src.calib)?JSON.parse(JSON.stringify(src.calib)):{'95':{name:'Резервуар № 10',start:0,v:CAL95.slice()}}});db.current=id;document.getElementById('newStation').value='';persist();renderStations();flashBtn(btn,'Создано');}
-function startRename(id){const s=db.stations.find(x=>x.id===id);if(!s)return;const row=document.getElementById('row-'+id);row.innerHTML='<input class="ren" id="ren-'+id+'" value="'+s.name.replace(/"/g,'&quot;')+'" /><div class="side"><button class="btn btn-ok" onclick="saveRename(\''+id+'\')">Сохранить</button><button class="btn b-cancel" onclick="renderStations()">Отмена</button></div>';const inp=document.getElementById('ren-'+id);inp.focus();inp.select();}
-function saveRename(id){if(!canAdmin())return;const name=document.getElementById('ren-'+id).value.trim();if(!name)return;const s=db.stations.find(x=>x.id===id);if(s)s.name=name;persist();renderStations();}
+function addStation(btn){if(!canAdmin()){toast('Заправки создаёт только владелец');return;}const name=document.getElementById('newStation').value.trim();if(!name)return;const id='s'+Date.now();const src=db.stations.find(function(x){return x.id===db.current;})||db.stations[0];db.stations.push({id:id,name:name,color:stFreeColor(),fuels:['95'],prices:fmap(function(){return '';}),calib:(src&&src.calib)?JSON.parse(JSON.stringify(src.calib)):{'95':{name:'Резервуар № 10',start:0,v:CAL95.slice()}}});db.current=id;document.getElementById('newStation').value='';persist();renderStations();flashBtn(btn,'Создано');}
+/* цвет заправки: красит её блок на экране АЗС и блоки «Дней», пока она выбрана. Фон, календарь и меню остаются от темы */
+var stPal=null;                                               // у какой заправки открыта палитра
+function stColor(s){return s.color||ST_COLORS[0];}
+function stFreeColor(){const used=db.stations.map(stColor);return ST_COLORS.find(function(c){return used.indexOf(c)<0;})||ST_COLORS[db.stations.length%ST_COLORS.length];}
+function stVars(s){const c=stColor(s),m=function(p,b){return 'color-mix(in srgb,'+c+' '+p+'%,'+b+')';};   // те же переменные, что задаёт тема для блоков
+  return '--hd1:'+c+';--hd2:'+m(75,'#000')+';--hdb:'+m(40,'#000')+';--blk:'+m(22,'var(--bg2)')+';--blk2:'+m(15,'var(--bg2)');}
+function stPalOpen(id){stPal=stPal===id?null:id;renderStations();}
+function stSetColor(id,c){if(!canAdmin())return;const s=db.stations.find(function(x){return x.id===id;});if(!s)return;s.color=c;stPal=null;persist();renderStations();stDayPaint();}
+function stDayPaint(){const el=document.getElementById('sc-day'),s=visStations().find(function(x){return x.id===db.current;});if(el)el.setAttribute('style',s?stVars(s):'');}
+var stRen=null;                                               // какая заправка сейчас переименовывается
+function startRename(id){stRen=id;renderStations();const inp=document.getElementById('ren-'+id);if(inp){inp.focus();inp.select();}}
+function saveRename(id){if(!canAdmin())return;const name=document.getElementById('ren-'+id).value.trim();if(!name)return;const s=db.stations.find(x=>x.id===id);if(s)s.name=name;stRen=null;persist();renderStations();}
 function delStation(id,btn){
-  if(!canAdmin()){toast('Удалять АЗС может только управляющий');return;}
+  if(!canAdmin()){toast('Удалять АЗС может только владелец');return;}
   const pre=id+'|',days=Object.keys(db.days).filter(function(k){return k.indexOf(pre)===0;}).length;
   const sup=spAll().filter(function(r){return r.station===id;}).length;
   armDo(btn,function(){delStationDo(id);},'Точно? Пропадут: дней '+days+', поставок '+sup,6000);
@@ -1035,6 +1079,7 @@ function migrateStations(stations,legacy){         // одна точка вхо
   legacy=legacy||{};
   migratePrices(stations,legacy.prices);
   migrateCalib(stations,legacy.calib);
+  (stations||[]).forEach(function(st,i){if(!st.color)st.color=ST_COLORS[i%ST_COLORS.length];});   // у каждой заправки свой цвет
   return stations;
 }
 function migratePrices(stations,legacy){
@@ -1047,7 +1092,7 @@ function migratePrices(stations,legacy){
 function stPrCell(sid,f){
   const sv=String(stPrice(f,sid)).trim(),k=sid+'-'+f;
   return '<div class="pr-cell" id="pc-'+k+'"><label>АИ-'+f+', ₽ <span class="pr-ok" style="display:'+(sv!==''?'inline':'none')+'">✅</span></label>'+
-    '<input inputmode="decimal" value="'+escAttr(sv)+'" data-saved="'+escAttr(sv)+'" class="'+(sv!==''?'pr-saved':'')+'" oninput="stPrInp(\''+sid+'\',\''+f+'\',this)">'+
+    '<input inputmode="decimal" placeholder="цена" value="'+escAttr(sv)+'" data-saved="'+escAttr(sv)+'" class="'+(sv!==''?'pr-saved':'')+'" oninput="stPrInp(\''+sid+'\',\''+f+'\',this)">'+
     '<button class="btn btn-ok pr-save" style="display:none" onclick="stSetPrice(\''+sid+'\',\''+f+'\',this)">Сохранить цену</button>'+
     ((stFuels(sid).length>1&&!stHasData(sid,f))?'<button class="btn btn-danger pr-save" style="display:block" onclick="stFuelDel(\''+sid+'\',\''+f+'\',this)">Убрать АИ-'+f+'</button>':'')+'</div>';
 }
@@ -1635,13 +1680,13 @@ function calFuelRender(){
 function calFuelSet(el){calS.fuel=el.dataset.f;calRender();}
 function calRender(){
   calStRender();calFuelRender();
-  const pb=document.getElementById('calPasteBtn');if(pb)pb.style.display=canAdmin()?'':'none';   // калибровку вносит и правит только управляющий
+  const pb=document.getElementById('calPasteBtn');if(pb)pb.style.display=canAdmin()?'':'none';   // калибровку вносит и правит только владелец
   const c=calGet(calS.fuel,calS.st),info=document.getElementById('calInfo');if(!info)return;
   info.textContent=c?((c.name||'Резервуар')+' · '+spStName(calS.st)+': '+c.v.length+' строк, '+c.start+'–'+(c.start+c.v.length-1)+' см, максимум '+fmt3(c.v[c.v.length-1])+' м³'):'Калибровка для АИ-'+calS.fuel+' не внесена.';
   const t=document.getElementById('calTable');
   if(calS.tbl&&c){
     t.style.display='';
-    t.innerHTML='<div class="cal-t">'+c.v.map(function(v,i){return '<div class="cal-row"><span>'+(c.start+i)+' см</span><input inputmode="decimal" value="'+v+'"'+(canAdmin()?' onchange="calEdit('+i+',this)"':' readonly')+'></div>';}).join('')+'</div><div class="muted" id="calEditMsg" style="margin-top:6px">'+(canAdmin()?'Строку можно править: изменение сразу пересчитает все поставки.':'Таблицу правит управляющий.')+'</div>';
+    t.innerHTML='<div class="cal-t">'+c.v.map(function(v,i){return '<div class="cal-row"><span>'+(c.start+i)+' см</span><input inputmode="decimal" value="'+v+'"'+(canAdmin()?' onchange="calEdit('+i+',this)"':' readonly')+'></div>';}).join('')+'</div><div class="muted" id="calEditMsg" style="margin-top:6px">'+(canAdmin()?'Строку можно править: изменение сразу пересчитает все поставки.':'Таблицу правит владелец.')+'</div>';
   }else{t.style.display='none';t.innerHTML='';}
   calFind();
 }
@@ -1787,9 +1832,11 @@ function renderDayTab(){bindAutoSave();
   const ns_=document.getElementById('noSt'); if(ns_) ns_.style.display=none?'':'none';
   if(none){
     const m=document.getElementById('stMenu'); if(m) m.innerHTML='';
+    stDayPaint();
     return;
   }
   if(!visStations().some(function(st){return st.id===db.current;})) db.current=visStations()[0].id;
+  stDayPaint();
   renderDayTabMain();
 }
 function renderDayTabMain(){
@@ -2082,7 +2129,7 @@ function logMake(old,patch,who,tag,keys){                // новая верс�
   });
   return log.slice(-40);
 }
-function logHtml(date){                                  // только управляющему
+function logHtml(date){                                  // только владельцу
   if(!isBoss())return '';
   const f=getRec(date).fuels[view.fuel]||{},log=Array.isArray(f.log)?f.log:[];
   if(!log.length)return '';
@@ -2095,7 +2142,7 @@ function logHtml(date){                                  // только упр�
 /* ---- заметки смены: свободный текст к дню (rec.sn), с автором, папкой и временем; цифры дня не трогают ---- */
 var snDraft='',snDraftKey='';
 function snList(date){const r=db.days[key(date)];return r&&Array.isArray(r.sn)?r.sn:[];}
-function snCanDel(n){const s=currentShift();return !isView()&&(canAdmin()||!!(s&&n.i&&n.i===s.id));}   // удалить: автор или управляющий
+function snCanDel(n){const s=currentShift();return !isView()&&(canAdmin()||!!(s&&n.i&&n.i===s.id));}   // удалить: автор или владелец
 function snFolderName(id){ensureFolders();const f=db.folders.filter(function(x){return x.id===id;})[0];return f?String(f.name||''):'';}
 function renderShiftNotes(){
   const box=document.getElementById('shiftNotes');if(!box)return;
@@ -2774,7 +2821,7 @@ function mergeSupplyFrom(cur,inc){
   return out;
 }
 function applyArchChat(btn){
-  if(!canAdmin()){toast('Загружать копию может только управляющий');return;}
+  if(!canAdmin()){toast('Загружать копию может только владелец');return;}
   const box=document.getElementById('archBox');
   const raw=box?box.value.trim():'';
   const st=document.getElementById('archStatus');
@@ -2906,7 +2953,7 @@ function fxOnBox(box,kind){
   },function(){layer.innerHTML='';});
 }
 function shareArchive(btn){
-  if(!canAdmin()){toast('Сохранять файл может только управляющий');return;}
+  if(!canAdmin()){toast('Сохранять файл может только владелец');return;}
   const name=fileName(),txt=fileText();
   const blob=new Blob([txt],{type:'application/json'});
   const file=new File([blob],name,{type:'application/json'});
@@ -2946,7 +2993,7 @@ function fxScreenFire(){                               // огонь на вес
   },function(){cv.remove();});
 }
 function wipeAll(btn){
-  if(!canAdmin()){toast('Стирать всё может только управляющий');return;}
+  if(!canAdmin()){toast('Стирать всё может только владелец');return;}
   armDo(btn,function(){
     if(!cloud.active){wipeDo(btn);return;}
     askText('Данные будут стёрты у ВСЕХ, кто пользуется приложением. Копия останется на этом устройстве. Чтобы продолжить, напиши слово СТЕРЕТЬ',function(w){
@@ -3356,7 +3403,6 @@ function cloudRenderPane(){
   bkStatPaint();inCloudPaint();sgPaint();
 }
 function cloudPeek(btn){sg.peek=!sg.peek;btn.textContent=sg.peek?'Скрыть':'Показать';cloudRenderPane();}
-function sgPeople(){usr.open='*';tab('stations');}   // люди и их коды живут в списке АЗС
 
 try{Object.keys(localStorage).filter(function(k){return /^azs-snap-/.test(k);}).forEach(function(k){localStorage.removeItem(k);});}catch(e){}   // старые копии на телефоне больше не ведутся
 function pad2(v){return String(v).padStart(2,'0');}
